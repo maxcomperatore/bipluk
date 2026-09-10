@@ -1,0 +1,1229 @@
+<!DOCTYPE html>
+<html lang="en" class="overflow-x-hidden">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% include "partials/local_fonts.html" %}
+    {% include 'partials/favicon.html' %}
+    <title>Online SysEx Checksum &amp; Splitter Utility | bipluk</title>
+    <meta name="description" content="Free in-browser MIDI SysEx tool. Repair corrupted Roland, Yamaha, and Kawai checksums, split DX7 bulk dumps into individual .syx patches, and transmit paced SysEx over Web MIDI to prevent buffer overflows on vintage synths.">
+    {% set seo_canonical = "https://bipluk.com/tools/sysex-checksum-splitter" %}
+    {% set seo_title = "Online SysEx Checksum & Splitter Utility | bipluk" %}
+    {% set seo_description = "Free in-browser MIDI SysEx tool. Repair corrupted Roland, Yamaha, and Kawai checksums, split DX7 bulk dumps into individual .syx patches, and transmit paced SysEx over Web MIDI to prevent buffer overflows on vintage synths." %}
+    {% include 'partials/seo_article_meta.html' %}
+    {% include 'partials/tailwind_lapis.html' %}
+
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+
+        ::selection {
+            background-color: rgba(41, 151, 255, 0.2);
+            color: #ffffff;
+        }
+
+        .studio-dot-grid {
+            background-image: radial-gradient(circle, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+            background-size: 28px 28px;
+            background-position: 0 0;
+            -webkit-mask-image: radial-gradient(ellipse 85% 65% at 50% 15%, black 25%, rgba(0, 0, 0, 0.5) 60%, transparent 90%);
+            mask-image: radial-gradient(ellipse 85% 65% at 50% 15%, black 25%, rgba(0, 0, 0, 0.5) 60%, transparent 90%);
+        }
+
+        .glow-card {
+            position: relative;
+            box-shadow: 4px 4px 0px 0px #18181b;
+            transition: none;
+        }
+
+        .glow-card:hover {
+            transform: translate(-2px, -2px);
+            border-color: #26619C;
+            box-shadow: 6px 6px 0px 0px #26619C;
+        }
+
+        .crt-scanlines {
+            background: linear-gradient(
+                rgba(18, 16, 16, 0) 50%, 
+                rgba(0, 0, 0, 0.3) 50%
+            ), linear-gradient(
+                90deg,
+                rgba(255, 0, 0, 0.04),
+                rgba(0, 255, 0, 0.02),
+                rgba(0, 0, 255, 0.04)
+            );
+            background-size: 100% 4px, 6px 100%;
+        }
+
+        @keyframes logo-spin {
+            0% { transform: rotateY(0deg); }
+            100% { transform: rotateY(360deg); }
+        }
+
+        .spin-logo {
+            animation: logo-spin 8s linear infinite;
+            transform-style: preserve-3d;
+            backface-visibility: visible;
+        }
+    </style>
+    {% include 'posthog.html' %}
+
+    <!-- Schema.org Comprehensive Structured Data (Google Rich Results) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "WebApplication",
+          "@id": "https://bipluk.com/tools/sysex-checksum-splitter#webapp",
+          "name": "SysEx Checksum Fixer & Bulk Dump Splitter",
+          "alternateName": "Online MIDI SysEx Repair & Pacing Tool",
+          "url": "https://bipluk.com/tools/sysex-checksum-splitter",
+          "description": "Free browser-based MIDI SysEx diagnostic utility. Repair corrupted Roland and Yamaha checksum bytes, unpack 32-voice DX7 bulk dumps into standalone .syx patches with ZIP export, and transmit paced Web MIDI transfers to prevent vintage hardware buffer overruns.",
+          "applicationCategory": "MultimediaApplication",
+          "operatingSystem": "All (Web Browser)",
+          "browserRequirements": "Requires Web MIDI compatible browser (Google Chrome, Microsoft Edge, Opera, Brave)",
+          "inLanguage": "en",
+          "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD",
+            "availability": "https://schema.org/InStock"
+          },
+          "featureList": [
+            "Roland 7-bit two's complement checksum verification and 1-click auto-repair",
+            "Yamaha DX7 32-voice 4,104-byte bulk dump splitter to individual .syx patches",
+            "Pure client-side zero-dependency ZIP archive generator",
+            "Hardware-paced Web MIDI transmitter (20ms to 250ms delays) preventing Motorola 6809 UART crashes",
+            "Kawai K3/K4 additive checksum formula validation",
+            "100% private local Uint8Array processing without server uploads"
+          ],
+          "creator": {
+            "@type": "Organization",
+            "name": "bipluk",
+            "url": "https://bipluk.com"
+          }
+        },
+        {
+          "@type": "BreadcrumbList",
+          "@id": "https://bipluk.com/tools/sysex-checksum-splitter#breadcrumbs",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": "https://bipluk.com"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Resources & Tools",
+              "item": "https://bipluk.com/resources"
+            },
+            {
+              "@type": "ListItem",
+              "position": 3,
+              "name": "SysEx Checksum Fixer & Splitter",
+              "item": "https://bipluk.com/tools/sysex-checksum-splitter"
+            }
+          ]
+        },
+        {
+          "@type": "FAQPage",
+          "@id": "https://bipluk.com/tools/sysex-checksum-splitter#faq",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "Why does my Roland synth show 'Checksum Error' when receiving SysEx?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Roland synthesizers (D-50, Juno-106, DEP-5, JV-1080) calculate checksums using a strict 7-bit two's complement formula: (128 - (sum % 128)) & 0x7F over the address and data payload bytes. If an editor calculates the sum incorrectly or fails to apply the final 0x7F bitmask when the sum is an exact multiple of 128, the value evaluates to 128 (0x80). Because MIDI data bytes must be strictly between 0 and 127, the synthesizer immediately rejects the packet."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "How do I split a Yamaha DX7 4,104-byte bulk .syx cartridge into single voices?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "A standard Yamaha DX7 bulk dump consists of 4,104 bytes: a 6-byte header (F0 43 00 09 20 00), 32 packed voices of 128 bytes each (4,096 bytes total), a 1-byte checksum, and an F7 terminator. This tool slices each 128-byte block, reads the 10-character ASCII patch name from bytes 118-127, wraps it in the Yamaha single-voice header (F0 43 00 00 01 1B), recalculates the single-voice checksum, and packages all 32 files into a downloadable ZIP archive directly in your browser."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Why do Oberheim Matrix-1000 and Kawai K3 freeze during SysEx dumps?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Vintage synthesizers from the 1980s are driven by 8-bit microprocessors like the 1 MHz Motorola 6809 or Intel 8051. Their hardware UART input buffers typically hold only 64 to 128 bytes. Modern USB-to-MIDI converters blast SysEx packets at full USB bus speed. Without inter-packet pacing delays (between 50ms and 100ms), the hardware buffer overflows, causing frozen displays, memory corruption, or complete lockups."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Are my proprietary synthesizer soundbanks uploaded to your server?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "No. All file ingestion, hexadecimal byte inspection, checksum calculation, ZIP packaging, and Web MIDI streaming execute 100% client-side in your browser using JavaScript Uint8Array buffers and the Web MIDI API. Zero bytes are uploaded to our servers, making it completely secure for proprietary, commercial, or rare soundbanks."
+              }
+            }
+          ]
+        },
+        {
+          "@type": "HowTo",
+          "@id": "https://bipluk.com/tools/sysex-checksum-splitter#howto",
+          "name": "How to fix a corrupted MIDI SysEx checksum online",
+          "description": "Step-by-step guide to diagnose and automatically repair corrupted Roland and Yamaha SysEx checksums in your browser.",
+          "step": [
+            {
+              "@type": "HowToStep",
+              "position": 1,
+              "name": "Load your .syx file",
+              "text": "Drag and drop your .syx or .bin file into the web dropzone, or click browse to select it from your disk."
+            },
+            {
+              "@type": "HowToStep",
+              "position": 2,
+              "name": "Verify diagnostic report",
+              "text": "The tool inspects the manufacturer byte and compares the file checksum against the official hardware specification."
+            },
+            {
+              "@type": "HowToStep",
+              "position": 3,
+              "name": "Click Fix & Download",
+              "text": "If a mismatch is detected, click the green 'Fix & Download .SYX' button to patch the checksum byte and export the clean file."
+            }
+          ]
+        }
+      ]
+    }
+    </script>
+
+</head>
+
+<body class="bg-black text-zinc-100 font-sans antialiased overflow-x-hidden relative selection:bg-teal-500/20 selection:text-white">
+
+    <!-- Precision Studio Dot Grid -->
+    <div class="fixed inset-0 pointer-events-none z-0 studio-dot-grid"></div>
+
+    <!-- Sticky Header -->
+    <header class="sticky top-0 bg-black/85 backdrop-blur-md border-b border-zinc-900 h-16 flex items-center justify-between px-6 z-40">
+        <div class="max-w-6xl w-full mx-auto flex items-center justify-between">
+            <div class="flex items-center gap-2.5">
+                <a href="/" class="flex items-center gap-2.5 group">
+                    <div class="relative spin-logo flex items-center justify-center" style="transform-style: preserve-3d; width: 24px; height: 24px;">
+                        <img src="/static/logo.svg" alt="Bipluk Logo" width="24" height="24" class="absolute w-6 h-6 object-contain" style="transform: translateZ(0px); image-rendering: pixelated;">
+                        <img src="/static/logo.svg" alt="" width="24" height="24" class="absolute w-6 h-6 object-contain" style="transform: translateZ(-0.5px); filter: brightness(0.6); image-rendering: pixelated;">
+                        <img src="/static/logo.svg" alt="" width="24" height="24" class="absolute w-6 h-6 object-contain" style="transform: translateZ(-1.0px); filter: brightness(0.4); image-rendering: pixelated;">
+                    </div>
+                    <span class="font-pixel uppercase text-sm text-white tracking-widest group-hover:text-lapis-light transition-colors">bipluk</span>
+                </a>
+            </div>
+
+            <nav class="hidden md:flex items-center gap-8 text-xs font-pixel text-zinc-400 uppercase tracking-wider">
+                <a href="/#features" class="hover:text-white transition-colors duration-200">Features</a>
+                <a href="/#pricing" class="hover:text-white transition-colors duration-200">Pricing</a>
+                <span class="text-zinc-600 select-none">/</span>
+                <a href="/resources" class="text-white transition-colors duration-200">Resources</a>
+                <a href="/shop" class="hover:text-white transition-colors duration-200">Shop</a>
+            </nav>
+
+            <div class="flex items-center gap-4">
+                {% if user %}
+                <a href="/home" class="bg-white hover:bg-zinc-200 text-black px-4 py-2 rounded-full text-2xs font-pixel uppercase tracking-wider transition-all duration-200 active:scale-95 flex items-center shadow-sm">
+                    Open Vault
+                </a>
+                {% else %}
+                <a href="/signup" class="bg-white hover:bg-zinc-200 text-black px-4 py-2 rounded-full text-2xs font-pixel uppercase tracking-wider transition-all duration-200 active:scale-95 flex items-center shadow-sm">
+                    Sign Up
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-6 py-12 relative z-10 space-y-12">
+        
+        <!-- Breadcrumbs & Heading -->
+        <div class="space-y-4">
+            <div class="flex items-center gap-2 text-2xs font-mono text-zinc-500 uppercase tracking-wider">
+                <a href="/resources" class="hover:text-zinc-300">Resources</a>
+                <span>/</span>
+                <span class="text-teal-400 font-semibold">SysEx Checksum &amp; Splitter</span>
+            </div>
+            <div class="inline-flex items-center px-3 py-1 rounded-full bg-teal-950/40 border border-teal-500/30 text-teal-300 font-mono text-3xs uppercase tracking-wider">
+                100% Client-Side · Zero File Uploads · Safe for Proprietary ROMs
+            </div>
+            <h1 class="text-3xl md:text-5xl font-pixel uppercase text-white tracking-tight leading-tight">
+                Online SysEx Checksum Fixer &amp; Bulk Splitter
+            </h1>
+            <p class="text-sm text-zinc-400 max-w-3xl leading-relaxed">
+                Vintage synthesizers from Roland, Yamaha, Kawai, and Oberheim choke when SysEx dumps have mismatched checksums or arrive faster than their 8-bit CPU buffers can process.
+                Use this tool to repair checksum bytes, unpack 32-voice bulk cartridges into individual <code class="text-zinc-200">.syx</code> files, and transmit paced Web MIDI transfers directly from Chrome.
+            </p>
+        </div>
+
+        <!-- Top Section: File Ingestion & Diagnostics Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            <!-- Left: Dropzone & Demos -->
+            <div class="space-y-6 lg:col-span-1">
+                <div class="bg-zinc-950 border border-zinc-900 rounded-2xl p-6 space-y-5">
+                    <h2 class="text-xs font-pixel text-white uppercase tracking-wider flex items-center justify-between">
+                        <span>1. Select SysEx File</span>
+                        <span class="text-zinc-600 font-mono text-3xs">.syx / .bin</span>
+                    </h2>
+
+                    <div id="drop-zone" class="border border-dashed border-zinc-800 hover:border-teal-500/40 rounded-xl p-8 text-center cursor-pointer transition-all duration-150 bg-black/40 select-none group">
+                        <input type="file" id="file-input" class="hidden" accept=".syx,.bin,.raw,.mid">
+                        <div class="space-y-3 pointer-events-none">
+                            <svg class="mx-auto h-8 w-8 text-zinc-500 group-hover:text-teal-400 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                            <p class="text-2xs font-mono text-zinc-400">
+                                Drag &amp; drop a <span class="text-zinc-200">.syx</span> file, or <span class="text-teal-400 underline decoration-dotted">browse</span>
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Quick Preset Demos -->
+                    <div class="space-y-2 pt-2">
+                        <p class="text-[10px] font-mono text-zinc-500 uppercase tracking-wider">Test with interactive samples:</p>
+                        <div class="grid grid-cols-2 gap-2">
+                            <button onclick="loadSample('dx7_bulk')" class="bg-zinc-900 hover:bg-zinc-800 hover:border-zinc-700 text-left p-2.5 rounded-lg border border-zinc-950 transition-all font-mono text-3xs text-zinc-300 flex flex-col justify-between h-16">
+                                <span class="text-teal-400 font-bold uppercase tracking-wider text-[9px]">Yamaha DX7 Bulk</span>
+                                <span class="text-zinc-500 text-[9px]">4104B -> 32 voices</span>
+                            </button>
+                            <button onclick="loadSample('roland_bad_cksum')" class="bg-zinc-900 hover:bg-zinc-800 hover:border-zinc-700 text-left p-2.5 rounded-lg border border-zinc-950 transition-all font-mono text-3xs text-zinc-300 flex flex-col justify-between h-16">
+                                <span class="text-rose-400 font-bold uppercase tracking-wider text-[9px]">Bad Roland Cksum</span>
+                                <span class="text-zinc-500 text-[9px]">D-50 / Juno-106</span>
+                            </button>
+                            <button onclick="loadSample('oberheim_multi')" class="bg-zinc-900 hover:bg-zinc-800 hover:border-zinc-700 text-left p-2.5 rounded-lg border border-zinc-950 transition-all font-mono text-3xs text-zinc-300 flex flex-col justify-between h-16">
+                                <span class="text-amber-400 font-bold uppercase tracking-wider text-[9px]">Oberheim Multi</span>
+                                <span class="text-zinc-500 text-[9px]">Paced MIDI stream</span>
+                            </button>
+                            <button onclick="loadSample('kawai_k3')" class="bg-zinc-900 hover:bg-zinc-800 hover:border-zinc-700 text-left p-2.5 rounded-lg border border-zinc-950 transition-all font-mono text-3xs text-zinc-300 flex flex-col justify-between h-16">
+                                <span class="text-sky-400 font-bold uppercase tracking-wider text-[9px]">Kawai K3 Patch</span>
+                                <span class="text-zinc-500 text-[9px]">Kawai checksum spec</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Middle & Right: Real-time Checksum Diagnostic Engine -->
+            <div class="space-y-6 lg:col-span-2">
+                <div class="bg-zinc-950 border border-zinc-900 rounded-2xl p-6 space-y-6">
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-zinc-900 pb-4">
+                        <div>
+                            <h2 class="text-xs font-pixel text-white uppercase tracking-wider">2. Checksum &amp; Stream Diagnostic</h2>
+                            <p class="text-2xs text-zinc-500 font-mono mt-0.5">Real-time hardware protocol integrity inspection</p>
+                        </div>
+                        <div id="status-pill" class="px-3 py-1 rounded-full text-2xs font-mono font-bold bg-zinc-900 text-zinc-500 border border-zinc-800">
+                            AWAITING STREAM
+                        </div>
+                    </div>
+
+                    <!-- Metrics Grid -->
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 font-mono">
+                        <div class="bg-black/50 border border-zinc-900 rounded-xl p-3">
+                            <span class="text-3xs text-zinc-500 uppercase block">Manufacturer</span>
+                            <span id="diag-mfg" class="text-xs text-white font-bold truncate block mt-1">-</span>
+                        </div>
+                        <div class="bg-black/50 border border-zinc-900 rounded-xl p-3">
+                            <span class="text-3xs text-zinc-500 uppercase block">Total Size</span>
+                            <span id="diag-size" class="text-xs text-zinc-300 font-bold block mt-1">0 Bytes</span>
+                        </div>
+                        <div class="bg-black/50 border border-zinc-900 rounded-xl p-3">
+                            <span class="text-3xs text-zinc-500 uppercase block">Packets Detected</span>
+                            <span id="diag-packets" class="text-xs text-teal-400 font-bold block mt-1">0</span>
+                        </div>
+                        <div class="bg-black/50 border border-zinc-900 rounded-xl p-3">
+                            <span class="text-3xs text-zinc-500 uppercase block">Checksum Spec</span>
+                            <span id="diag-spec" class="text-xs text-amber-400 font-bold block mt-1">-</span>
+                        </div>
+                    </div>
+
+                    <!-- Checksum Comparison Box -->
+                    <div id="checksum-box" class="bg-black/60 border border-zinc-900 rounded-xl p-4 space-y-3 font-mono text-2xs">
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+                            <span class="text-zinc-400 flex items-center gap-2">
+                                <span class="h-2 w-2 rounded-full bg-zinc-600" id="cksum-dot"></span>
+                                <span>Checksum Verification:</span>
+                            </span>
+                            <span id="cksum-details" class="text-zinc-500">No active packet</span>
+                        </div>
+
+                        <!-- Checksum Auto-Fix Bar (appears on error) -->
+                        <div id="fix-banner" class="hidden flex flex-col sm:flex-row items-center justify-between gap-4 p-3 bg-rose-950/30 border border-rose-500/40 rounded-lg">
+                            <div class="text-rose-300 space-y-0.5">
+                                <p class="font-bold text-xs uppercase">Hardware Rejection Warning</p>
+                                <p class="text-3xs text-rose-400/80">Your hardware will ignore this dump or report "Checksum Error". Click below to inject the mathematically correct checksum byte.</p>
+                            </div>
+                            <button onclick="fixAndDownload()" class="shrink-0 bg-emerald-500 hover:bg-emerald-400 text-black font-pixel text-2xs uppercase px-4 py-2 rounded-lg transition-all active:scale-95 shadow-md flex items-center gap-2">
+                                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                </svg>
+                                Fix &amp; Download .SYX
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Middle Section: Bulk Splitter & Patch Table -->
+        <div class="bg-zinc-950 border border-zinc-900 rounded-2xl p-6 space-y-6">
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-zinc-900 pb-4">
+                <div>
+                    <h2 class="text-xs font-pixel text-white uppercase tracking-wider">3. Bulk Dump Splitter</h2>
+                    <p class="text-2xs text-zinc-500 font-mono mt-0.5">Dissects multi-voice cartridges and concatenated F0..F7 streams into discrete files</p>
+                </div>
+
+                <div class="flex items-center gap-3">
+                    <button id="btn-download-all" onclick="downloadAllZip()" disabled class="bg-teal-500 hover:bg-teal-400 disabled:bg-zinc-900 disabled:text-zinc-600 disabled:cursor-not-allowed text-black font-pixel text-2xs uppercase px-4 py-2 rounded-lg transition-all active:scale-95 flex items-center gap-2 shadow-sm">
+                        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                        </svg>
+                        <span>Download All as .ZIP</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Extracted Patches Table -->
+            <div class="border border-zinc-900 rounded-xl overflow-hidden bg-black/40">
+                <div class="max-h-72 overflow-y-auto">
+                    <table class="w-full text-left font-mono text-2xs">
+                        <thead class="bg-zinc-900/60 text-zinc-400 text-3xs uppercase tracking-wider sticky top-0 border-b border-zinc-900 z-10 backdrop-blur-sm">
+                            <tr>
+                                <th class="py-2.5 px-4">#</th>
+                                <th class="py-2.5 px-4">Patch / Voice Identifier</th>
+                                <th class="py-2.5 px-4">Protocol</th>
+                                <th class="py-2.5 px-4">Bytes</th>
+                                <th class="py-2.5 px-4">Checksum</th>
+                                <th class="py-2.5 px-4 text-right">Export</th>
+                            </tr>
+                        </thead>
+                        <tbody id="patches-tbody" class="divide-y divide-zinc-900/70 text-zinc-300">
+                            <tr>
+                                <td colspan="6" class="py-12 text-center text-zinc-600 font-pixel uppercase tracking-wider text-3xs">
+                                    No bulk cartridge loaded. Drag a file or click a demo above.
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Section: Vintage Hardware Pacing & Web MIDI Console -->
+        <div class="bg-zinc-950 border border-zinc-900 rounded-2xl p-6 space-y-6">
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-zinc-900 pb-4">
+                <div>
+                    <h2 class="text-xs font-pixel text-white uppercase tracking-wider">4. Hardware Paced Web MIDI Transmitter</h2>
+                    <p class="text-2xs text-zinc-500 font-mono mt-0.5">Prevents MIDI UART buffer overruns on Motorola 6809 / 8051 synth CPUs</p>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span id="midi-port-badge" class="px-2.5 py-1 rounded bg-zinc-900 text-zinc-500 border border-zinc-800 font-mono text-3xs uppercase">
+                        Scanning MIDI Ports...
+                    </span>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- MIDI Device Selector -->
+                <div class="space-y-2 font-mono text-2xs">
+                    <label class="text-zinc-400 block uppercase tracking-wider text-3xs">Target MIDI Output Port</label>
+                    <select id="midi-select" class="w-full bg-black border border-zinc-800 rounded-xl px-3 py-2.5 text-zinc-200 focus:outline-none focus:border-teal-500 text-2xs">
+                        <option value="">Detecting hardware interfaces...</option>
+                    </select>
+                </div>
+
+                <!-- Inter-Packet Delay Selector -->
+                <div class="space-y-2 font-mono text-2xs">
+                    <label class="text-zinc-400 block uppercase tracking-wider text-3xs">Packet Pacing (Delay between dumps)</label>
+                    <select id="delay-select" class="w-full bg-black border border-zinc-800 rounded-xl px-3 py-2.5 text-zinc-200 focus:outline-none focus:border-teal-500 text-2xs">
+                        <option value="20">20ms · Fast (Yamaha DX7, Korg M1)</option>
+                        <option value="50" selected>50ms · Recommended (Roland Juno-106, D-50)</option>
+                        <option value="100">100ms · Safe (Oberheim Matrix-1000, Kawai K3)</option>
+                        <option value="250">250ms · Ultra-Conservative (Older Casio, Ensoniq)</option>
+                    </select>
+                </div>
+
+                <!-- Transmit Action Button -->
+                <div class="flex flex-col justify-end">
+                    <button id="btn-transmit" onclick="transmitPacedMidi()" disabled class="w-full bg-teal-500 hover:bg-teal-400 disabled:bg-zinc-900 disabled:text-zinc-600 disabled:cursor-not-allowed text-black font-pixel text-2xs uppercase px-4 py-3 rounded-xl transition-all active:scale-95 shadow-sm flex items-center justify-center gap-2">
+                        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span>Send Paced SysEx to Synth</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Transmission Progress Bar -->
+            <div id="progress-container" class="hidden space-y-2 font-mono text-2xs pt-2">
+                <div class="flex justify-between text-zinc-400 text-3xs uppercase">
+                    <span id="progress-label">Transmitting Packet 0 / 0...</span>
+                    <span id="progress-percent">0%</span>
+                </div>
+                <div class="w-full h-2 bg-zinc-900 rounded-full overflow-hidden">
+                    <div id="progress-bar" class="h-full bg-teal-400 transition-all duration-100" style="width: 0%"></div>
+                </div>
+                <div class="text-right">
+                    <button onclick="abortTransmission()" class="text-rose-400 hover:text-rose-300 text-3xs font-mono uppercase underline">Abort Transfer</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Deep Dive / Technical Reference -->
+        <div class="border-t border-zinc-900 pt-10 grid grid-cols-1 md:grid-cols-3 gap-8 font-mono text-2xs text-zinc-400">
+            <div class="space-y-3">
+                <h3 class="font-pixel uppercase text-white text-xs tracking-wider">Roland 7-Bit Two's Complement</h3>
+                <p class="leading-relaxed">
+                    Roland synthesizers (D-50, Juno-106, Jupiter-80, JV-1080) sum address and data bytes, then compute:
+                    <code class="text-teal-300 block bg-zinc-950 p-2 rounded mt-1 border border-zinc-900">checksum = (128 - (sum % 128)) &amp; 0x7F</code>
+                    If the sum is an exact multiple of 128, the checksum is 0x00. Many cheap web editors omit the final mask, causing immediate communication errors.
+                </p>
+            </div>
+
+            <div class="space-y-3">
+                <h3 class="font-pixel uppercase text-white text-xs tracking-wider">Yamaha DX7 Bulk Specification</h3>
+                <p class="leading-relaxed">
+                    A Yamaha 32-voice bulk dump consists of 4,104 bytes: a 6-byte header, 4,096 voice data bytes (32 voices &times; 128 bytes), a 1-byte checksum, and 0xF7.
+                    The checksum is the 7-bit two's complement of the 4,096 data bytes:
+                    <code class="text-teal-300 block bg-zinc-950 p-2 rounded mt-1 border border-zinc-900">checksum = (-sum) &amp; 0x7F</code>
+                </p>
+            </div>
+
+            <div class="space-y-3">
+                <h3 class="font-pixel uppercase text-white text-xs tracking-wider">The Motorola 6809 Buffer Bottleneck</h3>
+                <p class="leading-relaxed">
+                    Units like the Oberheim Matrix-1000 run on a 1 MHz Motorola 6809 CPU. Their serial UART buffer holds only 64 bytes.
+                    Modern USB-to-MIDI interfaces blast packets at full USB bus speed. Without pacing delays (50ms-100ms), the synth experiences a hardware buffer overflow and freezes.
+                </p>
+            </div>
+        </div>
+
+        
+        <!-- Visible FAQ Accordion (Directly supports Google FAQPage Rich Results) -->
+        <section class="border-t border-zinc-900 pt-12 space-y-8">
+            <div class="space-y-2">
+                <div class="inline-flex items-center gap-2 text-2xs font-mono text-zinc-500 uppercase tracking-wider">
+                    <span class="h-1.5 w-1.5 rounded-full bg-teal-400"></span>
+                    <span>Knowledge Base &amp; Protocol Reference</span>
+                </div>
+                <h2 class="text-2xl font-pixel uppercase text-white tracking-tight">Frequently Asked Questions</h2>
+                <p class="text-xs text-zinc-400 font-mono">Common hardware SysEx transmission quirks, checksum math, and buffer overflow remedies.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 font-mono text-2xs">
+                <div class="bg-zinc-950 border border-zinc-900 rounded-xl p-5 space-y-3">
+                    <h3 class="text-xs font-bold text-white uppercase tracking-wider text-teal-300">Why does my Roland synth show "Checksum Error"?</h3>
+                    <p class="text-zinc-400 leading-relaxed">
+                        Roland devices (D-50, Juno-106, DEP-5, JV-1080) use a 7-bit two's complement: <code class="text-zinc-200">checksum = (128 - (sum % 128)) &amp; 0x7F</code>. If an editor calculates the sum incorrectly or fails to mask with 0x7F when the sum is a multiple of 128, it outputs 128 (0x80), which violates the MIDI 7-bit standard and triggers an instant hardware error.
+                    </p>
+                </div>
+
+                <div class="bg-zinc-950 border border-zinc-900 rounded-xl p-5 space-y-3">
+                    <h3 class="text-xs font-bold text-white uppercase tracking-wider text-teal-300">How does the Yamaha DX7 bulk splitter work?</h3>
+                    <p class="text-zinc-400 leading-relaxed">
+                        A Yamaha 32-voice bulk dump is 4,104 bytes (6-byte header, 4,096 bytes data, 1-byte checksum, 0xF7). Our parser extracts each 128-byte voice block, reads the 10-character ASCII name, wraps it in the Yamaha single-voice header, and exports all 32 standalone <code class="text-zinc-200">.syx</code> files as a ZIP archive.
+                    </p>
+                </div>
+
+                <div class="bg-zinc-950 border border-zinc-900 rounded-xl p-5 space-y-3">
+                    <h3 class="text-xs font-bold text-white uppercase tracking-wider text-teal-300">Why do Oberheim Matrix-1000 and Kawai K3 crash?</h3>
+                    <p class="text-zinc-400 leading-relaxed">
+                        These units use slow 1 MHz 8-bit CPUs (Motorola 6809 / 8051) with tiny 64-byte UART buffers. Modern USB-MIDI interfaces blast packets too quickly. Setting an inter-packet pacing delay (50ms to 100ms) prevents serial FIFO buffer overruns and freezes.
+                    </p>
+                </div>
+
+                <div class="bg-zinc-950 border border-zinc-900 rounded-xl p-5 space-y-3">
+                    <h3 class="text-xs font-bold text-white uppercase tracking-wider text-teal-300">Are my synthesizer soundbanks uploaded to a server?</h3>
+                    <p class="text-zinc-400 leading-relaxed">
+                        No. 100% of the byte parsing, checksum verification, ZIP creation, and Web MIDI transmission runs locally in your browser's memory using JavaScript TypedArrays. Zero bytes leave your machine.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- Cross Link to Main SysEx Inspector -->
+        <div class="bg-zinc-950 border border-zinc-900 rounded-2xl p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="space-y-1 text-center sm:text-left">
+                <h4 class="font-pixel text-white text-xs uppercase tracking-wider">Looking for the FM Synth Sandbox &amp; Hex Visualizer?</h4>
+                <p class="text-2xs text-zinc-500 font-mono">Audition patches in real-time with Web Audio oscillator synthesis and inspect byte-by-byte color-coded hex blocks.</p>
+            </div>
+            <a href="/resources/sysex-inspector" class="shrink-0 px-4 py-2 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-zinc-300 hover:text-white font-pixel text-2xs uppercase tracking-wider transition-all border border-zinc-800">
+                Launch Hex Inspector ->
+            </a>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    {% include "footer.html" %}
+
+    <!-- Core Engine Scripts -->
+    <script>
+        let currentRawBytes = null;
+        let currentFilename = "bank.syx";
+        let parsedPackets = [];
+        let midiOutputs = [];
+        let selectedMidiOutput = null;
+        let isTransmitting = false;
+        let shouldAbortTransmission = false;
+
+        const MFG_NAMES = {
+            0x41: "Roland",
+            0x42: "Korg",
+            0x43: "Yamaha",
+            0x01: "Sequential Circuits",
+            0x10: "Kawai",
+            0x14: "Waldorf",
+            0x18: "Oberheim",
+            0x1C: "Akai",
+            0x3F: "Casio",
+            0x0F: "E-mu Systems"
+        };
+
+        const dropZone = document.getElementById('drop-zone');
+        const fileInput = document.getElementById('file-input');
+        const statusPill = document.getElementById('status-pill');
+        const diagMfg = document.getElementById('diag-mfg');
+        const diagSize = document.getElementById('diag-size');
+        const diagPackets = document.getElementById('diag-packets');
+        const diagSpec = document.getElementById('diag-spec');
+        const cksumDot = document.getElementById('cksum-dot');
+        const cksumDetails = document.getElementById('cksum-details');
+        const fixBanner = document.getElementById('fix-banner');
+        const patchesTbody = document.getElementById('patches-tbody');
+        const btnDownloadAll = document.getElementById('btn-download-all');
+        const btnTransmit = document.getElementById('btn-transmit');
+        const midiSelect = document.getElementById('midi-select');
+        const delaySelect = document.getElementById('delay-select');
+        const progressContainer = document.getElementById('progress-container');
+        const progressBar = document.getElementById('progress-bar');
+        const progressLabel = document.getElementById('progress-label');
+        const progressPercent = document.getElementById('progress-percent');
+        const midiPortBadge = document.getElementById('midi-port-badge');
+
+        dropZone.addEventListener('click', () => fileInput.click());
+        dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('border-teal-500', 'bg-teal-950/10'); });
+        dropZone.addEventListener('dragleave', () => { dropZone.classList.remove('border-teal-500', 'bg-teal-950/10'); });
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('border-teal-500', 'bg-teal-950/10');
+            if (e.dataTransfer.files.length > 0) processFile(e.dataTransfer.files[0]);
+        });
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) processFile(e.target.files[0]);
+        });
+
+        function processFile(file) {
+            currentFilename = file.name;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const bytes = new Uint8Array(e.target.result);
+                analyzeBytes(bytes, file.name);
+            };
+            reader.readAsArrayBuffer(file);
+        }
+
+        function computeRolandChecksum(bytes, startIndex, endIndex) {
+            let sum = 0;
+            for (let i = startIndex; i <= endIndex; i++) {
+                sum += bytes[i];
+            }
+            return (128 - (sum % 128)) & 0x7F;
+        }
+
+        function computeYamahaChecksum(bytes, startIndex, endIndex) {
+            let sum = 0;
+            for (let i = startIndex; i <= endIndex; i++) {
+                sum += bytes[i];
+            }
+            return (-sum) & 0x7F;
+        }
+
+        function computeKawaiChecksum(bytes, startIndex, endIndex) {
+            let sum = 0;
+            for (let i = startIndex; i <= endIndex; i++) {
+                sum += bytes[i];
+            }
+            return (sum + 0xA5) & 0x7F;
+        }
+
+        function analyzeBytes(bytes, filename) {
+            currentRawBytes = new Uint8Array(bytes);
+            diagSize.textContent = `${bytes.length.toLocaleString()} Bytes`;
+            fixBanner.classList.add('hidden');
+
+            let packets = [];
+            let inPacket = false;
+            let startIdx = 0;
+
+            for (let i = 0; i < bytes.length; i++) {
+                if (bytes[i] === 0xF0) {
+                    inPacket = true;
+                    startIdx = i;
+                } else if (bytes[i] === 0xF7 && inPacket) {
+                    packets.push(bytes.slice(startIdx, i + 1));
+                    inPacket = false;
+                }
+            }
+
+            if (packets.length === 0) {
+                statusPill.className = "px-3 py-1 rounded-full text-2xs font-mono font-bold bg-rose-950/60 text-rose-400 border border-rose-800";
+                statusPill.textContent = "INVALID SYSEX (NO F0..F7)";
+                diagMfg.textContent = "Unknown";
+                diagPackets.textContent = "0";
+                diagSpec.textContent = "N/A";
+                cksumDot.className = "h-2 w-2 rounded-full bg-rose-500";
+                cksumDetails.innerHTML = '<span class="text-rose-400">File lacks standard MIDI F0 start or F7 end byte.</span>';
+                patchesTbody.innerHTML = '<tr><td colspan="6" class="py-8 text-center text-rose-500 font-pixel uppercase text-3xs">Invalid SysEx stream</td></tr>';
+                btnDownloadAll.disabled = true;
+                btnTransmit.disabled = true;
+                return;
+            }
+
+            diagPackets.textContent = packets.length;
+            parsedPackets = [];
+
+            const firstPkt = packets[0];
+            const mfgId = firstPkt[1];
+            const mfgName = MFG_NAMES[mfgId] || `Custom (0x${mfgId.toString(16).toUpperCase()})`;
+            diagMfg.textContent = mfgName;
+
+            let hasCorruptedChecksum = false;
+            let corruptedPktInfo = null;
+
+            const isDx7Bulk = (mfgId === 0x43 && packets.length === 1 && firstPkt.length === 4104);
+
+            if (isDx7Bulk) {
+                diagSpec.textContent = "Yamaha 7-bit Two's Complement";
+                
+                const expectedCksum = computeYamahaChecksum(firstPkt, 6, 4101);
+                const actualCksum = firstPkt[4102];
+                const cksumOk = (expectedCksum === actualCksum);
+
+                if (cksumOk) {
+                    statusPill.className = "px-3 py-1 rounded-full text-2xs font-mono font-bold bg-emerald-950/60 text-emerald-400 border border-emerald-800";
+                    statusPill.textContent = "VERIFIED YAMAHA BULK";
+                    cksumDot.className = "h-2 w-2 rounded-full bg-emerald-400";
+                    cksumDetails.innerHTML = `<span class="text-emerald-400 font-bold">OK: 0x${actualCksum.toString(16).padStart(2, '0').toUpperCase()}</span> (32-voice bulk sum verified)`;
+                } else {
+                    hasCorruptedChecksum = true;
+                    corruptedPktInfo = { packetIndex: 0, actual: actualCksum, expected: expectedCksum, byteIndex: 4102 };
+                    statusPill.className = "px-3 py-1 rounded-full text-2xs font-mono font-bold bg-rose-950/60 text-rose-400 border border-rose-800";
+                    statusPill.textContent = "CORRUPTED BULK CHECKSUM";
+                    cksumDot.className = "h-2 w-2 rounded-full bg-rose-500";
+                    cksumDetails.innerHTML = `<span class="text-rose-400 font-bold">MISMATCH: Found 0x${actualCksum.toString(16).padStart(2, '0').toUpperCase()}, Expected 0x${expectedCksum.toString(16).padStart(2, '0').toUpperCase()}</span>`;
+                    fixBanner.classList.remove('hidden');
+                }
+
+                for (let v = 0; v < 32; v++) {
+                    const voiceOffset = 6 + (v * 128);
+                    const rawVoiceData = firstPkt.slice(voiceOffset, voiceOffset + 128);
+
+                    let patchName = "";
+                    for (let c = 118; c < 128; c++) {
+                        const ch = rawVoiceData[c];
+                        patchName += (ch >= 32 && ch <= 126) ? String.fromCharCode(ch) : " ";
+                    }
+                    patchName = patchName.trim() || `VOICE_${v+1}`;
+
+                    const singleVoiceBytes = new Uint8Array(163);
+                    singleVoiceBytes[0] = 0xF0;
+                    singleVoiceBytes[1] = 0x43;
+                    singleVoiceBytes[2] = 0x00;
+                    singleVoiceBytes[3] = 0x00;
+                    singleVoiceBytes[4] = 0x01;
+                    singleVoiceBytes[5] = 0x1B;
+                    singleVoiceBytes.set(rawVoiceData, 6);
+                    
+                    const vCksum = computeYamahaChecksum(singleVoiceBytes, 6, 133);
+                    singleVoiceBytes[134] = vCksum;
+                    singleVoiceBytes[135] = 0xF7;
+
+                    const trimmedSingle = singleVoiceBytes.slice(0, 136);
+
+                    parsedPackets.push({
+                        index: v + 1,
+                        name: patchName,
+                        mfg: "Yamaha",
+                        bytes: trimmedSingle,
+                        checksumStatus: "OK (1-Voice Wrapped)",
+                        checksumOk: true
+                    });
+                }
+
+            } else {
+                for (let p = 0; p < packets.length; p++) {
+                    const pkt = packets[p];
+                    const pMfgId = pkt[1];
+                    const pMfg = MFG_NAMES[pMfgId] || `Mfg 0x${pMfgId.toString(16).toUpperCase()}`;
+
+                    let cksumStatus = "No Checksum Spec";
+                    let isOk = true;
+
+                    if (pMfgId === 0x41 && pkt.length >= 10) {
+                        diagSpec.textContent = "Roland (128 - Sum%128) & 0x7F";
+                        const actual = pkt[pkt.length - 2];
+                        const expected = computeRolandChecksum(pkt, 5, pkt.length - 3);
+                        if (actual === expected) {
+                            cksumStatus = `OK (0x${actual.toString(16).padStart(2,'0').toUpperCase()})`;
+                        } else {
+                            cksumStatus = `ERR (Got 0x${actual.toString(16).padStart(2,'0').toUpperCase()}, Exp 0x${expected.toString(16).padStart(2,'0').toUpperCase()})`;
+                            isOk = false;
+                            hasCorruptedChecksum = true;
+                            corruptedPktInfo = { packetIndex: p, actual, expected, byteIndex: pkt.length - 2 };
+                        }
+                    } else if (pMfgId === 0x43 && pkt.length >= 8) {
+                        diagSpec.textContent = "Yamaha 7-bit Two's Complement";
+                        const actual = pkt[pkt.length - 2];
+                        const expected = computeYamahaChecksum(pkt, 6, pkt.length - 3);
+                        if (actual === expected) {
+                            cksumStatus = `OK (0x${actual.toString(16).padStart(2,'0').toUpperCase()})`;
+                        } else {
+                            cksumStatus = `ERR (Got 0x${actual.toString(16).padStart(2,'0').toUpperCase()}, Exp 0x${expected.toString(16).padStart(2,'0').toUpperCase()})`;
+                            isOk = false;
+                            hasCorruptedChecksum = true;
+                            corruptedPktInfo = { packetIndex: p, actual, expected, byteIndex: pkt.length - 2 };
+                        }
+                    } else if (pMfgId === 0x10 && pkt.length >= 8) {
+                        diagSpec.textContent = "Kawai Additive (Sum + 0xA5) & 0x7F";
+                        const actual = pkt[pkt.length - 2];
+                        const expected = computeKawaiChecksum(pkt, 4, pkt.length - 3);
+                        if (actual === expected) {
+                            cksumStatus = `OK (0x${actual.toString(16).padStart(2,'0').toUpperCase()})`;
+                        } else {
+                            cksumStatus = `ERR (Got 0x${actual.toString(16).padStart(2,'0').toUpperCase()}, Exp 0x${expected.toString(16).padStart(2,'0').toUpperCase()})`;
+                            isOk = false;
+                            hasCorruptedChecksum = true;
+                            corruptedPktInfo = { packetIndex: p, actual, expected, byteIndex: pkt.length - 2 };
+                        }
+                    }
+
+                    let extractedName = "";
+                    for (let c = 0; c < pkt.length - 1; c++) {
+                        if (pkt[c] >= 32 && pkt[c] <= 126 && pkt[c+1] >= 32 && pkt[c+1] <= 126 && pkt[c+2] >= 32 && pkt[c+2] <= 126) {
+                            let s = "";
+                            let k = c;
+                            while (k < pkt.length && pkt[k] >= 32 && pkt[k] <= 126 && s.length < 16) {
+                                s += String.fromCharCode(pkt[k]);
+                                k++;
+                            }
+                            if (s.trim().length >= 4) {
+                                extractedName = s.trim();
+                                break;
+                            }
+                        }
+                    }
+
+                    parsedPackets.push({
+                        index: p + 1,
+                        name: extractedName || `Packet ${p + 1}`,
+                        mfg: pMfg,
+                        bytes: pkt,
+                        checksumStatus: cksumStatus,
+                        checksumOk: isOk
+                    });
+                }
+
+                if (hasCorruptedChecksum) {
+                    statusPill.className = "px-3 py-1 rounded-full text-2xs font-mono font-bold bg-rose-950/60 text-rose-400 border border-rose-800";
+                    statusPill.textContent = "CORRUPTED CHECKSUM DETECTED";
+                    cksumDot.className = "h-2 w-2 rounded-full bg-rose-500";
+                    cksumDetails.innerHTML = `<span class="text-rose-400 font-bold">MISMATCH IN PACKET #${corruptedPktInfo.packetIndex + 1}: Found 0x${corruptedPktInfo.actual.toString(16).padStart(2, '0').toUpperCase()}, Expected 0x${corruptedPktInfo.expected.toString(16).padStart(2, '0').toUpperCase()}</span>`;
+                    fixBanner.classList.remove('hidden');
+                } else {
+                    statusPill.className = "px-3 py-1 rounded-full text-2xs font-mono font-bold bg-emerald-950/60 text-emerald-400 border border-emerald-800";
+                    statusPill.textContent = "CHECKSUM VERIFIED";
+                    cksumDot.className = "h-2 w-2 rounded-full bg-emerald-400";
+                    cksumDetails.innerHTML = '<span class="text-emerald-400 font-bold">ALL PACKETS PASSED CHECKSUM INTEGRITY</span>';
+                }
+            }
+
+            renderPacketsTable();
+            btnDownloadAll.disabled = false;
+            btnTransmit.disabled = (midiOutputs.length === 0);
+        }
+
+        function renderPacketsTable() {
+            patchesTbody.innerHTML = "";
+            parsedPackets.forEach((p, idx) => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-zinc-900/40 transition-colors";
+
+                const cksumBadge = p.checksumOk 
+                    ? `<span class="text-emerald-400 font-bold">${p.checksumStatus}</span>` 
+                    : `<span class="text-rose-400 font-bold">${p.checksumStatus}</span>`;
+
+                tr.innerHTML = `
+                    <td class="py-2.5 px-4 text-zinc-500">${p.index.toString().padStart(2, '0')}</td>
+                    <td class="py-2.5 px-4 font-bold text-white tracking-wide truncate max-w-[180px]">${p.name}</td>
+                    <td class="py-2.5 px-4 text-zinc-400">${p.mfg}</td>
+                    <td class="py-2.5 px-4 text-zinc-400">${p.bytes.length} B</td>
+                    <td class="py-2.5 px-4">${cksumBadge}</td>
+                    <td class="py-2.5 px-4 text-right">
+                        <button onclick="downloadSingle(${idx})" class="text-teal-400 hover:text-teal-300 font-pixel text-3xs uppercase tracking-wider px-2 py-1 bg-teal-950/30 hover:bg-teal-900/50 border border-teal-500/20 rounded transition-all">
+                            .SYX
+                        </button>
+                    </td>
+                `;
+                patchesTbody.appendChild(tr);
+            });
+        }
+
+        function downloadSingle(index) {
+            const pkt = parsedPackets[index];
+            if (!pkt) return;
+
+            const cleanName = pkt.name.replace(/[^a-zA-Z0-9_-]/g, '_').toLowerCase();
+            const filename = `${String(pkt.index).padStart(2, '0')}_${cleanName}.syx`;
+
+            const blob = new Blob([pkt.bytes], { type: 'application/octet-stream' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function fixAndDownload() {
+            if (!currentRawBytes) return;
+
+            let repaired = new Uint8Array(currentRawBytes);
+
+            let inPacket = false;
+            let startIdx = 0;
+
+            for (let i = 0; i < repaired.length; i++) {
+                if (repaired[i] === 0xF0) {
+                    inPacket = true;
+                    startIdx = i;
+                } else if (repaired[i] === 0xF7 && inPacket) {
+                    const pktLen = i - startIdx + 1;
+                    const mfgId = repaired[startIdx + 1];
+
+                    if (mfgId === 0x43 && pktLen === 4104) {
+                        const correct = computeYamahaChecksum(repaired, startIdx + 6, startIdx + 4101);
+                        repaired[startIdx + 4102] = correct;
+                    } else if (mfgId === 0x41 && pktLen >= 10) {
+                        const correct = computeRolandChecksum(repaired, startIdx + 5, i - 2);
+                        repaired[i - 1] = correct;
+                    } else if (mfgId === 0x43 && pktLen >= 8) {
+                        const correct = computeYamahaChecksum(repaired, startIdx + 6, i - 2);
+                        repaired[i - 1] = correct;
+                    } else if (mfgId === 0x10 && pktLen >= 8) {
+                        const correct = computeKawaiChecksum(repaired, startIdx + 4, i - 2);
+                        repaired[i - 1] = correct;
+                    }
+
+                    inPacket = false;
+                }
+            }
+
+            const blob = new Blob([repaired], { type: 'application/octet-stream' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `repaired_${currentFilename}`;
+            a.click();
+            URL.revokeObjectURL(url);
+
+            analyzeBytes(repaired, `repaired_${currentFilename}`);
+        }
+
+        function createZipArchive(files) {
+            const crcTable = new Uint32Array(256);
+            for (let i = 0; i < 256; i++) {
+                let c = i;
+                for (let k = 0; k < 8; k++) {
+                    c = ((c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1));
+                }
+                crcTable[i] = c;
+            }
+
+            function calcCrc32(bytes) {
+                let crc = 0 ^ (-1);
+                for (let i = 0; i < bytes.length; i++) {
+                    crc = (crc >>> 8) ^ crcTable[(crc ^ bytes[i]) & 0xFF];
+                }
+                return (crc ^ (-1)) >>> 0;
+            }
+
+            let localHeaders = [];
+            let centralHeaders = [];
+            let offset = 0;
+
+            for (const file of files) {
+                const nameBytes = new TextEncoder().encode(file.name);
+                const fileData = file.data;
+                const crc = calcCrc32(fileData);
+                const size = fileData.length;
+
+                const lh = new Uint8Array(30 + nameBytes.length);
+                const lv = new DataView(lh.buffer);
+                lv.setUint32(0, 0x04034b50, true);
+                lv.setUint16(4, 10, true);
+                lv.setUint16(6, 0, true);
+                lv.setUint16(8, 0, true);
+                lv.setUint16(10, 0, true);
+                lv.setUint16(12, 0, true);
+                lv.setUint32(14, crc, true);
+                lv.setUint32(18, size, true);
+                lv.setUint32(22, size, true);
+                lv.setUint16(26, nameBytes.length, true);
+                lv.setUint16(28, 0, true);
+                lh.set(nameBytes, 30);
+
+                localHeaders.push(lh);
+                localHeaders.push(fileData);
+
+                const ch = new Uint8Array(46 + nameBytes.length);
+                const cv = new DataView(ch.buffer);
+                cv.setUint32(0, 0x02014b50, true);
+                cv.setUint16(4, 20, true);
+                cv.setUint16(6, 10, true);
+                cv.setUint16(8, 0, true);
+                cv.setUint16(10, 0, true);
+                cv.setUint16(12, 0, true);
+                cv.setUint16(14, 0, true);
+                cv.setUint32(16, crc, true);
+                cv.setUint32(20, size, true);
+                cv.setUint32(24, size, true);
+                cv.setUint16(28, nameBytes.length, true);
+                cv.setUint16(30, 0, true);
+                cv.setUint16(32, 0, true);
+                cv.setUint16(34, 0, true);
+                cv.setUint16(36, 0, true);
+                cv.setUint32(38, 0, true);
+                cv.setUint32(42, offset, true);
+                ch.set(nameBytes, 46);
+
+                centralHeaders.push(ch);
+
+                offset += lh.length + fileData.length;
+            }
+
+            const centralDirOffset = offset;
+            let centralDirSize = 0;
+            centralHeaders.forEach(ch => centralDirSize += ch.length);
+
+            const eocd = new Uint8Array(22);
+            const ev = new DataView(eocd.buffer);
+            ev.setUint32(0, 0x06054b50, true);
+            ev.setUint16(4, 0, true);
+            ev.setUint16(6, 0, true);
+            ev.setUint16(8, files.length, true);
+            ev.setUint16(10, files.length, true);
+            ev.setUint32(12, centralDirSize, true);
+            ev.setUint32(16, centralDirOffset, true);
+            ev.setUint16(20, 0, true);
+
+            const totalParts = [...localHeaders, ...centralHeaders, eocd];
+            return new Blob(totalParts, { type: 'application/zip' });
+        }
+
+        function downloadAllZip() {
+            if (parsedPackets.length === 0) return;
+
+            const files = parsedPackets.map(p => {
+                const cleanName = p.name.replace(/[^a-zA-Z0-9_-]/g, '_').toLowerCase();
+                return {
+                    name: `${String(p.index).padStart(2, '0')}_${cleanName}.syx`,
+                    data: p.bytes
+                };
+            });
+
+            const zipBlob = createZipArchive(files);
+            const url = URL.createObjectURL(zipBlob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${currentFilename.replace(/\.[^/.]+$/, "")}_split_patches.zip`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        if (navigator.requestMIDIAccess) {
+            navigator.requestMIDIAccess({ sysex: true })
+                .then(midiAccess => {
+                    updateMidiOutputs(midiAccess);
+                    midiAccess.onstatechange = () => updateMidiOutputs(midiAccess);
+                })
+                .catch(err => {
+                    midiPortBadge.className = "px-2.5 py-1 rounded bg-rose-950/50 text-rose-400 border border-rose-800 font-mono text-3xs uppercase";
+                    midiPortBadge.textContent = "Web MIDI SysEx Permission Required";
+                });
+        } else {
+            midiPortBadge.className = "px-2.5 py-1 rounded bg-zinc-900 text-zinc-600 border border-zinc-800 font-mono text-3xs uppercase";
+            midiPortBadge.textContent = "Web MIDI Not Supported (Use Chrome/Edge)";
+        }
+
+        function updateMidiOutputs(midiAccess) {
+            midiOutputs = Array.from(midiAccess.outputs.values());
+            midiSelect.innerHTML = "";
+
+            if (midiOutputs.length === 0) {
+                midiSelect.innerHTML = '<option value="">No MIDI output interfaces found</option>';
+                midiPortBadge.className = "px-2.5 py-1 rounded bg-amber-950/40 text-amber-400 border border-amber-800 font-mono text-3xs uppercase";
+                midiPortBadge.textContent = "Connect USB MIDI Interface";
+                btnTransmit.disabled = true;
+                return;
+            }
+
+            midiOutputs.forEach((out, idx) => {
+                const opt = document.createElement('option');
+                opt.value = idx;
+                opt.textContent = `${out.name} (${out.manufacturer || 'Generic'})`;
+                midiSelect.appendChild(opt);
+            });
+
+            midiPortBadge.className = "px-2.5 py-1 rounded bg-emerald-950/40 text-emerald-400 border border-emerald-800 font-mono text-3xs uppercase";
+            midiPortBadge.textContent = `${midiOutputs.length} MIDI Interface(s) Online`;
+            
+            if (parsedPackets.length > 0) {
+                btnTransmit.disabled = false;
+            }
+        }
+
+        async function transmitPacedMidi() {
+            if (isTransmitting || parsedPackets.length === 0 || midiOutputs.length === 0) return;
+
+            const selectedIdx = parseInt(midiSelect.value);
+            const outputPort = midiOutputs[selectedIdx];
+            if (!outputPort) {
+                alert("Please select a valid MIDI output interface.");
+                return;
+            }
+
+            const delayMs = parseInt(delaySelect.value) || 50;
+
+            isTransmitting = true;
+            shouldAbortTransmission = false;
+            btnTransmit.disabled = true;
+            progressContainer.classList.remove('hidden');
+
+            const totalPackets = parsedPackets.length;
+
+            for (let i = 0; i < totalPackets; i++) {
+                if (shouldAbortTransmission) {
+                    progressLabel.textContent = "Transmission aborted by user.";
+                    break;
+                }
+
+                const pkt = parsedPackets[i];
+                progressLabel.textContent = `Transmitting Packet ${i + 1} / ${totalPackets}: ${pkt.name}`;
+                const pct = Math.round(((i + 1) / totalPackets) * 100);
+                progressBar.style.width = `${pct}%`;
+                progressPercent.textContent = `${pct}%`;
+
+                try {
+                    outputPort.send(pkt.bytes);
+                } catch (e) {
+                    console.error("SysEx send error:", e);
+                }
+
+                await new Promise(resolve => setTimeout(resolve, delayMs));
+            }
+
+            if (!shouldAbortTransmission) {
+                progressLabel.textContent = `Completed! ${totalPackets} packets transmitted successfully with ${delayMs}ms pacing.`;
+            }
+
+            isTransmitting = false;
+            btnTransmit.disabled = false;
+        }
+
+        function abortTransmission() {
+            shouldAbortTransmission = true;
+        }
+
+        function loadSample(type) {
+            if (type === 'dx7_bulk') {
+                const b = new Uint8Array(4104);
+                b[0] = 0xF0; b[1] = 0x43; b[2] = 0x00; b[3] = 0x09; b[4] = 0x20; b[5] = 0x00;
+                
+                const names = [
+                    "SOLID BASS", "E.PIANO 1 ", "TUB BELL  ", "SYN-LEAD 1", "MARIMBA   ", "BRASS 1   ", "STRINGS 1 ", "OPERA     ",
+                    "GUITAR 1  ", "FLUTE 1   ", "CELESTA 1 ", "CLAV 1    ", "KOTO      ", "HARMONICA ", "ORGAN 1   ", "LASER GUN ",
+                    "E.PIANO 2 ", "CHIME 2   ", "BASS 2    ", "SYN-LEAD 2", "XYLOPHONE ", "BRASS 2   ", "STRINGS 2 ", "SOPRANO   ",
+                    "GUITAR 2  ", "OBOE 1    ", "HARPSICH 1", "WIND CHIME", "SHAKUHACHI", "ACCORDION ", "ORGAN 2   ", "HELICOPTER"
+                ];
+
+                for (let i = 0; i < 32; i++) {
+                    const offset = 6 + (i * 128);
+                    const n = names[i].padEnd(10, ' ');
+                    for (let c = 0; c < 10; c++) b[offset + 118 + c] = n.charCodeAt(c);
+                }
+
+                let sum = 0;
+                for (let s = 6; s <= 4101; s++) sum += b[s];
+                b[4102] = (-sum) & 0x7F;
+                b[4103] = 0xF7;
+
+                analyzeBytes(b, "DX7_Factory_ROM1_Bulk.syx");
+
+            } else if (type === 'roland_bad_cksum') {
+                const b = new Uint8Array(32);
+                b[0] = 0xF0;
+                b[1] = 0x41;
+                b[2] = 0x10;
+                b[3] = 0x14;
+                b[4] = 0x12;
+                b[5] = 0x00; b[6] = 0x01; b[7] = 0x00;
+                
+                const name = "FANTASIA";
+                for (let i = 0; i < name.length; i++) b[8 + i] = name.charCodeAt(i);
+                
+                b[30] = 0x7F;
+                b[31] = 0xF7;
+
+                analyzeBytes(b, "D50_Fantasia_BadChecksum.syx");
+
+            } else if (type === 'oberheim_multi') {
+                let all = [];
+                for (let i = 0; i < 6; i++) {
+                    const pkt = new Uint8Array(20);
+                    pkt[0] = 0xF0;
+                    pkt[1] = 0x18;
+                    pkt[2] = 0x08;
+                    pkt[3] = 0x01;
+                    pkt[4] = i;
+                    const name = `M1000_${i+1}`;
+                    for (let c = 0; c < name.length; c++) pkt[5 + c] = name.charCodeAt(c);
+                    pkt[19] = 0xF7;
+                    all.push(...pkt);
+                }
+                analyzeBytes(new Uint8Array(all), "Matrix1000_6_Patches.syx");
+
+            } else if (type === 'kawai_k3') {
+                const b = new Uint8Array(48);
+                b[0] = 0xF0;
+                b[1] = 0x10;
+                b[2] = 0x00;
+                b[3] = 0x20;
+                b[4] = 0x00;
+                const name = "DIGIWAVE";
+                for (let c = 0; c < name.length; c++) b[5 + c] = name.charCodeAt(c);
+                
+                let sum = 0;
+                for (let s = 4; s <= 45; s++) sum += b[s];
+                b[46] = (sum + 0xA5) & 0x7F;
+                b[47] = 0xF7;
+
+                analyzeBytes(b, "Kawai_K3_Digiwave.syx");
+            }
+        }
+    </script>
+    {% include 'visitor_avatar.html' %}
+    {% include "mobile_nav.html" %}
+</body>
+
+</html>
