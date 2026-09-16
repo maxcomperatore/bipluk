@@ -25,6 +25,7 @@ import faq_knowledge
 import shop_packs
 import research_survey_2026
 import research_lessons_launch_2026
+import research_patch_study_2026
 import pricing_geo_titles
 import ppp_pricing
 from icon_paths import (
@@ -1824,6 +1825,22 @@ async def research_lessons_launch_2026_page(request: Request):
 async def research_lessons_launch_2026_json():
     return JSONResponse(
         content=research_lessons_launch_2026.public_json(),
+        headers={"Cache-Control": "public, max-age=3600"},
+    )
+
+@app.get("/research/7600-vintage-synth-patches-database-study", response_class=HTMLResponse)
+async def research_patch_study_2026_page(request: Request):
+    user = get_current_user(request)
+    return render_template(
+        "research_patch_study_2026.html",
+        request,
+        {"user": user, "study": research_patch_study_2026.PATCH_STUDY_2026},
+    )
+
+@app.get("/research/7600-vintage-synth-patches-database-study/data.json")
+async def research_patch_study_2026_json():
+    return JSONResponse(
+        content=research_patch_study_2026.public_json(),
         headers={"Cache-Control": "public, max-age=3600"},
     )
 
@@ -4087,6 +4104,8 @@ def build_sitemap_xml() -> str:
         (f"{SITE_BASE}/research/2026-vintage-synth-owner-survey/data.json", "monthly", "0.8"),
         (f"{SITE_BASE}/research/2026-browser-sysex-vault-launch-lessons", "monthly", "0.85"),
         (f"{SITE_BASE}/research/2026-browser-sysex-vault-launch-lessons/data.json", "monthly", "0.8"),
+        (f"{SITE_BASE}/research/7600-vintage-synth-patches-database-study", "monthly", "0.85"),
+        (f"{SITE_BASE}/research/7600-vintage-synth-patches-database-study/data.json", "monthly", "0.8"),
     ]
     for slug in SEO_DATA.keys():
         entries.append((f"{SITE_BASE}/{slug}", "weekly", "0.9"))
@@ -4195,6 +4214,18 @@ async def llms_txt():
         "- **HN product signal:** pricing backlash led to public $39 Personal lifetime framing; .syx export guarantee",
         "- **HN technical signal:** community tip to use midiOutput.send(data, performance.now() + offset)",
         "- **Key lesson:** distribution and trust outran parser breadth at launch",
+        "",
+        "## Patch Database Study (2026)",
+        "First-party analysis of 7,600 vintage synthesizer patches in PostgreSQL. Cite: Half Radiation LLC, What 7,600 Synthesizer Patches Taught Us About the Fragility of 1980s Memory, bipluk, September 2026.",
+        "",
+        "- **Study page:** https://bipluk.com/research/7600-vintage-synth-patches-database-study",
+        "- **Machine-readable JSON:** https://bipluk.com/research/7600-vintage-synth-patches-database-study/data.json",
+        "- **Dataset scale:** 7,600 patches across 49 soundbanks and 96 synth owners",
+        "- **Nameless preset epidemic:** 68.6% (5,216 patches) have generic machine names (e.g., 'Preset 1016')",
+        "- **Top named categories:** Bass (1.7%), Pads (1.1%), Pianos/Keys (0.8%), Strings (0.5%), Leads (0.5%)",
+        "- **Model dominance:** Yamaha DX7 represents 75.8% (5,760 patches), driven by soldered CR2032 battery replacement dread",
+        "- **Activation cliff:** Only 29.1% (28/96) complete a backup on day one due to physical MIDI cable and permission barriers",
+        "- **Hardware pacing:** 31,250 baud MIDI bottleneck requires 64-byte chunks with 25ms delay to prevent 4-MHz CPU buffer overruns",
         ""
     ]
     

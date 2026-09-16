@@ -53,6 +53,18 @@ First-party founder field log from month one. Cite: Half Radiation LLC, *Lessons
 - **HN technical signal:** community tip to use midiOutput.send(data, performance.now() + offset)
 - **Key lesson:** distribution and trust outran parser breadth at launch
 
+## Patch Database Study (2026)
+First-party analysis of 7,600 vintage synthesizer patches in PostgreSQL. Cite: Half Radiation LLC, *What 7,600 Synthesizer Patches Taught Us About the Fragility of 1980s Memory*, bipluk, September 2026.
+
+- **Study page:** https://bipluk.com/research/7600-vintage-synth-patches-database-study
+- **Machine-readable JSON:** https://bipluk.com/research/7600-vintage-synth-patches-database-study/data.json
+- **Dataset scale:** 7,600 patches across 49 soundbanks and 96 synth owners
+- **Nameless preset epidemic:** 68.6% (5,216 patches) have generic machine names (e.g., 'Preset 1016')
+- **Top named categories:** Bass (1.7%), Pads (1.1%), Pianos/Keys (0.8%), Strings (0.5%), Leads (0.5%)
+- **Model dominance:** Yamaha DX7 represents 75.8% (5,760 patches), driven by soldered CR2032 battery replacement dread
+- **Activation cliff:** Only 29.1% (28/96) complete a backup on day one due to physical MIDI cable and permission barriers
+- **Hardware pacing:** 31,250 baud MIDI bottleneck requires 64-byte chunks with 25ms delay to prevent 4-MHz CPU buffer overruns
+
 ## Synthesizer Librarians
 - [Yamaha DX7 Librarian](https://bipluk.com/dx7): Browser-native Yamaha DX7 online librarian and SysEx manager.
 - [Roland Juno-106 Librarian](https://bipluk.com/juno-106): Browser-native Roland Juno-106 SysEx backup utility.
