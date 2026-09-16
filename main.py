@@ -1140,7 +1140,7 @@ def send_email_via_resend(
         headers={
             "Authorization": f"Bearer {api_key}",
             "Content-Type": "application/json",
-            "User-Agent": "bipluk/1.0 (resend-api)",
+            "User-Agent": "bipluk-marketing/1.0",
             "Accept": "application/json",
         },
         method="POST",
@@ -1571,7 +1571,7 @@ async def api_send_studio_link(request: Request):
         print(f"Error saving subscriber in send_studio_link: {e}")
 
     # Send link email
-    subject = "🎹 Your Bipluk Studio Link (Open on your DAW computer)"
+    subject = "🎹 Your Bipluk Link"
     html_content = f"""
     <div style="background-color: #000000; padding: 40px 20px; font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Display', 'Helvetica Neue', Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased;">
         <div style="max-width: 520px; margin: 0 auto; background-color: #121215; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 20px; padding: 36px 32px; box-shadow: 0 20px 48px rgba(0, 0, 0, 0.7);">
@@ -1605,9 +1605,11 @@ async def api_send_studio_link(request: Request):
     text_content = f"Here is your link to open Bipluk on your studio computer: https://bipluk.com/?ref=mobile_reminder&email={email}\n\nPlug in your USB-MIDI cable to back up your hardware synth patches in 1 click."
 
     try:
-        send_email_via_resend(email, subject, text_content, html=html_content)
+        ok, err = send_email_via_resend(email, subject, text_content, html=html_content)
+        if not ok:
+            logger.error(f"Failed to send studio link email to {email}: {err}")
     except Exception as e:
-        print(f"Error sending email in send_studio_link: {e}")
+        logger.error(f"Error sending email in send_studio_link: {e}")
 
     return JSONResponse({"ok": True, "message": "Link sent! Check your inbox."})
 
