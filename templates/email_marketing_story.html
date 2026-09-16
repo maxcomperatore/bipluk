@@ -51,7 +51,7 @@
                     <tr>
                         <td style="padding: 32px;">
                             <h1 style="color: #ffffff; font-size: 21px; font-weight: 600; line-height: 28px; margin: 0 0 16px 0; letter-spacing: -0.02em;">
-                                {{ campaign.headline }}
+                                {{ campaign.headline | safe }}
                             </h1>
 
                             <p style="font-size: 14px; line-height: 22px; margin: 0 0 16px 0; color: #a1a1a6;">
@@ -66,14 +66,14 @@
                             <div style="background-color: #18181c; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 14px; padding: 18px; margin-bottom: 24px;">
                                 <span style="display: inline-block; font-size: 11px; font-family: -apple-system-ui-monospace, 'SF Mono', 'Geist Mono', monospace; color: #ffffff; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.12); padding: 2px 9px; border-radius: 9999px; margin-bottom: 8px;">Technical Reality</span>
                                 <p style="font-size: 13px; line-height: 21px; color: #e4e4e7; margin: 0;">
-                                    {{ campaign.hard_reality | trim }}
+                                    {{ campaign.hard_reality | trim | safe }}
                                 </p>
                             </div>
 
                             <!-- Call to Action Section -->
                             <div style="margin-bottom: 28px;">
                                 <p style="font-size: 14px; line-height: 23px; color: #a1a1a6; margin: 0 0 18px 0;">
-                                    {{ campaign.call_to_action_text | trim }}
+                                    {{ campaign.call_to_action_text | trim | safe }}
                                 </p>
 
                                 <table border="0" cellpadding="0" cellspacing="0" style="width: 100%;">

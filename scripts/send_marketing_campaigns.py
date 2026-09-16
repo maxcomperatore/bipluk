@@ -102,9 +102,21 @@ def render_story_template(campaign: dict, user: dict) -> str:
     email_str = user.get("email", "")
     first_name = extract_first_name(email_str)
 
+    # Convert Markdown **bold** syntax to rich HTML <strong> tags
+    formatted_campaign = {}
+    for k, v in campaign.items():
+        if isinstance(v, str):
+            formatted_campaign[k] = re.sub(
+                r'\*\*(.*?)\*\*',
+                r'<strong style="color: #ffffff; font-weight: 600;">\1</strong>',
+                v
+            )
+        else:
+            formatted_campaign[k] = v
+
     template = Template(html_content)
     return template.render(
-        campaign=campaign,
+        campaign=formatted_campaign,
         first_name=first_name,
         email=email_str
     )
