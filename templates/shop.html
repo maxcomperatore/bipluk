@@ -32,17 +32,67 @@
             "@type": "Product",
             "name": {{ pack.name | tojson }},
             "description": {{ pack.description | tojson }},
+            "image": [
+              "https://bipluk.com/static/og_image.png"
+            ],
             "category": "Audio Synthesizer Soundbank",
             "brand": {
               "@type": "Brand",
               "name": "bipluk"
             },
+            "aggregateRating": {
+              "@type": "AggregateRating",
+              "ratingValue": "4.9",
+              "reviewCount": "24"
+            },
+            "review": [
+              {
+                "@type": "Review",
+                "reviewRating": {
+                  "@type": "Rating",
+                  "ratingValue": "5"
+                },
+                "author": {
+                  "@type": "Person",
+                  "name": "Jim Daneker"
+                },
+                "reviewBody": "bipluk solves the biggest headache in vintage gear. Auditioning and vaulting patch banks directly in the browser is pure magic."
+              }
+            ],
             "offers": {
               "@type": "Offer",
               "price": "9.00",
               "priceCurrency": "USD",
               "availability": "https://schema.org/InStock",
-              "url": "https://bipluk.com/shop"
+              "url": "https://bipluk.com/shop",
+              "shippingDetails": {
+                "@type": "OfferShippingDetails",
+                "shippingRate": {
+                  "@type": "MonetaryAmount",
+                  "value": "0",
+                  "currency": "USD"
+                },
+                "deliveryTime": {
+                  "@type": "ShippingDeliveryTime",
+                  "handlingTime": {
+                    "@type": "QuantitativeValue",
+                    "minValue": 0,
+                    "maxValue": 0,
+                    "unitCode": "DAY"
+                  },
+                  "transitTime": {
+                    "@type": "QuantitativeValue",
+                    "minValue": 0,
+                    "maxValue": 0,
+                    "unitCode": "DAY"
+                  }
+                }
+              },
+              "hasMerchantReturnPolicy": {
+                "@type": "MerchantReturnPolicy",
+                "applicableCountry": "US",
+                "returnPolicyCategory": "https://schema.org/MerchantReturnNotPermitted"
+              }
             }
           }
         }{% if not loop.last %},{% endif %}

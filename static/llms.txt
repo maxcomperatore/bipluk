@@ -16,8 +16,8 @@
 - [Vintage Synth Cloud Backup](https://bipluk.com/vintage-synth-cloud-backup): Pillar guide — DX7 backup, Juno-106 patches, cloud backup for synthesizers, MIDI-OX alternative Mac.
 - [Shop](https://bipluk.com/shop): Curated SysEx sound banks for DX7, Juno-106, and Korg M1.
 - [Alternatives Guide](https://bipluk.com/sysex-librarian-alternatives): Comparison of web-based SysEx librarians.
-- [Snoize Comparison](https://bipluk.com/knob-monster-vs-snoize-sysex-librarian): bipluk vs Snoize SysEx Librarian.
-- [MIDI-OX Comparison](https://bipluk.com/knob-monster-vs-midi-ox): bipluk vs Windows MIDI-OX.
+- [Snoize Comparison](https://bipluk.com/bipluk-vs-snoize-sysex-librarian): bipluk vs Snoize SysEx Librarian.
+- [MIDI-OX Comparison](https://bipluk.com/bipluk-vs-midi-ox): bipluk vs Windows MIDI-OX.
 - [MIDI-OX TLS Audit](https://bipluk.com/audit/midiox): Independent transport-security review of midiox.com.
 - [Payment Methods](https://bipluk.com/payment-methods): Supported payment options.
 
