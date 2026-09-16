@@ -649,6 +649,8 @@ def create_subscriber(email: str) -> bool:
                 """,
                 (email_clean, created_at)
             )
+            # Automatically remove from unsubscribed_emails so resubscribed users receive emails again
+            cursor.execute("DELETE FROM unsubscribed_emails WHERE email = %s", (email_clean,))
             conn.commit()
             return True
         finally:
@@ -855,6 +857,23 @@ def add_to_unsubscribed(email: str):
     except Exception as e:
         print(f"Database error in add_to_unsubscribed: {e}")
         return
+
+def remove_from_unsubscribed(email: str) -> bool:
+    clean_email = email.lower().strip() if email else ""
+    if not clean_email or "@" not in clean_email or "." not in clean_email:
+        return False
+    try:
+        conn = get_db_connection()
+        try:
+            cursor = conn.cursor()
+            cursor.execute("DELETE FROM unsubscribed_emails WHERE email = %s", (clean_email,))
+            conn.commit()
+            return True
+        finally:
+            conn.close()
+    except Exception as e:
+        print(f"Database error in remove_from_unsubscribed: {e}")
+        return False
 
 def is_unsubscribed(email: str) -> bool:
     try:

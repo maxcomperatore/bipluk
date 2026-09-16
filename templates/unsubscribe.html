@@ -34,7 +34,20 @@
                 </p>
             </div>
             <p class="text-xs text-zinc-500 leading-relaxed font-sans">
-                The unsubscribe link you followed appears to be invalid or expired.
+                The link you followed appears to be invalid or expired.
+            </p>
+            {% elif resubscribed %}
+            <span class="inline-flex items-center justify-center h-12 w-12 rounded-full bg-emerald-950/80 border border-emerald-800 text-lg shadow-[0_0_20px_rgba(16,185,129,0.2)]">
+                ⚡
+            </span>
+            <div class="space-y-2">
+                <h1 class="text-xl font-pixel uppercase text-white tracking-tight">Re-subscribed!</h1>
+                <p class="text-xs text-emerald-400 font-mono uppercase tracking-wider">
+                    {% if email %}{{ email }}{% else %}Your email{% endif %} is back on the list.
+                </p>
+            </div>
+            <p class="text-xs text-zinc-400 leading-relaxed font-sans">
+                You're back in! You will receive future synth hardware stories, SysEx tips, and updates without missing a beat.
             </p>
             {% else %}
             <span class="inline-flex items-center justify-center h-12 w-12 rounded-full bg-zinc-900 border border-zinc-800 text-lg">
@@ -49,6 +62,19 @@
             <p class="text-xs text-zinc-500 leading-relaxed font-sans">
                 You will no longer receive weekly hardware anecdotes, tips, or opinion pieces. You can still access your dashboard and use all free or premium features of the platform at any time.
             </p>
+
+            {% if email %}
+            <div class="pt-4 border-t border-zinc-900/80 space-y-3">
+                <p class="text-2xs font-mono uppercase tracking-widest text-zinc-500">Unsubscribed by accident?</p>
+                <form action="/resubscribe" method="POST">
+                    <input type="hidden" name="email" value="{{ email }}">
+                    <input type="hidden" name="token" value="{{ resubscribe_token }}">
+                    <button type="submit" class="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 hover:border-emerald-500/50 text-2xs font-pixel uppercase tracking-wider transition-all duration-200 cursor-pointer">
+                        <span>⚡</span> Click here to re-subscribe
+                    </button>
+                </form>
+            </div>
+            {% endif %}
             {% endif %}
             <div class="pt-4">
                 <a href="/" class="inline-flex items-center justify-center px-6 py-2 rounded-full bg-white hover:bg-zinc-200 text-black text-2xs font-pixel uppercase tracking-wider transition-all duration-200">

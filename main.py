@@ -1915,6 +1915,7 @@ async def subscribe(request: Request, email: str = Form(...)):
     if not EMAIL_REGEX.match(email_clean):
         return HTMLResponse(content="Invalid email format", status_code=400)
     database.create_subscriber(email_clean)
+    database.remove_from_unsubscribed(email_clean)
     
     # Send custom OTel log that propagates to PostHog
     logger.info(
@@ -5077,7 +5078,7 @@ async def unsubscribe_page(request: Request, token: str = "", email: str = ""):
     if target_email and not error:
         if not re.match(EMAIL_REGEX, target_email) or "{{" in target_email or "%7b" in target_email.lower():
             logger.warning(f"Rejected invalid unsubscribe email attempt: {target_email}")
-            return render_template("unsubscribe.html", request, {"email": "", "error": "Invalid email address."})
+            return render_template("unsubscribe.html", request, {"email": "", "error": "Invalid email address.", "resubscribed": False, "resubscribe_token": ""})
 
         database.add_to_unsubscribed(target_email)
         trigger_alert(
@@ -5086,7 +5087,65 @@ async def unsubscribe_page(request: Request, token: str = "", email: str = ""):
             {"email": target_email},
             distinct_id=target_email
         )
-    return render_template("unsubscribe.html", request, {"email": target_email, "error": error})
+    resubscribe_token = cookie_signer.sign(target_email.encode()).decode() if (target_email and not error) else ""
+    return render_template("unsubscribe.html", request, {
+        "email": target_email,
+        "error": error,
+        "resubscribed": False,
+        "resubscribe_token": resubscribe_token
+    })
+
+
+@app.api_route("/resubscribe", methods=["GET", "POST"], response_class=HTMLResponse)
+async def resubscribe_endpoint(request: Request, token: str = "", email: str = ""):
+    form_data = {}
+    if request.method == "POST":
+        try:
+            form = await request.form()
+            form_data = dict(form)
+        except Exception:
+            pass
+    target_token = form_data.get("token") or token or request.query_params.get("token", "")
+    target_email = form_data.get("email") or email or request.query_params.get("email", "")
+
+    if target_token:
+        try:
+            target_email = cookie_signer.unsign(target_token).decode()
+        except BadSignature:
+            if not target_email:
+                return render_template("unsubscribe.html", request, {
+                    "email": "",
+                    "error": "Invalid or expired resubscribe link.",
+                    "resubscribed": False,
+                    "resubscribe_token": ""
+                })
+
+    target_email = target_email.lower().strip() if target_email else ""
+    EMAIL_REGEX = r"^[^@\s]+@[^@\s]+\.[^@\s]+$"
+    if not target_email or not re.match(EMAIL_REGEX, target_email):
+        return render_template("unsubscribe.html", request, {
+            "email": "",
+            "error": "Please provide a valid email address to re-subscribe.",
+            "resubscribed": False,
+            "resubscribe_token": ""
+        })
+
+    database.remove_from_unsubscribed(target_email)
+    database.create_subscriber(target_email)
+
+    trigger_alert(
+        "newsletter_resubscribed",
+        f"User `{target_email}` has re-subscribed to the newsletter.",
+        {"email": target_email},
+        distinct_id=target_email
+    )
+
+    return render_template("unsubscribe.html", request, {
+        "email": target_email,
+        "error": "",
+        "resubscribed": True,
+        "resubscribe_token": ""
+    })
 
 @app.get("/{synth_slug}", response_class=HTMLResponse)
 async def dynamic_synth_seo(synth_slug: str, request: Request):
