@@ -189,6 +189,8 @@ def init_db():
         );
         CREATE INDEX IF NOT EXISTS idx_user_sessions_token ON user_sessions (session_token);
         CREATE INDEX IF NOT EXISTS idx_user_sessions_user_id ON user_sessions (user_id);
+        CREATE INDEX IF NOT EXISTS idx_banks_user_id ON banks (user_id);
+        CREATE INDEX IF NOT EXISTS idx_patches_bank_id ON patches (bank_id);
         """)
         
         # Add drip_email_sent, reengagement_email_sent, and last_marketing_email_sent tracking to users table
