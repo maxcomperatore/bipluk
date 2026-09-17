@@ -1568,6 +1568,7 @@ async def api_send_studio_link(request: Request):
         return JSONResponse({"ok": False, "error": "Invalid JSON payload."}, status_code=400)
 
     email = (body.get("email") or "").strip().lower()
+    model = (body.get("model") or "").strip()
     if not email or not re.match(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$", email):
         return JSONResponse({"ok": False, "error": "Please enter a valid email address."}, status_code=400)
 
@@ -1577,28 +1578,34 @@ async def api_send_studio_link(request: Request):
     except Exception as e:
         print(f"Error saving subscriber in send_studio_link: {e}")
 
+    synth_label = model.replace("-", " ").title() if model else ""
+    subject = f"Your Bipluk Studio Link: {synth_label}" if synth_label else "Your Bipluk Studio Link"
+    synth_query = f"&model={model}" if model else ""
+    launch_url = f"https://bipluk.com/?ref=mobile_reminder&email={email}{synth_query}"
+    synth_banner = f'<p style="color: #86868b; font-size: 12px; margin: 0 0 16px 0; font-weight: 500;">Preloaded for {synth_label} SysEx backup</p>' if synth_label else '<p style="color: #86868b; font-size: 11px; margin: 0; font-weight: 400;">Browser-Native Web MIDI</p>'
+    target_hardware = synth_label or "synthesizer"
+
     # Send link email
-    subject = "🎹 Your Bipluk Link"
     html_content = f"""
     <div style="background-color: #000000; padding: 40px 20px; font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Display', 'Helvetica Neue', Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased;">
         <div style="max-width: 520px; margin: 0 auto; background-color: #121215; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 20px; padding: 36px 32px; box-shadow: 0 20px 48px rgba(0, 0, 0, 0.7);">
             <div style="text-align: center; margin-bottom: 24px;">
                 <img src="https://bipluk.com/static/logo.svg" width="34" height="34" style="display: inline-block; border-radius: 8px; margin-bottom: 8px;" alt="bipluk">
                 <h1 style="color: #ffffff; font-size: 20px; margin: 0 0 6px 0; font-weight: 600; letter-spacing: -0.02em;">Open bipluk on your studio desk</h1>
-                <p style="color: #86868b; font-size: 11px; margin: 0; font-weight: 400;">Browser-Native Web MIDI</p>
+                {synth_banner}
             </div>
             <p style="color: #a1a1a6; font-size: 14px; line-height: 23px; margin-bottom: 24px; text-align: center;">
-                You requested this link on mobile. When you're sitting at your computer with your USB-MIDI interface connected, launch your session below:
+                You requested this launch link while browsing off-desk. When you are sitting at your computer with your USB-MIDI interface connected, launch your session below:
             </p>
             <div style="text-align: center; margin: 28px 0;">
-                <a href="https://bipluk.com/?ref=mobile_reminder&email={email}" style="display: inline-block; background-color: #ffffff; color: #000000; padding: 13px 36px; border-radius: 9999px; text-decoration: none; font-weight: 600; font-size: 14px; letter-spacing: -0.01em; box-shadow: 0 4px 16px rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.2);">
+                <a href="{launch_url}" style="display: inline-block; background-color: #ffffff; color: #000000; padding: 13px 36px; border-radius: 9999px; text-decoration: none; font-weight: 600; font-size: 14px; letter-spacing: -0.01em; box-shadow: 0 4px 16px rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.2);">
                     Open Studio Vault
                 </a>
             </div>
             <div style="background-color: #18181c; border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 12px; padding: 16px; margin-top: 24px;">
                 <p style="color: #86868b; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; margin: 0 0 8px 0;">Getting Started</p>
                 <p style="color: #a1a1a6; font-size: 13px; line-height: 20px; margin: 0;">
-                    1. Connect your class-compliant USB-MIDI cable to your synth.<br>
+                    1. Connect your class-compliant USB-MIDI cable to your {target_hardware}.<br>
                     2. Open the link in Chrome, Edge, or Brave.<br>
                     3. Back up or audition hardware patches in one click with zero drivers.
                 </p>
@@ -1609,7 +1616,7 @@ async def api_send_studio_link(request: Request):
         </div>
     </div>
     """
-    text_content = f"Here is your link to open Bipluk on your studio computer: https://bipluk.com/?ref=mobile_reminder&email={email}\n\nPlug in your USB-MIDI cable to back up your hardware synth patches in 1 click."
+    text_content = f"Here is your link to open Bipluk on your studio computer: {launch_url}\n\nPlug in your USB-MIDI cable to back up your hardware synth patches in 1 click."
 
     try:
         ok, err = send_email_via_resend(email, subject, text_content, html=html_content)
@@ -1948,6 +1955,7 @@ async def subscribe(request: Request, email: str = Form(...)):
 @app.get("/login", response_class=HTMLResponse)
 async def login_page(request: Request, error: str = None, msg: str = None):
     next_url = request.query_params.get("next")
+    model = request.query_params.get("model")
     signed_cookie = request.cookies.get("session_user")
     if signed_cookie:
         session_data = verify_session_cookie(signed_cookie)
@@ -1958,13 +1966,15 @@ async def login_page(request: Request, error: str = None, msg: str = None):
                 resp = render_template("login.html", request, {
                     "error": error or "Your account has been suspended due to an active payment dispute.",
                     "msg": msg,
-                    "next": next_url
+                    "next": next_url,
+                    "model": model
                 })
                 resp.delete_cookie("session_user", path="/")
                 return resp
     if get_current_user(request):
-        return RedirectResponse(url=safe_next_url(next_url))
-    return render_template("login.html", request, {"error": error, "msg": msg, "next": next_url})
+        target_url = safe_next_url(next_url) if next_url else (f"/home?synth={model}" if model else "/home")
+        return RedirectResponse(url=target_url)
+    return render_template("login.html", request, {"error": error, "msg": msg, "next": next_url, "model": model})
 
 @app.post("/login")
 async def do_login(request: Request, email: str = Form(...), password: str = Form(...), next: str = Form(None)):
@@ -4423,7 +4433,7 @@ async def oauth_protected_resource():
 
 # --- Google OAuth Routes ---
 @app.get("/auth/google")
-async def auth_google(request: Request):
+async def auth_google(request: Request, next: str = None):
     if not settings.GOOGLE_CLIENT_ID:
         return RedirectResponse("/login?error=Google+Sign-In+configuration+pending.+Please+sign+in+with+email.", status_code=303)
     redirect_uri = f"{settings.SITE_BASE}/auth/google/callback"
@@ -4435,12 +4445,15 @@ async def auth_google(request: Request):
         "access_type": "offline",
         "prompt": "select_account"
     }
+    target_next = next or request.query_params.get("next")
+    if target_next:
+        params["state"] = target_next
     from urllib.parse import urlencode
     url = "https://accounts.google.com/o/oauth2/v2/auth?" + urlencode(params)
     return RedirectResponse(url)
 
 @app.get("/auth/google/callback")
-async def auth_google_callback(request: Request, background_tasks: BackgroundTasks, code: str = None, error: str = None):
+async def auth_google_callback(request: Request, background_tasks: BackgroundTasks, code: str = None, error: str = None, state: str = None):
     if error or not code:
         return RedirectResponse("/login?error=Google+login+was+cancelled+or+failed.", status_code=303)
     
@@ -4518,7 +4531,8 @@ async def auth_google_callback(request: Request, background_tasks: BackgroundTas
         if user:
             database.create_user_session(user["id"], session_token)
 
-        response = RedirectResponse(url="/home", status_code=303)
+        target_url = safe_next_url(state) if state else "/home"
+        response = RedirectResponse(url=target_url, status_code=303)
         response.set_cookie(
             key="session_user",
             value=sign_session_cookie(email, session_token),

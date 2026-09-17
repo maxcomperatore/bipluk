@@ -49,8 +49,20 @@
         </div>
         {% endif %}
 
+        {% if model %}
+        <div class="mb-5 p-3.5 rounded-2xl bg-zinc-900/90 border border-zinc-800 text-left shadow-lg">
+            <div class="flex items-center gap-2 mb-1.5">
+                <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                <span class="font-pixel text-[10px] text-emerald-400 uppercase tracking-widest">{{ model | replace('-', ' ') | title }} SysEx Vault</span>
+            </div>
+            <p class="text-xs text-zinc-300 font-mono leading-relaxed">
+                Connect your account below to access soundbanks and Web MIDI SysEx tools for your {{ model | replace('-', ' ') | title }}.
+            </p>
+        </div>
+        {% endif %}
+
         <!-- Direct 1-Click Google OAuth Button -->
-        <a href="/auth/google" onclick="setLastAuthMethod('google')"
+        <a href="/auth/google{% if next %}?next={{ next }}{% elif model %}?next=/home?synth={{ model }}{% endif %}" onclick="setLastAuthMethod('google')"
             class="w-full py-3.5 px-5 rounded-xl bg-white hover:bg-zinc-100 text-zinc-950 text-sm font-bold flex items-center justify-center gap-3 transition-all duration-150 shadow-lg active:scale-[0.98] relative">
             <svg class="w-5 h-5 shrink-0" viewBox="0 0 24 24">
                 <path fill="#EA4335" d="M12 5c1.6 0 3 .6 4.1 1.6l3.1-3.1C17.3 1.7 14.8 1 12 1 7.5 1 3.7 3.6 1.9 7.3l3.7 2.9C6.5 7.1 9 5 12 5z"/>
@@ -145,7 +157,8 @@
 
             const evtToken = tokenInput ? tokenInput.value : '';
             const urlParams = new URLSearchParams(window.location.search);
-            const nextParam = urlParams.get('next') || '';
+            const modelParam = urlParams.get('model') || '';
+            const nextParam = urlParams.get('next') || (modelParam ? `/home?synth=${modelParam}` : '');
 
             const magicBtn = document.getElementById('magic-btn');
             if (magicBtn) {
@@ -167,7 +180,7 @@
                 if (res.ok && data.ok) {
                     setLastAuthMethod('magic');
                     if (data.verified_instant && data.redirect) {
-                        showFeedback('⚡ Verified instantly via Chrome! Redirecting...', false);
+                        showFeedback('Verified instantly via Chrome. Redirecting...', false);
                         setTimeout(() => {
                             window.location.href = data.redirect;
                         }, 400);
