@@ -71,8 +71,8 @@ def main() -> int:
     users = queue.get("users") or []
     subject = queue.get("subject") or "Getting started with bipluk"
     body = queue.get("body") or ""
-    from_addr = queue.get("from_addr") or SMTP_FROM
-    reply_to = queue.get("reply_to") or SMTP_REPLY_TO
+    from_addr = queue.get("from") or queue.get("from_addr") or "bipluk Dispatch <news@bipluk.com>"
+    reply_to = queue.get("reply_to") or "support@bipluk.com"
 
     sent: list[dict] = []
     failed: list[dict] = []
