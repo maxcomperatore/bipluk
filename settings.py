@@ -33,10 +33,12 @@ DATABASE_URL = require_env("DATABASE_URL") if IS_PRODUCTION else getenv("DATABAS
 _raw_session_secret = getenv("SESSION_SECRET_KEY")
 _INSECURE_DEV_SECRET = "dev-only-session-secret-change-me"
 if not _raw_session_secret or _raw_session_secret.strip() == _INSECURE_DEV_SECRET:
-    raise RuntimeError(
-        "CRITICAL SECURITY FAILURE: SESSION_SECRET_KEY must be securely configured. "
-        "Refusing to boot with empty or insecure default session secret."
-    )
+    if IS_PRODUCTION:
+        raise RuntimeError(
+            "CRITICAL SECURITY FAILURE: SESSION_SECRET_KEY must be securely configured. "
+            "Refusing to boot with empty or insecure default session secret."
+        )
+    _raw_session_secret = _INSECURE_DEV_SECRET
 SESSION_SECRET_KEY = _raw_session_secret.strip()
 
 SITE_BASE = (getenv("SITE_BASE", "https://bipluk.com") or "https://bipluk.com").rstrip("/")
