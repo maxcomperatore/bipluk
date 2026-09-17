@@ -3148,13 +3148,17 @@ async def get_bank_details(request: Request, bank_id: int):
     first_bank_id = banks[0]["id"] if banks else None
     is_first_bank = (first_bank_id is None) or (first_bank_id == bank_id)
 
-    # First soundbank is 100% free! Lock only on bank #2 onwards
+    # First soundbank is 100% free. On secondary banks, preview first 3 presets free so user verifies parsing success
     if user.get("tier") != "premium" and not is_first_bank:
         if bank.get("patches"):
             for i, patch in enumerate(bank["patches"]):
-                patch["name"] = f"LOCKED {i+1} (PRO)"
+                if i >= 3:
+                    patch["name"] = f"PRO PRESET #{i+1} (LOCKED)"
+                    patch["is_locked"] = True
+                else:
+                    patch["is_locked"] = False
         else:
-            bank["patches"] = [{"name": "LOCKED (PRO)", "index": 0}]
+            bank["patches"] = [{"name": "LOCKED (PRO)", "index": 0, "is_locked": True}]
 
     template = "patch_list_mobile.html" if request.query_params.get("mobile") == "1" else "patch_list.html"
     return render_template(template, request, {

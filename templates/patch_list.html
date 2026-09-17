@@ -95,14 +95,14 @@
     </div>
 
     {% if user.tier != 'premium' and not is_first_bank %}
-    <!-- Paywall Notification on Bank #2+ -->
+    <!-- Paywall Notification on Bank #2+ with Value Proof -->
     <div class="bg-amber-500/10 border-b border-amber-500/30 px-6 py-2.5 flex items-center justify-between text-xs text-amber-300 select-none">
         <div class="flex items-center gap-2">
-            <img src="/static/icons/dinkie/lock.svg" class="h-3.5 w-3.5 shrink-0" style="filter: brightness(0) invert(0.8);" alt="" />
-            <span><strong>Your 1st vault was on us.</strong> Upgrade to unlock unlimited cloud vaults &amp; 7,600+ soundpack library.</span>
+            <img src="/static/icons/dinkie/checkmark-circled.svg" class="h-3.5 w-3.5 shrink-0" style="filter: invert(70%) sepia(80%) saturate(1000%) hue-rotate(350deg);" alt="" />
+            <span><strong>Upload Verified:</strong> Presets 1 to 3 are unlocked for preview. Upgrade to lifetime ($39) to unlock all presets and unlimited cloud vaults.</span>
         </div>
         <button onclick="showUpgradeModal()" class="px-3 py-1 bg-amber-400 hover:bg-amber-300 text-black font-bold uppercase rounded text-[9px] tracking-wider transition-colors shadow cursor-pointer">
-            Unlock All Vaults
+            Unlock All Presets
         </button>
     </div>
     {% elif user.tier != 'premium' and is_first_bank %}

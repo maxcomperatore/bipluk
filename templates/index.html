@@ -1054,8 +1054,8 @@
     <div id="status-overlay"
         class="fixed inset-0 bg-black/85 backdrop-blur-xs z-50 hidden md:flex items-center justify-center hidden-transition">
         <div
-            class="bg-[#0e0e11] border border-zinc-900 rounded-xl p-5 w-80 max-w-[90vw] text-center shadow-2xl shadow-black select-none">
-            <!-- Spinner / Success check -->
+            class="bg-[#0e0e11] border border-zinc-900 rounded-xl p-5 w-84 max-w-[92vw] text-center shadow-2xl shadow-black select-none">
+            <!-- Spinner / Success check / Diagnostic icon -->
             <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 mb-3.5"
                 id="overlay-icon-container">
                 <img src="/static/icons/dinkie/revert.svg" class="h-5 w-5 animate-spin" style="filter: invert(1);"
@@ -1063,25 +1063,49 @@
                 <img src="/static/icons/dinkie/checkmark-circled.svg" class="h-6 w-6 hidden"
                     style="filter: invert(48%) sepia(91%) saturate(2321%) hue-rotate(200deg) brightness(95%) contrast(95%);"
                     id="overlay-check" />
+                <img src="/static/icons/dinkie/high-voltage-sign.svg" class="h-6 w-6 hidden"
+                    style="filter: invert(70%) sepia(80%) saturate(1000%) hue-rotate(350deg);"
+                    id="overlay-alert" />
             </div>
 
             <h3 class="text-xs font-bold text-white mb-0.5" id="overlay-title">Backing Up Synthesizer</h3>
             <p class="text-[10px] text-zinc-500" id="overlay-message">Initiating handshake with vintage hardware...</p>
 
             <!-- Progress Bar -->
-            <div class="w-full bg-zinc-950 rounded-full h-1 mt-3.5 overflow-hidden">
+            <div id="overlay-progress-container" class="w-full bg-zinc-950 rounded-full h-1 mt-3.5 overflow-hidden">
                 <div id="overlay-progress" class="bg-emerald-500 h-full rounded-full transition-all duration-150"
                     style="width: 0%"></div>
             </div>
 
-            <div class="flex items-center justify-between text-[8px] font-mono text-zinc-500 mt-2">
+            <div id="overlay-status-row" class="flex items-center justify-between text-[8px] font-mono text-zinc-500 mt-2">
                 <span id="overlay-status-left">0%</span>
                 <span id="overlay-status-right">WAITING</span>
             </div>
 
-            <!-- Abort button -->
+            <!-- Interactive Hardware Diagnostic Box (Revealed on Handshake Timeout) -->
+            <div id="overlay-troubleshoot-box" class="hidden mt-4 text-left p-3 rounded-xl bg-zinc-950/80 border border-amber-500/30 space-y-2.5">
+                <div class="flex items-center gap-1.5 text-amber-400 font-mono text-[9px] uppercase tracking-wider font-semibold">
+                    <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping"></span>
+                    <span>Troubleshooting Checklist</span>
+                </div>
+                <ul id="overlay-troubleshoot-list" class="space-y-1.5 text-[10px] text-zinc-300 font-sans leading-tight">
+                    <!-- Dynamic tips populated by JS -->
+                </ul>
+                <div class="pt-2 flex flex-col gap-2">
+                    <button id="overlay-retry-btn" type="button"
+                        class="w-full py-2 bg-emerald-500 hover:bg-emerald-400 text-zinc-950 text-xs font-bold rounded-lg transition-all shadow text-center active:scale-98">
+                        Retry Handshake
+                    </button>
+                    <button id="overlay-upload-syx-btn" type="button" onclick="switchToSyxUpload()"
+                        class="w-full py-1.5 bg-zinc-900 hover:bg-zinc-800 border border-zinc-750 text-zinc-300 text-[10px] font-mono rounded-lg transition-all text-center">
+                        Upload .syx file instead &rarr;
+                    </button>
+                </div>
+            </div>
+
+            <!-- Abort / Close button -->
             <button onclick="closeStatusOverlay()" id="overlay-close-btn"
-                class="mt-5 px-3 py-2 text-zinc-300 font-semibold text-[10px] rounded-lg transition-all w-full tactical-button">
+                class="mt-4 px-3 py-2 text-zinc-400 hover:text-zinc-200 font-semibold text-[10px] rounded-lg transition-all w-full tactical-button">
                 Cancel
             </button>
         </div>
@@ -1924,6 +1948,133 @@
             if (isIngesting) {
                 stopMidiIngestion(false);
             }
+
+            // Reset diagnostic state for future clean openings
+            const box = document.getElementById('overlay-troubleshoot-box');
+            const prog = document.getElementById('overlay-progress-container');
+            const srow = document.getElementById('overlay-status-row');
+            const alertIcon = document.getElementById('overlay-alert');
+            const spinner = document.getElementById('overlay-spinner');
+            const iconContainer = document.getElementById('overlay-icon-container');
+            if (box) box.classList.add('hidden');
+            if (prog) prog.classList.remove('hidden');
+            if (srow) srow.classList.remove('hidden');
+            if (alertIcon) alertIcon.classList.add('hidden');
+            if (spinner) spinner.classList.remove('hidden');
+            if (iconContainer) {
+                iconContainer.classList.remove('bg-amber-500/10', 'border-amber-500/20', 'text-amber-400');
+                iconContainer.classList.add('bg-emerald-500/10', 'border-emerald-500/20', 'text-emerald-400');
+            }
+        }
+
+        function showDiagnosticOverlay(synthModel, bankName) {
+            const titleEl = document.getElementById('overlay-title');
+            const msgEl = document.getElementById('overlay-message');
+            const spinner = document.getElementById('overlay-spinner');
+            const check = document.getElementById('overlay-check');
+            const alertIcon = document.getElementById('overlay-alert');
+            const iconContainer = document.getElementById('overlay-icon-container');
+            const prog = document.getElementById('overlay-progress-container');
+            const srow = document.getElementById('overlay-status-row');
+            const box = document.getElementById('overlay-troubleshoot-box');
+            const list = document.getElementById('overlay-troubleshoot-list');
+            const retryBtn = document.getElementById('overlay-retry-btn');
+            const cancelBtn = document.getElementById('overlay-close-btn');
+
+            if (spinner) spinner.classList.add('hidden');
+            if (check) check.classList.add('hidden');
+            if (alertIcon) alertIcon.classList.remove('hidden');
+            if (prog) prog.classList.add('hidden');
+            if (srow) srow.classList.add('hidden');
+
+            if (iconContainer) {
+                iconContainer.classList.remove('bg-emerald-500/10', 'border-emerald-500/20', 'text-emerald-400');
+                iconContainer.classList.add('bg-amber-500/10', 'border-amber-500/20', 'text-amber-400');
+            }
+
+            if (titleEl) titleEl.textContent = "Hardware Not Responding";
+            if (msgEl) msgEl.textContent = `No SysEx data received from ${synthModel || 'synthesizer'}.`;
+
+            if (cancelBtn) {
+                cancelBtn.textContent = "Close Diagnostic";
+            }
+
+            let tips = [];
+            const model = (synthModel || '').toLowerCase();
+            if (model.includes('juno')) {
+                tips = [
+                    "Check rear switch: set 3-position toggle to Position III (Function).",
+                    "Cable check: Interface MIDI OUT -> Juno MIDI IN, Interface MIDI IN -> Juno MIDI OUT.",
+                    "Manual dump: Press WRITE on the Juno-106 panel to transmit all 128 patches."
+                ];
+            } else if (model.includes('dx7')) {
+                tips = [
+                    "Memory Protect: Press FUNCTION 14 and verify Internal Protect is OFF.",
+                    "SysEx setting: Press FUNCTION 8 and verify MIDI SysEx / Bulk Dump is ENABLED.",
+                    "Cable check: Both MIDI IN and MIDI OUT must be connected (crossed cables)."
+                ];
+            } else if (model.includes('m1')) {
+                tips = [
+                    "Memory Protect: Open GLOBAL page 3, set Program and Combi protect to OFF.",
+                    "MIDI filter: Open GLOBAL page 2, set MIDI EXCL (Exclusive) to ENABLE.",
+                    "Cable check: Verify both MIDI In and Out cables are firmly seated."
+                ];
+            } else if (model.includes('prophet')) {
+                tips = [
+                    "Manual dump: Open Prophet Global Menu -> select 'Dump Bank' to transmit.",
+                    "Cable check: Interface MIDI OUT -> Prophet MIDI IN, Interface MIDI IN -> Prophet MIDI OUT.",
+                    "MIDI channel: Ensure synth and interface are communicating on the same channel."
+                ];
+            } else {
+                tips = [
+                    "Crossed cables: Interface MIDI OUT must go to Synth MIDI IN, and Interface MIDI IN to Synth MIDI OUT.",
+                    "Panel dump: Many synths require triggering a 'Bulk Dump' or 'SysEx Send' from their utility menu.",
+                    "Cheap USB adapters: Some low-cost USB cables lack buffers and drop SysEx packets."
+                ];
+            }
+
+            if (list) {
+                list.innerHTML = tips.map(t => `<li class="flex items-start gap-1.5"><span class="text-amber-400 font-bold">&bull;</span><span>${t}</span></li>`).join('');
+            }
+
+            if (retryBtn) {
+                retryBtn.onclick = () => {
+                    if (box) box.classList.add('hidden');
+                    if (prog) prog.classList.remove('hidden');
+                    if (srow) srow.classList.remove('hidden');
+                    if (alertIcon) alertIcon.classList.add('hidden');
+                    if (spinner) spinner.classList.remove('hidden');
+                    if (iconContainer) {
+                        iconContainer.classList.remove('bg-amber-500/10', 'border-amber-500/20', 'text-amber-400');
+                        iconContainer.classList.add('bg-emerald-500/10', 'border-emerald-500/20', 'text-emerald-400');
+                    }
+                    showStatusOverlay("Backing Up Synthesizer", "Retrying handshake with vintage hardware...", true);
+                    startMidiIngestion(bankName, synthModel);
+                    logToPostHog('midi_handshake_retry_clicked', { synth_model: synthModel, bank_name: bankName });
+                };
+            }
+
+            if (box) box.classList.remove('hidden');
+
+            logToPostHog('midi_diagnostic_modal_shown', {
+                synth_model: synthModel,
+                bank_name: bankName
+            });
+        }
+
+        function switchToSyxUpload() {
+            closeStatusOverlay();
+            const uploadForm = document.getElementById('upload-form');
+            if (uploadForm) {
+                uploadForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                const fileInput = uploadForm.querySelector('input[type="file"]');
+                if (fileInput) {
+                    fileInput.classList.add('ring-2', 'ring-emerald-400');
+                    setTimeout(() => fileInput.classList.remove('ring-2', 'ring-emerald-400'), 3000);
+                    fileInput.click();
+                }
+            }
+            logToPostHog('midi_diagnostic_switched_to_upload');
         }
 
         // --- Ingest and Pull SysEx Logic ---
@@ -2014,20 +2165,7 @@
                 dumpTimeout = setTimeout(() => {
                     if (isIngesting && ingestedBytes.length === 0) {
                         stopMidiIngestion(false);
-                        closeStatusOverlay();
-                        let toastMsg = "Press WRITE on the Juno-106 while this dialog is open.";
-                        if (isLXR) {
-                            toastMsg = "Press SHIFT + SAVE on the LXR-02 to send SysEx kit data.";
-                        } else if (isProphet) {
-                            toastMsg = "Verify MIDI Cables and that you initiated the dump on the synth.";
-                        }
-                        showToast("No response from synth", toastMsg, "warning");
-                        logToPostHog('midi_dump_timeout', {
-                            synth_model: synthModel,
-                            bank_name: bankName,
-                            timeout_ms: 60000,
-                            reason: "No response from manual trigger"
-                        });
+                        showDiagnosticOverlay(synthModel, bankName);
                     }
                 }, 60000);
             } else {
@@ -2039,14 +2177,7 @@
                 dumpTimeout = setTimeout(() => {
                     if (isIngesting && ingestedBytes.length === 0) {
                         stopMidiIngestion(false);
-                        closeStatusOverlay();
-                        showToast("No response from synth", "Verify MIDI Cables (In to Out) and device MIDI channel.", "warning");
-                        logToPostHog('midi_dump_timeout', {
-                            synth_model: synthModel,
-                            bank_name: bankName,
-                            timeout_ms: 25000,
-                            reason: "No response to dump request command"
-                        });
+                        showDiagnosticOverlay(synthModel, bankName);
                     }
                 }, 25000);
             }

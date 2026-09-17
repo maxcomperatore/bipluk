@@ -102,6 +102,37 @@
                 </span>
             </button>
         </form>
+
+        <!-- Reassuring Magic Link Sent State -->
+        <div id="magic-sent-container" class="hidden space-y-4 pt-1 text-center">
+            <div class="p-4 rounded-2xl bg-zinc-900/90 border border-emerald-500/40 shadow-xl space-y-3">
+                <div class="w-10 h-10 mx-auto rounded-full bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                    </svg>
+                </div>
+                <div>
+                    <h3 class="text-sm font-bold text-white tracking-wide">Sign-in link sent!</h3>
+                    <p class="text-xs text-zinc-400 mt-1 font-mono">
+                        We sent a secure sign-in link to <span id="sent-target-email" class="text-white font-semibold"></span>.
+                    </p>
+                </div>
+                <p class="text-[11px] text-zinc-500 leading-relaxed font-sans">
+                    Click the link in your email to enter your vault automatically. You can keep this tab open or close it.
+                </p>
+                <a id="open-webmail-btn" href="https://mail.google.com" target="_blank" rel="noopener noreferrer"
+                    class="w-full py-2.5 px-4 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 text-xs font-bold flex items-center justify-center gap-2 transition-all shadow active:scale-[0.98]">
+                    <span>Open Email Inbox</span>
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                    </svg>
+                </a>
+            </div>
+
+            <button type="button" onclick="resetMagicForm()" class="text-xs text-zinc-500 hover:text-zinc-300 transition-colors underline font-mono">
+                Didn't get it? Try again or use another email
+            </button>
+        </div>
     </div>
 
     <script src="/static/js/mailcheck.js"></script>
@@ -185,7 +216,39 @@
                             window.location.href = data.redirect;
                         }, 400);
                     } else {
-                        showFeedback('Magic link sent! Check your inbox to sign in.', false);
+                        // Switch UI into unambiguous "Check your inbox" state
+                        const formEl = document.getElementById('magic-form');
+                        const sentContainer = document.getElementById('magic-sent-container');
+                        const targetEmailEl = document.getElementById('sent-target-email');
+                        const webmailBtn = document.getElementById('open-webmail-btn');
+
+                        if (targetEmailEl) targetEmailEl.textContent = email;
+                        if (feedbackEl) feedbackEl.classList.add('hidden');
+
+                        if (webmailBtn) {
+                            if (email.includes('@gmail.') || email.includes('@googlemail.')) {
+                                webmailBtn.href = 'https://mail.google.com/mail/u/0/#search/bipluk';
+                                webmailBtn.querySelector('span').textContent = 'Open Gmail';
+                            } else if (email.includes('@outlook.') || email.includes('@hotmail.') || email.includes('@live.')) {
+                                webmailBtn.href = 'https://outlook.live.com/mail/0/';
+                                webmailBtn.querySelector('span').textContent = 'Open Outlook';
+                            } else if (email.includes('@yahoo.')) {
+                                webmailBtn.href = 'https://mail.yahoo.com';
+                                webmailBtn.querySelector('span').textContent = 'Open Yahoo Mail';
+                            } else {
+                                webmailBtn.href = 'mailto:';
+                                webmailBtn.querySelector('span').textContent = 'Open Mail App';
+                            }
+                        }
+
+                        if (formEl) formEl.classList.add('hidden');
+                        if (sentContainer) sentContainer.classList.remove('hidden');
+
+                        if (window.posthog) {
+                            try {
+                                window.posthog.capture('magic_link_requested_success', { email: email });
+                            } catch (e) {}
+                        }
                     }
                 } else {
                     showFeedback(data.error || 'Failed to send magic link.', true);
@@ -197,6 +260,17 @@
                     magicBtn.disabled = false;
                     magicBtn.innerHTML = '<svg class="w-5 h-5 shrink-0 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.75"><rect width="20" height="16" x="2" y="4" rx="2.5"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg><span>Send Magic Sign-In Link</span>';
                 }
+            }
+        }
+
+        function resetMagicForm() {
+            const formEl = document.getElementById('magic-form');
+            const sentContainer = document.getElementById('magic-sent-container');
+            if (sentContainer) sentContainer.classList.add('hidden');
+            if (formEl) formEl.classList.remove('hidden');
+            if (emailInput) {
+                emailInput.focus();
+                emailInput.select();
             }
         }
 
