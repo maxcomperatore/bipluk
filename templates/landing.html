@@ -3164,7 +3164,7 @@
         <div class="p-3.5 rounded-2xl bg-zinc-950/95 backdrop-blur-xl border border-zinc-800 shadow-[0_16px_48px_rgba(0,0,0,0.9),inset_0_1px_0_rgba(255,255,255,0.08)]">
             <div class="flex items-center justify-between gap-2 mb-2">
                 <div class="flex items-center gap-2">
-                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                    <span class="w-1.5 h-1.5 rounded-full bg-amber-400 shadow-[0_0_6px_rgba(251,191,36,0.7)] shrink-0"></span>
                     <span id="floating-dock-title" class="text-xs font-mono text-zinc-300 font-medium">Browsing away from your synth?</span>
                 </div>
                 <button type="button" onclick="dismissStudioDock()" class="text-zinc-500 hover:text-white p-1 rounded transition-colors" aria-label="Dismiss studio link dock">
@@ -3188,11 +3188,22 @@
     </div>
 
     <script>
-    let dockDismissed = sessionStorage.getItem('studio_dock_dismissed') === '1';
+    function isDockSuppressed() {
+        if (localStorage.getItem('studio_dock_converted') === '1') {
+            return true;
+        }
+        const dismissedAt = parseInt(localStorage.getItem('studio_dock_dismissed_at') || '0', 10);
+        if (dismissedAt && (Date.now() - dismissedAt) < 3 * 24 * 60 * 60 * 1000) {
+            return true;
+        }
+        return false;
+    }
+
+    let dockDismissed = isDockSuppressed();
 
     function dismissStudioDock() {
         dockDismissed = true;
-        sessionStorage.setItem('studio_dock_dismissed', '1');
+        localStorage.setItem('studio_dock_dismissed_at', Date.now().toString());
         const dock = document.getElementById('floating-studio-dock');
         if (dock) {
             dock.classList.add('translate-y-32', 'opacity-0', 'pointer-events-none');
@@ -3265,6 +3276,7 @@
             });
             const data = await res.json();
             if (data.ok) {
+                localStorage.setItem('studio_dock_converted', '1');
                 formEl.classList.add('hidden');
                 if (feedback) feedback.classList.remove('hidden');
                 setTimeout(() => {
@@ -3276,6 +3288,7 @@
                 button.innerHTML = originalHtml;
             }
         } catch (err) {
+            localStorage.setItem('studio_dock_converted', '1');
             formEl.classList.add('hidden');
             if (feedback) feedback.classList.remove('hidden');
             setTimeout(() => {
