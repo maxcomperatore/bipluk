@@ -1,8 +1,6 @@
 name: Recurring Marketing Campaign Cron (3x per Week)
 
 on:
-  schedule:
-    - cron: "23 15 * * 0,2,4"   # 3x per week: Sunday, Tuesday, Thursday at 15:23 UTC (skips GitHub :00 queue backlog)
   workflow_dispatch:
 
 jobs:
