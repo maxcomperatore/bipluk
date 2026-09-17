@@ -5549,6 +5549,7 @@ async def get_drip_eligible_users() -> tuple[list[dict], int, int]:
     return [], 0, 0
 
 
+@app.get("/api/cron/drip-queue")
 @app.get("/api/cron/drip-pending")
 async def drip_pending(request: Request):
     """Queue eligible drip recipients — actual send runs on GitHub Actions (Vercel IPs blocked by Cloudflare)."""

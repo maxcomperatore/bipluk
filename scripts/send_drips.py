@@ -67,7 +67,7 @@ def mask_email(email_str: str) -> str:
 
 
 def main() -> int:
-    queue = http_json("GET", f"{SITE}/api/cron/drip-queue")
+    queue = http_json("GET", f"{SITE}/api/cron/drip-pending")
     users = queue.get("users") or []
     subject = queue.get("subject") or "Getting started with bipluk"
     body = queue.get("body") or ""
