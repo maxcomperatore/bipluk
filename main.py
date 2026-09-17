@@ -1087,7 +1087,12 @@ SMTP_HOST = settings.SMTP_HOST
 SMTP_PORT = settings.SMTP_PORT
 SMTP_USER = settings.SMTP_USER
 SMTP_PASSWORD = settings.SMTP_PASSWORD
-SMTP_FROM = settings.SMTP_FROM
+SMTP_REPLY_TO = getattr(settings, "SMTP_REPLY_TO", "support@bipluk.com")
+SMTP_FROM = getattr(settings, "SMTP_FROM", "bipluk Support <support@bipluk.com>")
+SMTP_FROM_SUPPORT = getattr(settings, "SMTP_FROM_SUPPORT", "bipluk Support <support@bipluk.com>")
+SMTP_FROM_BILLING = getattr(settings, "SMTP_FROM_BILLING", "bipluk Billing <billing@bipluk.com>")
+SMTP_FROM_MARKETING = getattr(settings, "SMTP_FROM_MARKETING", "Max from bipluk <max@bipluk.com>")
+SMTP_FROM_NEWSLETTER = getattr(settings, "SMTP_FROM_NEWSLETTER", "bipluk Dispatch <news@bipluk.com>")
 CRON_SECRET = settings.CRON_SECRET or ""
 
 
@@ -1101,6 +1106,7 @@ def send_email_via_resend(
     body: str,
     *,
     html: str | None = None,
+    from_addr: str | None = None,
     reply_to: str | None = None,
     list_unsubscribe: str | None = None,
 ) -> tuple[bool, str | None]:
@@ -1113,10 +1119,12 @@ def send_email_via_resend(
     if not api_key:
         return False, "missing api key"
 
+    effective_reply_to = reply_to or SMTP_REPLY_TO
     payload: dict = {
-        "from": SMTP_FROM,
+        "from": from_addr or SMTP_FROM_SUPPORT,
         "to": [to],
         "subject": subject,
+        "reply_to": [effective_reply_to] if isinstance(effective_reply_to, str) else list(effective_reply_to),
     }
 
     # Auto-detect HTML in body if html param is not explicitly provided
@@ -1130,8 +1138,6 @@ def send_email_via_resend(
     else:
         payload["text"] = body
 
-    if reply_to:
-        payload["reply_to"] = [reply_to]
     if list_unsubscribe:
         payload["headers"] = {"List-Unsubscribe": f"<{list_unsubscribe}>"}
 
@@ -2650,7 +2656,8 @@ def send_vault_limit_email(email: str) -> tuple[bool, str]:
         subject="Your bipluk soundbank vault is full!",
         body=plain_body,
         html=html_content,
-        reply_to="support@bipluk.com",
+        from_addr=SMTP_FROM_BILLING,
+        reply_to=SMTP_REPLY_TO,
     )
 
 def send_battery_warning_email(email: str) -> tuple[bool, str]:
@@ -2678,7 +2685,8 @@ def send_battery_warning_email(email: str) -> tuple[bool, str]:
         subject="⚠️ Reminder: Have you backed up your hardware synth patches recently?",
         body=plain_body,
         html=html_content,
-        reply_to="support@bipluk.com",
+        from_addr=SMTP_FROM_MARKETING,
+        reply_to=SMTP_REPLY_TO,
     )
 
 def send_vip_purchase_email(email: str, plan: str = "personal") -> tuple[bool, str]:
@@ -2705,7 +2713,8 @@ def send_vip_purchase_email(email: str, plan: str = "personal") -> tuple[bool, s
         subject="🎉 Welcome to bipluk+ Lifetime!",
         body=plain_body,
         html=html_content,
-        reply_to="support@bipluk.com",
+        from_addr=SMTP_FROM_BILLING,
+        reply_to=SMTP_REPLY_TO,
     )
 
 @app.get("/api/test-smart-email")
@@ -5398,7 +5407,8 @@ def send_abandoned_checkout_email_task(email: str, username: str = None):
             subject="Still thinking it over?",
             body=plain_body,
             html=html_content,
-            reply_to="support@bipluk.com",
+            from_addr=SMTP_FROM_BILLING,
+            reply_to=SMTP_REPLY_TO,
         )
         if ok:
             logger.info(f"Abandoned checkout email successfully sent to {email}")
@@ -5498,8 +5508,8 @@ async def abandoned_checkout_pending(request: Request):
     eligible, skipped_young, pending_total = await get_abandoned_checkout_eligible_users()
     return {
         "subject": "Still thinking it over?",
-        "from": SMTP_FROM,
-        "reply_to": "support@bipluk.com",
+        "from": SMTP_FROM_BILLING,
+        "reply_to": SMTP_REPLY_TO,
         "users": eligible,
         "skipped_young": skipped_young,
         "pending_total": pending_total,
@@ -6012,7 +6022,7 @@ def run_newsletter_broadcast_sync(override_subject: str = None, override_body: s
         smtp_port = SMTP_PORT
         smtp_user = SMTP_USER
         smtp_pass = SMTP_PASSWORD
-        smtp_from = SMTP_FROM
+        smtp_from = SMTP_FROM_NEWSLETTER
 
         sent_count = 0
         failed_count = 0
@@ -6038,7 +6048,7 @@ def run_newsletter_broadcast_sync(override_subject: str = None, override_body: s
                     msg['From'] = smtp_from
                     msg['To'] = email
                     msg['Subject'] = subject
-                    msg['Reply-To'] = "support@bipluk.com"
+                    msg['Reply-To'] = SMTP_REPLY_TO
                     msg['List-Unsubscribe'] = f"<https://bipluk.com/unsubscribe?token={unsubscribe_token}>"
                     msg['Precedence'] = "bulk"
                     msg.attach(MIMEText(personal_body, 'plain'))
@@ -6117,8 +6127,8 @@ async def newsletter_pending(request: Request):
     return {
         "status": "ready",
         "subject": subject,
-        "from": SMTP_FROM,
-        "reply_to": "support@bipluk.com",
+        "from": SMTP_FROM_NEWSLETTER,
+        "reply_to": SMTP_REPLY_TO,
         "recipients": prepared,
         "recipient_count": len(prepared),
     }

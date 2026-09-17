@@ -27,7 +27,8 @@ except ImportError:
     CAMPAIGNS = []
 
 RESEND_API_KEY = settings.RESEND_API_KEY
-SMTP_FROM = settings.SMTP_FROM or "Max from bipluk <support@bipluk.com>"
+SMTP_FROM = getattr(settings, "SMTP_FROM_MARKETING", None) or settings.SMTP_FROM or "Max from bipluk <max@bipluk.com>"
+SMTP_REPLY_TO = getattr(settings, "SMTP_REPLY_TO", None) or "support@bipluk.com"
 
 def extract_first_name(email_str: str) -> str:
     if not email_str:
@@ -189,7 +190,7 @@ def run_marketing_dispatch(days_interval: int = 2, force_email: str = None, max_
             body=text_body,
             html=html_body,
             from_addr=SMTP_FROM,
-            reply_to="support@bipluk.com"
+            reply_to=SMTP_REPLY_TO
         )
 
         if ok:
