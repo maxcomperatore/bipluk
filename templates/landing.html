@@ -3160,7 +3160,7 @@
 {% endif %}
 
     <!-- Persistent Floating Studio Dock (Mobile & Off-Desk Scrollers) -->
-    <div id="floating-studio-dock" class="fixed bottom-[74px] sm:bottom-6 inset-x-3 max-w-sm sm:max-w-md mx-auto z-40 translate-y-32 opacity-0 pointer-events-none transition-all duration-300 ease-out">
+    <div id="floating-studio-dock" class="fixed bottom-[calc(88px+env(safe-area-inset-bottom,0px))] sm:bottom-6 inset-x-3 max-w-sm sm:max-w-md mx-auto z-40 translate-y-32 opacity-0 pointer-events-none transition-all duration-300 ease-out">
         <div class="p-3.5 rounded-2xl bg-zinc-950/95 backdrop-blur-xl border border-zinc-800 shadow-[0_16px_48px_rgba(0,0,0,0.9),inset_0_1px_0_rgba(255,255,255,0.08)]">
             <div class="flex items-center justify-between gap-2 mb-2">
                 <div class="flex items-center gap-2">
