@@ -18,7 +18,7 @@
         </div>
     </div>
 
-    {% if user.tier == 'premium' %}
+    {% if user.tier == 'premium' or is_first_bank %}
     <div class="px-4 pb-3 flex items-center gap-2">
         <a href="/banks/{{ bank.id }}/download"
             onclick="logToPostHog('bank_downloaded', { bank_id: {{ bank.id }}, bank_name: '{{ bank.name }}', mobile: true })"
@@ -31,6 +31,14 @@
             <img src="/static/icons/dinkie/globe-meridians.svg" class="h-3.5 w-3.5" style="filter: invert(1);" alt="" />
             Share
         </button>
+    </div>
+    {% else %}
+    <div class="px-4 pb-3 flex items-center gap-2">
+        <a href="/checkout"
+            class="inline-flex items-center gap-2 rounded-full bg-amber-400 text-black text-xs font-semibold px-4 py-2 active:scale-[0.98] transition-transform">
+            <img src="/static/icons/dinkie/lock.svg" class="h-3.5 w-3.5" alt="" />
+            Unlock Vaults
+        </a>
     </div>
     {% endif %}
 

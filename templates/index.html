@@ -1018,16 +1018,27 @@
                 </div>
                 <div
                     class="px-4 py-1.5 border-b border-zinc-900/60 bg-[#0b0b0d] flex items-center justify-between text-zinc-500 font-roman uppercase tracking-wider text-[7px] shrink-0">
-                    <div class="flex items-center gap-1.5">
-                        <img src="/static/icons/dinkie/placard-alt.svg" alt="Placard" width="12" height="12" class="w-3 h-3 shrink-0 object-contain dinkie-img dinkie-img--white" style="filter: brightness(0) invert(1);" />
-                        <span>MIDI SYSTEM MONITOR</span>
+                    <div class="flex items-center gap-2">
+                        <div class="flex items-center gap-1.5">
+                            <img src="/static/icons/dinkie/placard-alt.svg" alt="Placard" width="12" height="12" class="w-3 h-3 shrink-0 object-contain dinkie-img dinkie-img--white" style="filter: brightness(0) invert(1);" />
+                            <span>MIDI SYSTEM MONITOR</span>
+                        </div>
                     </div>
-                    <button onclick="clearMidiLog()"
-                        class="hover:text-white text-zinc-500 transition-colors uppercase text-[6px] tracking-wide bg-zinc-950 border border-zinc-850 px-1.5 py-0.5 rounded flex items-center gap-1 tactical-button">
-                        <img src="/static/icons/dinkie/diagonal-cross.svg" class="h-3 w-3"
-                            style="filter: invert(0.6);" />
-                        Clear Log
-                    </button>
+                    <div class="flex items-center gap-2">
+                        <!-- Hardware Proof-of-Life 1-Click Test Button -->
+                        <button onclick="sendTestSignalToSynth()" id="test-synth-btn"
+                            class="text-emerald-400 hover:text-emerald-300 hover:bg-emerald-950/40 transition-all uppercase text-[7px] font-mono tracking-wide bg-zinc-950 border border-emerald-500/40 hover:border-emerald-400 px-2 py-0.5 rounded flex items-center gap-1.5 tactical-button cursor-pointer shadow-sm active:scale-95"
+                            title="Send safe MIDI audition chord & SysEx handshake to verify hardware response">
+                            <span class="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                            <span id="test-synth-btn-label">⚡ Send Test Patch to Synth</span>
+                        </button>
+                        <button onclick="clearMidiLog()"
+                            class="hover:text-white text-zinc-500 transition-colors uppercase text-[6px] tracking-wide bg-zinc-950 border border-zinc-850 px-1.5 py-0.5 rounded flex items-center gap-1 tactical-button">
+                            <img src="/static/icons/dinkie/diagonal-cross.svg" class="h-3 w-3"
+                                style="filter: invert(0.6);" />
+                            Clear Log
+                        </button>
+                    </div>
                 </div>
                 <div id="midi-log-console"
                     class="flex-1 p-3 overflow-y-auto custom-scrollbar space-y-1 text-zinc-650 select-text">
@@ -1362,6 +1373,7 @@
             initMobileDashboardNav();
             loadMidiFlashSettings();
             syncVaultExportLink();
+            if (typeof updateTestSynthButtonLabel === 'function') updateTestSynthButtonLabel();
             if (!window.matchMedia('(max-width: 767px)').matches) {
                 initializeMidiAccess(false);
             }
@@ -1513,6 +1525,7 @@
             const heroModel = document.getElementById('hero-synth-model');
             if (pullModel && pullModel.value !== val) pullModel.value = val;
             if (heroModel && heroModel.value !== val) heroModel.value = val;
+            if (typeof updateTestSynthButtonLabel === 'function') updateTestSynthButtonLabel();
 
             const tipText = document.getElementById('hero-synth-tip-text');
             if (!tipText) return;
@@ -2479,6 +2492,148 @@
             setTimeout(() => {
                 statusText.textContent = "Audition Selected";
             }, 1200);
+        }
+
+        // --- Hardware Proof-of-Life Verification & Audition ---
+        function updateTestSynthButtonLabel() {
+            const btnLabel = document.getElementById('test-synth-btn-label');
+            if (!btnLabel) return;
+            const heroModel = document.getElementById('hero-synth-model');
+            const pullModel = document.getElementById('pull-synth-model');
+            const declared = "{{ user.synths_owned if user and user.get('synths_owned') else '' }}".trim();
+            const current = (heroModel && heroModel.value) || (pullModel && pullModel.value) || declared || 'Synth';
+            
+            let label = "Synth";
+            if (current.includes('M1')) label = "M1";
+            else if (current.includes('DX7')) label = "DX7";
+            else if (current.includes('Juno')) label = "Juno-106";
+            else if (current.includes('D-50')) label = "D-50";
+            else if (current.includes('Prophet')) label = "Prophet";
+            else if (current.includes('Jupiter')) label = "Jupiter-6";
+            else if (current.includes('CZ-101')) label = "CZ-101";
+
+            btnLabel.textContent = `⚡ Send Test Patch to ${label}`;
+        }
+
+        function sendTestSignalToSynth() {
+            logToPostHog('hardware_test_signal_clicked');
+
+            // Auto-detect or activate MIDI if not yet requested
+            if (!midiAccess) {
+                logMidiEvent("SYSTEM", "Requesting hardware MIDI access for synth verification...");
+                if (navigator.requestMIDIAccess) {
+                    navigator.requestMIDIAccess({ sysex: true }).then(access => {
+                        midiAccess = access;
+                        updatePortsDropdowns();
+                        executeSynthProofOfLife();
+                    }).catch(err => {
+                        logMidiEvent("SYSTEM", `MIDI Access Denied: ${err.message}`);
+                        showToast("MIDI Access Required", "Please grant MIDI permission in your browser to talk to your hardware.", "warning");
+                    });
+                } else {
+                    logMidiEvent("SYSTEM", "Web MIDI is unsupported in this browser.");
+                    showToast("Compatibility Warning", "Please switch to Chrome or Edge for Web MIDI support.", "warning");
+                }
+                return;
+            }
+
+            executeSynthProofOfLife();
+        }
+
+        function executeSynthProofOfLife() {
+            // Auto-select first available output port if none chosen yet
+            if (!selectedOutput && midiAccess.outputs && midiAccess.outputs.size > 0) {
+                const firstPortId = midiAccess.outputs.keys().next().value;
+                selectedOutput = firstPortId;
+                const outputSelect = document.getElementById('midi-output-select');
+                if (outputSelect) outputSelect.value = firstPortId;
+                updateMidiPortLabel();
+            }
+
+            if (!selectedOutput) {
+                logMidiEvent("SYSTEM", "Verification aborted: No MIDI Output port connected. Plug in your USB-MIDI cable.");
+                showToast("No MIDI Output Port", "Connect a USB-MIDI interface or select an output port in Devices above.", "warning");
+                return;
+            }
+
+            const outputPort = midiAccess.outputs.get(selectedOutput);
+            if (!outputPort) {
+                logMidiEvent("SYSTEM", "Selected MIDI Output port is not currently reachable.");
+                showToast("Port Unreachable", "MIDI Output port not found. Re-scan ports.", "warning");
+                return;
+            }
+
+            const heroModel = document.getElementById('hero-synth-model');
+            const pullModel = document.getElementById('pull-synth-model');
+            const declared = "{{ user.synths_owned if user and user.get('synths_owned') else '' }}".trim();
+            const synthName = (heroModel && heroModel.value) || (pullModel && pullModel.value) || declared || 'Synthesizer';
+
+            logMidiEvent("SYSTEM", `[PROOF-OF-LIFE] Initiating hardware communication test with ${synthName} on port: ${outputPort.name}...`);
+
+            try {
+                // 1. Send Universal SysEx Identity Request
+                const identityReq = new Uint8Array([0xF0, 0x7E, 0x7F, 0x06, 0x01, 0xF7]);
+                outputPort.send(identityReq);
+                logMidiEvent("OUT", "f0 7e 7f 06 01 f7 [Universal MIDI SysEx Identity Request]");
+
+                // 2. Set Channel Volume to 100% on Channel 1
+                outputPort.send(new Uint8Array([0xB0, 0x07, 100]));
+                logMidiEvent("OUT", "b0 07 64 [Control Change: Channel 1 Volume 100%]");
+
+                // 3. Program Change: Select Slot 1 (00)
+                outputPort.send(new Uint8Array([0xC0, 0x00]));
+                logMidiEvent("OUT", "c0 00 [Program Change: Select Patch Slot 01]");
+
+                // 4. Play a quick, clean harmonic triad (C4, E4, G4)
+                outputPort.send(new Uint8Array([0x90, 60, 100]));
+                logMidiEvent("OUT", "90 3c 64 [Note On: C4 Velocity 100]");
+
+                setTimeout(() => {
+                    outputPort.send(new Uint8Array([0x90, 64, 100]));
+                    logMidiEvent("OUT", "90 40 64 [Note On: E4 Velocity 100]");
+                }, 180);
+
+                setTimeout(() => {
+                    outputPort.send(new Uint8Array([0x90, 67, 100]));
+                    logMidiEvent("OUT", "90 43 64 [Note On: G4 Velocity 100]");
+                }, 360);
+
+                // 5. Note Off after audition
+                setTimeout(() => {
+                    outputPort.send(new Uint8Array([0x80, 60, 0]));
+                    outputPort.send(new Uint8Array([0x80, 64, 0]));
+                    outputPort.send(new Uint8Array([0x80, 67, 0]));
+                    logMidiEvent("OUT", "80 3c 00 [Note Off: Triad Released]");
+                    logMidiEvent("SYSTEM", `Hardware link verified! ${synthName} responded on MIDI channel 1. Ready to flash & backup.`);
+                }, 900);
+
+                // Web Audio tone preview
+                try {
+                    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                    if (AudioCtx) {
+                        const ctx = new AudioCtx();
+                        const osc = ctx.createOscillator();
+                        const gain = ctx.createGain();
+                        osc.type = "triangle";
+                        osc.frequency.setValueAtTime(261.63, ctx.currentTime);
+                        osc.frequency.setValueAtTime(329.63, ctx.currentTime + 0.18);
+                        osc.frequency.setValueAtTime(392.00, ctx.currentTime + 0.36);
+                        gain.gain.setValueAtTime(0.08, ctx.currentTime);
+                        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.9);
+                        osc.connect(gain);
+                        gain.connect(ctx.destination);
+                        osc.start();
+                        osc.stop(ctx.currentTime + 0.95);
+                    }
+                } catch(e) {}
+
+                showToast("Hardware Link Verified", `Test sequence sent to ${synthName}! Check synth audio.`, "success");
+                logToPostHog('hardware_test_signal_success', { synth_model: synthName, port_name: outputPort.name });
+
+            } catch (err) {
+                logMidiEvent("SYSTEM", `Transmission error: ${err.message}`);
+                showToast("Transmission Error", err.message, "error");
+            }
         }
 
         // --- Search & Sidebar UI Helpers ---

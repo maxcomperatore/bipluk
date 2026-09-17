@@ -3134,7 +3134,12 @@ async def get_bank_details(request: Request, bank_id: int):
     if not bank:
         raise HTTPException(status_code=404, detail="Bank not found")
 
-    if user.get("tier") != "premium":
+    banks = database.get_all_banks(user["id"])
+    first_bank_id = banks[0]["id"] if banks else None
+    is_first_bank = (first_bank_id is None) or (first_bank_id == bank_id)
+
+    # First soundbank is 100% free! Lock only on bank #2 onwards
+    if user.get("tier") != "premium" and not is_first_bank:
         if bank.get("patches"):
             for i, patch in enumerate(bank["patches"]):
                 patch["name"] = f"LOCKED {i+1} (PRO)"
@@ -3142,7 +3147,12 @@ async def get_bank_details(request: Request, bank_id: int):
             bank["patches"] = [{"name": "LOCKED (PRO)", "index": 0}]
 
     template = "patch_list_mobile.html" if request.query_params.get("mobile") == "1" else "patch_list.html"
-    return render_template(template, request, {"bank": bank, "user": user})
+    return render_template(template, request, {
+        "bank": bank,
+        "user": user,
+        "is_first_bank": is_first_bank,
+        "user_banks_count": len(banks)
+    })
 
 @app.post("/banks", response_class=HTMLResponse)
 async def create_bank(
@@ -3448,12 +3458,17 @@ async def download_bank(request: Request, bank_id: int):
     user = get_current_user(request)
     if not user:
         return RedirectResponse(url="/login")
-    if user["tier"] != "premium":
-        return RedirectResponse(url="/checkout")
-        
     bank = database.get_bank(bank_id, user["id"])
     if not bank:
         raise HTTPException(status_code=404, detail="Bank not found")
+
+    banks = database.get_all_banks(user["id"])
+    first_bank_id = banks[0]["id"] if banks else None
+    is_first_bank = (first_bank_id is None) or (first_bank_id == bank_id)
+
+    # First soundbank is 100% free to download! Lock only on bank #2 onwards
+    if user["tier"] != "premium" and not is_first_bank:
+        return RedirectResponse(url="/checkout")
         
     try:
         sysex_bytes = bytes.fromhex(bank["sysex_hex"])

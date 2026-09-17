@@ -45,7 +45,7 @@
                     </button>
                     
                     <!-- Download -->
-                    {% if user.tier == 'premium' %}
+                    {% if user.tier == 'premium' or is_first_bank %}
                     <a href="/banks/{{ bank.id }}/download" 
                        title="Download .syx backup file" 
                        onclick="logToPostHog('bank_downloaded', { bank_id: {{ bank.id }}, bank_name: '{{ bank.name }}' })"
@@ -93,6 +93,28 @@
             </div>
         </div>
     </div>
+
+    {% if user.tier != 'premium' and not is_first_bank %}
+    <!-- Paywall Notification on Bank #2+ -->
+    <div class="bg-amber-500/10 border-b border-amber-500/30 px-6 py-2.5 flex items-center justify-between text-xs text-amber-300 select-none">
+        <div class="flex items-center gap-2">
+            <span class="text-sm">🔒</span>
+            <span><strong>Your 1st vault was on us!</strong> Upgrade to unlock unlimited cloud vaults &amp; 7,600+ soundpack library.</span>
+        </div>
+        <button onclick="showUpgradeModal()" class="px-3 py-1 bg-amber-400 hover:bg-amber-300 text-black font-bold uppercase rounded text-[9px] tracking-wider transition-colors shadow cursor-pointer">
+            Unlock All Vaults
+        </button>
+    </div>
+    {% elif user.tier != 'premium' and is_first_bank %}
+    <!-- First Vault Free Banner -->
+    <div class="bg-emerald-500/10 border-b border-emerald-500/30 px-6 py-1.5 flex items-center justify-between text-2xs text-emerald-300 select-none">
+        <div class="flex items-center gap-1.5">
+            <span class="text-xs">✨</span>
+            <span><strong>First Vault Free:</strong> Full preset browsing, SysEx sync, and .syx downloads are unlocked for your 1st soundbank!</span>
+        </div>
+        <span class="text-emerald-400 font-pixel text-[8px] uppercase tracking-wider">100% Free Vault</span>
+    </div>
+    {% endif %}
 
     <!-- iTunes Song Grid Table -->
     <div class="flex-1 overflow-y-auto custom-scrollbar bg-[#08080a]">
