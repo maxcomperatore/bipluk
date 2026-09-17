@@ -1709,26 +1709,23 @@
                 {% elif seo %}
                 {{ seo.hero_title | safe }}
                 {% else %}
-                The Cloud Librarian
-                <span
-                    class="hidden md:inline-flex items-center align-middle mx-1.5 w-8 h-8 md:w-11 md:h-11 shrink-0 relative top-[-1px] md:top-[-2px]">
-                    <img src="/static/icons/pixelarticons_cloud.svg" alt="Cloud"
-                        class="w-full h-full object-contain" style="filter: invert(1);">
-                </span>
+                Never lose a synth sound again.
                 <br class="hidden sm:inline">
-                <span>for your</span>
-                <span class="inline-flex items-center justify-center align-middle mx-1.5 w-10 h-10 md:w-12 md:h-12 shrink-0 relative top-[-1px] md:top-[-2px] shadow-lapis-glow overflow-hidden bg-zinc-950 rounded-lg">
-                    <div class="absolute inset-[3px] bg-repeat opacity-100 z-0" style="background-image: url('/static/texture224.png');"></div>
-                    <img id="hero-visitor-avatar"
-                        src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='1' height='1'></svg>"
-                        alt="Your Avatar" class="absolute inset-[3px] w-[calc(100%-6px)] h-[calc(100%-6px)] object-cover z-10 rounded">
-                    <img src="/static/panels/transparent/ziggurat.png" alt="Frame" class="absolute inset-0 w-full h-full object-fill pointer-events-none z-20" style="image-rendering: pixelated; image-rendering: crisp-edges;">
+                <span class="text-zinc-400 text-lg sm:text-2xl md:text-3xl font-mono normal-case tracking-normal block mt-3 font-normal">
+                    One-click browser backups for your
+                    <span class="inline-flex items-center justify-center align-middle mx-1 w-8 h-8 sm:w-10 sm:h-10 md:w-11 md:h-11 shrink-0 relative top-[-2px] shadow-lapis-glow overflow-hidden bg-zinc-950 rounded-lg">
+                        <div class="absolute inset-[2px] bg-repeat opacity-100 z-0" style="background-image: url('/static/texture224.png');"></div>
+                        <img id="hero-visitor-avatar"
+                            src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='1' height='1'></svg>"
+                            alt="Your Avatar" class="absolute inset-[2px] w-[calc(100%-4px)] h-[calc(100%-4px)] object-cover z-10 rounded">
+                        <img src="/static/panels/transparent/ziggurat.png" alt="Frame" class="absolute inset-0 w-full h-full object-fill pointer-events-none z-20" style="image-rendering: pixelated; image-rendering: crisp-edges;">
+                    </span>
+                    vintage hardware.
                 </span>
-                <span class="text-zinc-400 ml-1">vintage synthesizers <img src="/static/icons/dinkie/musical-keyboard.svg" alt="Keyboard" class="inline-block align-middle h-[0.85em] md:h-[0.95em] w-auto ml-1 relative top-[-2px] opacity-90" style="filter: invert(1); image-rendering: pixelated;" /></span>
                 {% endif %}
             </h1>
 
-            <p class="text-xs md:text-sm font-mono text-zinc-400 max-w-xl mx-auto mt-8 leading-relaxed reveal tracking-wide"
+            <p class="text-xs md:text-sm font-mono text-zinc-400 max-w-xl mx-auto mt-7 leading-relaxed reveal tracking-wide"
                 style="--delay: 150ms;">
                 {% if is_halloween_week %}
                 Resurrect, exorcise, and summon lost patches from your 1980s and 90s hardware directly in your web
@@ -1736,9 +1733,8 @@
                 {% elif seo %}
                 {{ seo.hero_subtitle }}
                 {% else %}
-                Backup & preserve custom patch banks directly in your browser.<br class="hidden sm:inline">
-                The insurance policy your vintage synths deserve.<br class="hidden sm:inline">
-                <span class="underline decoration-zinc-700/60 underline-offset-4 decoration-1">No driver wall, no app sprawl. One click backs it all.</span>
+                Zero drivers. Zero desktop installs. Web MIDI vault for Roland, Yamaha, Korg, and Sequential.<br class="hidden sm:inline">
+                <span class="underline decoration-zinc-700/60 underline-offset-4 decoration-1">Your first hardware backup is 100% free.</span>
                 {% endif %}
             </p>
 
