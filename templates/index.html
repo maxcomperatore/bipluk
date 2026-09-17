@@ -1030,7 +1030,7 @@
                             class="text-emerald-400 hover:text-emerald-300 hover:bg-emerald-950/40 transition-all uppercase text-[7px] font-mono tracking-wide bg-zinc-950 border border-emerald-500/40 hover:border-emerald-400 px-2 py-0.5 rounded flex items-center gap-1.5 tactical-button cursor-pointer shadow-sm active:scale-95"
                             title="Send safe MIDI audition chord & SysEx handshake to verify hardware response">
                             <span class="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                            <span id="test-synth-btn-label">⚡ Send Test Patch to Synth</span>
+                            <span id="test-synth-btn-label">Send Test Patch to Synth</span>
                         </button>
                         <button onclick="clearMidiLog()"
                             class="hover:text-white text-zinc-500 transition-colors uppercase text-[6px] tracking-wide bg-zinc-950 border border-zinc-850 px-1.5 py-0.5 rounded flex items-center gap-1 tactical-button">
@@ -2512,7 +2512,7 @@
             else if (current.includes('Jupiter')) label = "Jupiter-6";
             else if (current.includes('CZ-101')) label = "CZ-101";
 
-            btnLabel.textContent = `⚡ Send Test Patch to ${label}`;
+            btnLabel.textContent = `Send Test Patch to ${label}`;
         }
 
         function sendTestSignalToSynth() {
