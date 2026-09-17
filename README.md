@@ -11,7 +11,7 @@
 
 <p align="center">
   <a href="https://bipluk.com"><img src="https://img.shields.io/badge/Production-bipluk.com-26619C?style=for-the-badge&logo=googlechrome&logoColor=white" alt="Production Site" /></a>
-  <a href="https://github.com/maxcomperatore/bipluk.com"><img src="https://img.shields.io/badge/License-GPLv3-blue.svg?style=for-the-badge" alt="License: GPL v3" /></a>
+  <a href="https://github.com/maxcomperatore/bipluk"><img src="https://img.shields.io/badge/License-GPLv3-blue.svg?style=for-the-badge" alt="License: GPL v3" /></a>
   <img src="https://img.shields.io/badge/Python-3.12%20%7C%203.13-blue?style=for-the-badge&logo=python&logoColor=white" alt="Python Version" />
   <img src="https://img.shields.io/badge/Standard-W3C%20Web%20MIDI-emerald?style=for-the-badge&logo=w3c&logoColor=white" alt="Web MIDI Standard" />
   <img src="https://img.shields.io/badge/Hardware%20Synths-110%2B%20Models-purple?style=for-the-badge" alt="Synths Supported" />
@@ -509,8 +509,8 @@ $$\text{Display Number} = \left(\left\lfloor \frac{\text{index}}{8} \right\rfloo
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/maxcomperatore/bipluk.com.git
-   cd bipluk.com
+   git clone https://github.com/maxcomperatore/bipluk.git
+   cd bipluk
    ```
 
 2. **Create and activate a virtual environment:**
