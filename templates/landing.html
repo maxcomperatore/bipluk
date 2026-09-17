@@ -8,6 +8,9 @@
     <meta http-equiv="origin-trial" content="Ah0DUlSjh07hgLL8JCWkCDq0srJ+qjq3jFUdQ/5qyLluOwhrP3sL8bBj5/ll815yDAZuwBxh2p924Hn7RX7DEQYAAABweyJvcmlnaW4iOiJodHRwczovL2JpcGx1ay5jb206NDQzIiwiZmVhdHVyZSI6IkVtYWlsVmVyaWZpY2F0aW9uUHJvdG9jb2wiLCJleHBpcnkiOjE3OTQ4NzM2MDAsImlzU3ViZG9tYWluIjp0cnVlfQ==">
     <meta name="google-site-verification" content="STOaPWGwgPycvNfxtzTRhyetLyvasi3uelnlo5SV_QA" />
     {% include "partials/local_fonts.html" %}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Almarai:wght@700;800&display=swap" rel="stylesheet">
     <title>{{ seo.title if seo else "Web MIDI SysEx Librarian for Windows & Mac | bipluk" }}</title>
     <meta name="description" content="{{ seo.description if seo else 'The browser-native Web MIDI SysEx librarian and patch vault for Windows, Mac & Linux. Backup, decode, and manage vintage hardware synth patches with zero software installation.' }}">
     <meta name="keywords" content="{{ seo.keywords if seo else 'sysex librarian, web based sysex librarian, sysex librarian windows, sysex librarian mac, snoize alternative, web midi sysex librarian, vintage synth backup, dx7 backup, juno-106 patches, korg m1 sysex, cloud backup for synthesizers, bipluk' }}">
@@ -393,6 +396,10 @@
         .font-nabla-synth {
             font-family: 'Nabla', system-ui;
             font-palette: --synth-nabla;
+        }
+
+        .font-almarai {
+            font-family: 'Almarai', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         }
 
         @keyframes pricing-gem-shimmer {
@@ -1385,7 +1392,7 @@
         <!-- Hero Section -->
         <section class="max-w-6xl mx-auto px-6 pt-32 pb-16 text-center relative z-10">
             <h1
-                class="text-2xl sm:text-3xl md:text-5xl font-pixel uppercase tracking-wider text-white leading-tight max-w-5xl mx-auto reveal">
+                class="font-almarai font-extrabold uppercase tracking-tight text-white leading-tight max-w-5xl mx-auto reveal">
                 {% if is_halloween_week %}
                 The Haunted Vault
                 <span class="inline-flex items-center align-middle mx-1">
@@ -1405,9 +1412,10 @@
                 {% elif seo %}
                 {{ seo.hero_title | safe }}
                 {% else %}
-                Never lose a synth sound again.
-                <br class="hidden sm:inline">
-                <span class="text-zinc-400 text-lg sm:text-2xl md:text-3xl font-mono normal-case tracking-normal block mt-3 font-normal">
+                <span class="text-3xl sm:text-4xl md:text-6xl block font-extrabold tracking-tight">
+                    Never lose a synth sound again.
+                </span>
+                <span class="text-zinc-400 text-lg sm:text-2xl md:text-3xl font-bold tracking-tight block mt-3.5">
                     One-click browser backups for your
                     <span class="inline-flex items-center justify-center align-middle mx-1 w-8 h-8 sm:w-10 sm:h-10 md:w-11 md:h-11 shrink-0 relative top-[-2px] shadow-lapis-glow overflow-hidden bg-zinc-950 rounded-lg">
                         <div class="absolute inset-[2px] bg-repeat opacity-100 z-0" style="background-image: url('/static/texture224.png');"></div>
