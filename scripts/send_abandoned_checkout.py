@@ -70,7 +70,7 @@ def mask_email(email_str: str) -> str:
 def main() -> int:
     queue = http_json("GET", f"{SITE}/api/cron/abandoned-checkout-pending")
     subject = queue.get("subject", "Still thinking it over?")
-    from_addr = queue.get("from", "bipluk Billing <support@bipluk.com>")
+    from_addr = queue.get("from", "Bipluk Billing <support@bipluk.com>")
     reply_to = queue.get("reply_to") or "support@bipluk.com"
     users = queue.get("users") or []
 
