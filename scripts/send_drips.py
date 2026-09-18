@@ -71,7 +71,7 @@ def main() -> int:
     users = queue.get("users") or []
     subject = queue.get("subject") or "Getting started with bipluk"
     body = queue.get("body") or ""
-    from_addr = queue.get("from") or queue.get("from_addr") or "bipluk Dispatch <news@bipluk.com>"
+    from_addr = queue.get("from") or queue.get("from_addr") or "bipluk Dispatch <support@bipluk.com>"
     reply_to = queue.get("reply_to") or "support@bipluk.com"
 
     sent: list[dict] = []
