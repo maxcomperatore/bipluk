@@ -167,20 +167,10 @@
         <div class="pt-8 flex flex-col md:flex-row items-center justify-between gap-6">
             <div class="flex flex-col items-center md:items-start gap-1">
                 <div class="flex items-center gap-2.5 group cursor-pointer">
-                    <div class="relative brand-icon-wrap flex items-center justify-center"
-                        style="transform-style: preserve-3d; width: 20px; height: 20px;">
+                    <div class="brand-icon-wrap flex items-center justify-center shrink-0 w-5 h-5">
                         <img src="/static/logo.svg" alt="Bipluk Logo" width="20" height="20"
-                            class="absolute w-5 h-5 object-contain"
-                            style="transform: translateZ(0px); image-rendering: pixelated;">
-                        <img src="/static/logo.svg" alt="" width="20" height="20"
-                            class="absolute w-5 h-5 object-contain"
-                            style="transform: translateZ(-0.5px); filter: brightness(0.6); image-rendering: pixelated;">
-                        <img src="/static/logo.svg" alt="" width="20" height="20"
-                            class="absolute w-5 h-5 object-contain"
-                            style="transform: translateZ(-1.0px); filter: brightness(0.4); image-rendering: pixelated;">
-                        <img src="/static/logo.svg" alt="" width="20" height="20"
-                            class="absolute w-5 h-5 object-contain"
-                            style="transform: translateZ(-1.5px); filter: brightness(0.2); image-rendering: pixelated;">
+                            class="w-5 h-5 object-contain"
+                            style="image-rendering: pixelated; image-rendering: crisp-edges;">
                     </div>
                     <span class="font-roman uppercase text-xs text-white tracking-widest group-hover:text-blue-400 transition-colors">Bipluk™</span>
 
@@ -355,16 +345,14 @@
         }
 
         .brand-icon-wrap {
-            transform: scale(1) rotate(0deg);
-            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.2s ease;
-            transform-style: preserve-3d;
-            backface-visibility: visible;
+            transform: scale(1);
+            transform-origin: center center;
+            will-change: transform;
         }
 
         .group:hover .brand-icon-wrap,
         .brand-icon-wrap:hover {
-            animation: brand-twitch 0.45s ease-in-out forwards;
-            filter: drop-shadow(0 0 8px rgba(74, 127, 184, 0.6));
+            animation: brand-twitch 0.4s cubic-bezier(0.25, 1, 0.5, 1) forwards;
         }
 
     @keyframes led-glow {
