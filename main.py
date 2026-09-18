@@ -1953,9 +1953,11 @@ async def subscribe(request: Request, email: str = Form(...)):
     return Response(status_code=200)
 
 @app.get("/login", response_class=HTMLResponse)
+@app.get("/pricing", response_class=HTMLResponse)
 async def login_page(request: Request, error: str = None, msg: str = None):
     next_url = request.query_params.get("next")
     model = request.query_params.get("model")
+    is_pricing = request.url.path == "/pricing" or request.query_params.get("from") == "pricing"
     signed_cookie = request.cookies.get("session_user")
     if signed_cookie:
         session_data = verify_session_cookie(signed_cookie)
@@ -1967,14 +1969,21 @@ async def login_page(request: Request, error: str = None, msg: str = None):
                     "error": error or "Your account has been suspended due to an active payment dispute.",
                     "msg": msg,
                     "next": next_url,
-                    "model": model
+                    "model": model,
+                    "is_pricing": is_pricing
                 })
                 resp.delete_cookie("session_user", path="/")
                 return resp
     if get_current_user(request):
         target_url = safe_next_url(next_url) if next_url else (f"/home?synth={model}" if model else "/home")
         return RedirectResponse(url=target_url)
-    return render_template("login.html", request, {"error": error, "msg": msg, "next": next_url, "model": model})
+    return render_template("login.html", request, {
+        "error": error,
+        "msg": msg,
+        "next": next_url,
+        "model": model,
+        "is_pricing": is_pricing
+    })
 
 @app.post("/login")
 async def do_login(request: Request, email: str = Form(...), password: str = Form(...), next: str = Form(None)):

@@ -8,7 +8,7 @@
     {% include 'partials/seo_noindex.html' %}
     {% include "partials/local_fonts.html" %}
     {% include 'partials/favicon.html' %}
-    <title>Sign In - bipluk</title>
+    <title>{% if is_pricing %}Unlock Lifetime Access - Bipluk{% else %}Sign In - Bipluk{% endif %}</title>
     {% include 'partials/tailwind_lapis.html' %}
     <style>
         html, body {
@@ -35,8 +35,14 @@
 
     <div class="w-full max-w-sm px-6 py-6 relative z-10 my-auto text-center">
         <div class="mb-6">
-            <img src="/static/logo.svg" alt="bipluk Logo" class="h-11 w-auto mx-auto object-contain mb-2.5">
-            <h1 class="font-pixel uppercase text-base text-white tracking-widest">bipluk</h1>
+            <img src="/static/logo.svg" alt="Bipluk Logo" class="h-11 w-auto mx-auto object-contain mb-2.5" style="image-rendering: pixelated;">
+            <h1 class="font-pixel uppercase text-base text-white tracking-widest">Bipluk</h1>
+            {% if is_pricing %}
+            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-950/60 border border-blue-500/40 text-[10px] font-mono uppercase tracking-wider text-blue-300 mt-2.5 shadow-sm">
+                <span class="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse"></span>
+                <span>$39 Lifetime · One-Time · Yours Forever</span>
+            </div>
+            {% endif %}
         </div>
 
         {% if msg %}
@@ -49,7 +55,17 @@
         </div>
         {% endif %}
 
-        {% if model %}
+        {% if is_pricing and not model %}
+        <div class="mb-5 p-3.5 rounded-2xl bg-zinc-900/90 border border-blue-500/30 text-left shadow-lg">
+            <div class="flex items-center gap-2 mb-1.5">
+                <span class="w-2 h-2 rounded-full bg-blue-400"></span>
+                <span class="font-pixel text-[10px] text-blue-400 uppercase tracking-widest">Lifetime Studio Vault</span>
+            </div>
+            <p class="text-xs text-zinc-300 font-mono leading-relaxed">
+                Sign in with Google or your email below to unlock unlimited synth soundbanks, zero export locks, and permanent cloud backups.
+            </p>
+        </div>
+        {% elif model %}
         <div class="mb-5 p-3.5 rounded-2xl bg-zinc-900/90 border border-zinc-800 text-left shadow-lg">
             <div class="flex items-center gap-2 mb-1.5">
                 <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
