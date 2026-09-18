@@ -1590,8 +1590,8 @@ async def api_send_studio_link(request: Request):
     <div style="background-color: #000000; padding: 40px 20px; font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Display', 'Helvetica Neue', Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased;">
         <div style="max-width: 520px; margin: 0 auto; background-color: #121215; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 20px; padding: 36px 32px; box-shadow: 0 20px 48px rgba(0, 0, 0, 0.7);">
             <div style="text-align: center; margin-bottom: 24px;">
-                <img src="https://bipluk.com/static/logo.svg" width="34" height="34" style="display: inline-block; border-radius: 8px; margin-bottom: 8px;" alt="bipluk">
-                <h1 style="color: #ffffff; font-size: 20px; margin: 0 0 6px 0; font-weight: 600; letter-spacing: -0.02em;">Open bipluk on your studio desk</h1>
+                <img src="https://bipluk.com/static/logo.svg" width="34" height="34" style="display: inline-block; border-radius: 8px; margin-bottom: 8px;" alt="Bipluk">
+                <h1 style="color: #ffffff; font-size: 20px; margin: 0 0 6px 0; font-weight: 600; letter-spacing: -0.02em;">Open Bipluk on your studio desk</h1>
                 {synth_banner}
             </div>
             <p style="color: #a1a1a6; font-size: 14px; line-height: 23px; margin-bottom: 24px; text-align: center;">
@@ -1611,7 +1611,7 @@ async def api_send_studio_link(request: Request):
                 </p>
             </div>
             <div style="border-top: 1px solid rgba(255, 255, 255, 0.06); margin-top: 28px; padding-top: 16px; font-size: 11px; color: #52525b; text-align: center;">
-                &copy; 2026 bipluk · Web MIDI Cloud Librarian
+                &copy; 2026 Bipluk · Web MIDI Cloud Librarian
             </div>
         </div>
     </div>
@@ -2198,14 +2198,14 @@ async def do_magic_request(request: Request):
         from urllib.parse import quote
         magic_url += f"&next={quote(next_url)}"
 
-    subject = "Your bipluk Magic Sign-In Link"
-    body = f"Hello,\n\nClick the link below to sign in to bipluk automatically:\n{magic_url}\n\nThis link will expire in 15 minutes."
+    subject = "Your Bipluk Magic Sign-In Link"
+    body = f"Hello,\n\nClick the link below to sign in to Bipluk automatically:\n{magic_url}\n\nThis link will expire in 15 minutes."
     
     html_content = f"""
     <div style="background-color: #000000; padding: 40px 20px; font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Display', 'Helvetica Neue', Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased;">
         <div style="max-width: 460px; margin: 0 auto; background-color: #121215; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 20px; padding: 36px 32px; text-align: center; box-shadow: 0 20px 48px rgba(0, 0, 0, 0.7);">
-            <img src="{SITE_BASE}/static/logo.svg" alt="bipluk" width="36" height="36" style="display: inline-block; margin-bottom: 12px; border-radius: 8px;">
-            <h1 style="color: #ffffff; font-size: 18px; font-weight: 600; letter-spacing: -0.02em; margin: 0 0 4px 0;">bipluk</h1>
+            <img src="{SITE_BASE}/static/logo.svg" alt="Bipluk" width="36" height="36" style="display: inline-block; margin-bottom: 12px; border-radius: 8px;">
+            <h1 style="color: #ffffff; font-size: 18px; font-weight: 600; letter-spacing: -0.02em; margin: 0 0 4px 0;">Bipluk</h1>
             <p style="color: #86868b; font-size: 11px; margin: 0 0 24px 0; font-weight: 400;">Passwordless Vault Sign-In</p>
             <div style="border-top: 1px solid rgba(255, 255, 255, 0.06); margin: 0 0 24px 0;"></div>
             
@@ -2215,7 +2215,7 @@ async def do_magic_request(request: Request):
             </p>
 
             <a href="{magic_url}" style="display: inline-block; background-color: #ffffff; color: #000000; text-decoration: none; padding: 13px 36px; border-radius: 9999px; font-size: 14px; font-weight: 600; font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif; letter-spacing: -0.01em; box-shadow: 0 4px 16px rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.2); margin: 8px 0 24px 0;">
-                Sign In to bipluk
+                Sign In to Bipluk
             </a>
 
             <p style="color: #6e6e73; font-size: 12px; line-height: 18px; margin: 0 0 8px 0;">
@@ -2402,14 +2402,14 @@ async def do_forgot_password(request: Request, email: str = Form(...)):
     RESET_CODES[code] = {"email": email_clean, "expires": time.time() + 1800, "attempts": 0}
     
     # Send standard transactional confirmation email via Resend
-    subject = "Your Password Reset Confirmation Code - bipluk"
-    body = f"Hello,\n\nYour bipluk password reset confirmation code is: {code}\n\nThis code will expire in 30 minutes.\n\nIf you did not request this, please ignore this message."
+    subject = "Your Password Reset Confirmation Code - Bipluk"
+    body = f"Hello,\n\nYour Bipluk password reset confirmation code is: {code}\n\nThis code will expire in 30 minutes.\n\nIf you did not request this, please ignore this message."
     html_content = f"""
     <div style="background-color: #000000; padding: 40px 20px; font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Display', 'Helvetica Neue', Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased;">
         <div style="max-width: 460px; margin: 0 auto; background-color: #121215; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 20px; padding: 36px 32px; text-align: center; box-shadow: 0 20px 48px rgba(0, 0, 0, 0.7);">
             <!-- Logo Header -->
-            <img src="{SITE_BASE}/static/logo.svg" alt="bipluk" width="36" height="36" style="display: inline-block; margin-bottom: 12px; border-radius: 8px;">
-            <h1 style="color: #ffffff; font-size: 18px; font-weight: 600; letter-spacing: -0.02em; margin: 0 0 4px 0;">bipluk</h1>
+            <img src="{SITE_BASE}/static/logo.svg" alt="Bipluk" width="36" height="36" style="display: inline-block; margin-bottom: 12px; border-radius: 8px;">
+            <h1 style="color: #ffffff; font-size: 18px; font-weight: 600; letter-spacing: -0.02em; margin: 0 0 4px 0;">Bipluk</h1>
             <p style="color: #86868b; font-size: 11px; margin: 0 0 24px 0; font-weight: 400;">Security &amp; Account Recovery</p>
 
             <div style="border-top: 1px solid rgba(255, 255, 255, 0.06); margin: 0 0 24px 0;"></div>
@@ -2431,13 +2431,13 @@ async def do_forgot_password(request: Request, email: str = Form(...)):
             <!-- Security Notice -->
             <div style="background-color: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px; padding: 14px; margin-bottom: 24px; text-align: left;">
                 <p style="color: #a1a1a6; font-size: 12px; margin: 0; line-height: 18px;">
-                    <strong style="color: #ffffff;">Security Alert:</strong> bipluk will never ask for this code over email or social media. If you did not request a password reset, your account is safe and you can ignore this email.
+                    <strong style="color: #ffffff;">Security Alert:</strong> Bipluk will never ask for this code over email or social media. If you did not request a password reset, your account is safe and you can ignore this email.
                 </p>
             </div>
 
             <!-- Footer -->
             <p style="color: #52525b; font-size: 11px; margin: 0;">
-                &copy; 2026 bipluk · Web MIDI Cloud Librarian
+                &copy; 2026 Bipluk · Web MIDI Cloud Librarian
             </p>
         </div>
     </div>
@@ -2622,7 +2622,7 @@ async def test_reengagement_email(email: str = "max@gmail.com", send: str = None
         )
         ok, err = send_email_via_resend(
             to=email,
-            subject="We miss you at bipluk",
+            subject="We miss you at Bipluk",
             body=plain_body,
             html=html_content,
             reply_to="support@bipluk.com",
@@ -2657,13 +2657,13 @@ def send_vault_limit_email(email: str) -> tuple[bool, str]:
         "unsubscribe_token": unsubscribe_token,
     })
     plain_body = (
-        f"Your bipluk soundbank vault is full!\n\n"
-        "You have reached your 1 free soundbank slot. Upgrade to bipluk+ Lifetime to store unlimited synth vaults.\n\n"
+        f"Your Bipluk soundbank vault is full!\n\n"
+        "You have reached your 1 free soundbank slot. Upgrade to Bipluk+ Lifetime to store unlimited synth vaults.\n\n"
         "Upgrade now: https://bipluk.com/signup?plan=personal"
     )
     return send_email_via_resend(
         to=email_clean,
-        subject="Your bipluk soundbank vault is full!",
+        subject="Your Bipluk soundbank vault is full!",
         body=plain_body,
         html=html_content,
         from_addr=SMTP_FROM_BILLING,
@@ -2714,13 +2714,13 @@ def send_vip_purchase_email(email: str, plan: str = "personal") -> tuple[bool, s
     })
     plain_body = (
         f"Hi {first_name_cap},\n\n"
-        "🎉 Welcome to bipluk+ Lifetime!\n\n"
+        "🎉 Welcome to Bipluk+ Lifetime!\n\n"
         "Your purchase has been confirmed and your studio vault is now permanently unlocked.\n\n"
         "Open your VIP vault: https://bipluk.com/home"
     )
     return send_email_via_resend(
         to=email_clean,
-        subject="🎉 Welcome to bipluk+ Lifetime!",
+        subject="🎉 Welcome to Bipluk+ Lifetime!",
         body=plain_body,
         html=html_content,
         from_addr=SMTP_FROM_BILLING,
@@ -5220,36 +5220,36 @@ async def dynamic_synth_seo(synth_slug: str, request: Request):
 DRIP_SUBJECT = "your studio vault is locked"
 DRIP_BODY_TEMPLATE = """hey there,
 
-you signed up for bipluk, but you are currently on the free tier.
+you signed up for Bipluk, but you are currently on the free tier.
 
 right now, your vault is restricted. you can't download your sysex banks back to your computer, upload a second soundbank, or use preset name decoding.
 
-if you successfully tested your synth connection and want to protect your entire collection, it's time to upgrade. bipluk is a professional tool built exclusively for producers who want a bulletproof cloud archive for their vintage synthesizers.
+if you successfully tested your synth connection and want to protect your entire collection, it's time to upgrade. Bipluk is a professional tool built exclusively for producers who want a bulletproof cloud archive for their vintage synthesizers.
 
 if you have a juno-106, dx7, or m1 sitting in your studio right now, those sounds are vulnerable. all it takes is one internal battery failure or local drive crash to wipe your custom patches forever.
 
-unlock your vault and get full, unlimited access to bipluk today:
+unlock your vault and get full, unlimited access to Bipluk today:
 
 👉 https://bipluk.com/home
 
 keep the analog alive,
 
-bipluk support
+Bipluk Support
 p.s. if you ran into issues setting up your midi connection or parsing your sysex bank, just reply directly to this email and let me know.
 """
 
 DRIP_HTML_TEMPLATE = """
 <div style="background-color: #050507; padding: 40px 20px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
     <div style="max-width: 460px; margin: 0 auto; background-color: #0b0b0e; border: 1px solid #1f1f24; border-radius: 20px; padding: 32px; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.8);">
-        <img src="https://bipluk.com/static/logo.svg" alt="bipluk" width="44" height="44" style="margin-bottom: 12px; image-rendering: pixelated;">
-        <h1 style="color: #ffffff; font-size: 18px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin: 0 0 6px 0;">bipluk</h1>
+        <img src="https://bipluk.com/static/logo.svg" alt="Bipluk" width="44" height="44" style="margin-bottom: 12px; image-rendering: pixelated;">
+        <h1 style="color: #ffffff; font-size: 18px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin: 0 0 6px 0;">Bipluk</h1>
         <p style="color: #71717a; font-size: 12px; margin: 0 0 24px 0; font-weight: 500;">Vault Status & Protection Alert</p>
 
         <hr style="border: 0; border-top: 1px solid #18181b; margin: 0 0 24px 0;">
 
         <h2 style="color: #f4f4f5; font-size: 16px; font-weight: 600; margin: 0 0 12px 0;">Your Studio Vault is Restricted</h2>
         <p style="color: #a1a1aa; font-size: 13px; line-height: 1.5; margin: 0 0 16px 0; text-align: left;">
-            You signed up for bipluk, but you are currently on the free tier. Free vaults are restricted to 1 soundbank slot with export locks.
+            You signed up for Bipluk, but you are currently on the free tier. Free vaults are restricted to 1 soundbank slot with export locks.
         </p>
         <p style="color: #a1a1aa; font-size: 13px; line-height: 1.5; margin: 0 0 24px 0; text-align: left;">
             If you have a <strong style="color: #ffffff;">Juno-106, DX7, or M1</strong> in your studio, those custom patches are vulnerable. All it takes is one dead RAM battery or local disk crash to wipe your soundbanks forever.
@@ -5258,7 +5258,7 @@ DRIP_HTML_TEMPLATE = """
         <a href="https://bipluk.com/checkout" style="display: inline-block; background-color: #ffffff; color: #000000; text-decoration: none; padding: 14px 32px; border-radius: 12px; font-size: 13px; font-weight: bold; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 24px;">Unlock Unlimited Vault &rarr;</a>
 
         <p style="color: #52525b; font-size: 11px; margin: 0;">
-            © 2026 bipluk · Web MIDI Cloud Librarian
+            © 2026 Bipluk · Web MIDI Cloud Librarian
         </p>
     </div>
 </div>

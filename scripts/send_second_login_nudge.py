@@ -48,7 +48,7 @@ def generate_plain_text(first_name: str, email: str) -> str:
         f"If you're ready to unlock unlimited private cloud vaults, one-click patch auditions, and permanent soundbank backup for your entire hardware collection:\n"
         f"Claim Lifetime Studio Access: https://bipluk.com/#pricing?utm_source=email&utm_medium=trigger&utm_campaign=second_login\n\n"
         f"Keep the analog fires burning,\n"
-        f"Max from bipluk\n"
+        f"Max from Bipluk\n"
         f"bipluk.com\n\n"
         f"To unsubscribe: https://bipluk.com/unsubscribe?email={email}\n"
     )

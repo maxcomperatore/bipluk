@@ -1,5 +1,5 @@
 """
-Catalog of high-converting, technical storytelling email campaigns for bipluk.
+Catalog of high-converting, technical storytelling email campaigns for Bipluk.
 Follows the 3-part direct-response formula:
 - 60 percent Technical Truth / Hardware Mystery / Story
 - 20 percent Hard Reality confrontation
@@ -14,7 +14,7 @@ Front-loaded per 90-day stochastic Monte Carlo conversion optimization:
 
 CAMPAIGNS = [   {   'badge': 'HARDWARE MAINTENANCE · BATTERY DECAY',
         'call_to_action_text': '\n'
-                               'Back up your entire synthesizer to bipluk in 30 seconds before you do your next '
+                               'Back up your entire synthesizer to Bipluk in 30 seconds before you do your next '
                                'battery replacement. Download raw .syx files anytime, or flash them back in one click '
                                'once the new battery is soldered. $39 once protects every synth you will ever own for '
                                'life.\n'
@@ -51,7 +51,7 @@ CAMPAIGNS = [   {   'badge': 'HARDWARE MAINTENANCE · BATTERY DECAY',
         'subject': 'The CR2032 battery time bomb'},
     {   'badge': 'BUSINESS OF MUSIC · ASSET PROTECTION',
         'call_to_action_text': '\n'
-                               'bipluk gives you lifetime cloud vault preservation for just $39 once, less than 0.2% '
+                               'Bipluk gives you lifetime cloud vault preservation for just $39 once, less than 0.2% '
                                'of your studio gear value. No monthly rent, no recurring subscriptions, and unlimited '
                                'soundbank storage across all your hardware rigs.\n'
                                '        ',
@@ -88,7 +88,7 @@ CAMPAIGNS = [   {   'badge': 'HARDWARE MAINTENANCE · BATTERY DECAY',
         'subject': '$50,000 in gear, $0 in patch data'},
     {   'badge': 'RECOVERY PROTOCOL · KORG M1',
         'call_to_action_text': '\n'
-                               'bipluk stores full Korg M1 factory banks, combi programs, and custom user patches in '
+                               'Bipluk stores full Korg M1 factory banks, combi programs, and custom user patches in '
                                'your secure cloud vault. If your M1 ever wipes, connect your USB cable, click Restore, '
                                'and your entire workstation memory is repopulated in 15 seconds flat.\n'
                                '        ',
@@ -104,7 +104,7 @@ CAMPAIGNS = [   {   'badge': 'HARDWARE MAINTENANCE · BATTERY DECAY',
         'preheader': "If your display says '00 [BLANK]', do not panic.",
         'ps_text': 'If your M1 currently shows "00 PROG: [BLANK] / INIT COMB", don\'t panic. You don\'t need a $180 '
                    'RAM card. You can flash the full original 100-program factory bank back into your M1 in 15 seconds '
-                   'through bipluk: <a '
+                   'through Bipluk: <a '
                    'href="https://bipluk.com/home?utm_source=email&utm_medium=drip&utm_campaign=korg_m1_wipe" '
                    'style="color: #ffffff; text-decoration: underline;">Restore M1 factory sounds now &rarr;</a>',
         'story_body': '\n'
@@ -125,7 +125,7 @@ CAMPAIGNS = [   {   'badge': 'HARDWARE MAINTENANCE · BATTERY DECAY',
         'subject': 'The Korg M1 00 PROG disaster'},
     {   'badge': 'HARDWARE FORENSICS · ROLAND',
         'call_to_action_text': '\n'
-                               'bipluk connects directly to your Juno-106 in Chrome with zero driver installation. For '
+                               'Bipluk connects directly to your Juno-106 in Chrome with zero driver installation. For '
                                'less than the cost of a single replacement voice chip ($39 once for lifetime access), '
                                'one click pulls your entire bank and safely locks every preset in your private cloud '
                                'vault forever.\n'
@@ -179,7 +179,7 @@ CAMPAIGNS = [   {   'badge': 'HARDWARE MAINTENANCE · BATTERY DECAY',
         'headline': 'How a Master Sound Designer Solved the SysEx Nightmare',
         'id': 'jim_daneker_vault',
         'preheader': 'How touring arena soundchecks replaced 32-bit floppy disks.',
-        'ps_text': 'Jim Daneker runs bipluk on touring arena rigs with Michael W. Smith because soundcheck is no place '
+        'ps_text': 'Jim Daneker runs Bipluk on touring arena rigs with Michael W. Smith because soundcheck is no place '
                    'for 1990s driver conflicts. Join hundreds of pro keyboardists with lifetime access: <a '
                    'href="https://bipluk.com/#pricing?utm_source=email&utm_medium=drip&utm_campaign=jim_daneker" '
                    'style="color: #ffffff; text-decoration: underline;">Claim your $39 Lifetime Pass &rarr;</a>',
@@ -193,8 +193,8 @@ CAMPAIGNS = [   {   'badge': 'HARDWARE MAINTENANCE · BATTERY DECAY',
                       'to run dead software, and dealing with MIDI interfaces that choke mid-transfer during '
                       'soundcheck.\n'
                       '\n'
-                      'When Jim picked up bipluk, he put it directly into his studio workflow:\n'
-                      '"bipluk solves the single biggest headache in vintage hardware gear. Having a zero-install Web '
+                      'When Jim picked up Bipluk, he put it directly into his studio workflow:\n'
+                      '"Bipluk solves the single biggest headache in vintage hardware gear. Having a zero-install Web '
                       'MIDI librarian that auditions, decodes, and vaults vintage patch banks directly in the browser '
                       "without 1990s driver conflicts is pure magic. It's the modern standard we've needed for "
                       'decades."\n'
@@ -202,7 +202,7 @@ CAMPAIGNS = [   {   'badge': 'HARDWARE MAINTENANCE · BATTERY DECAY',
         'subject': "Jim Daneker's touring rig secret"},
     {   'badge': 'INDUSTRY ANALYSIS · OPERATING SYSTEMS',
         'call_to_action_text': '\n'
-                               'bipluk runs entirely on native Web MIDI standards inside modern browsers. No '
+                               'Bipluk runs entirely on native Web MIDI standards inside modern browsers. No '
                                'installation, no manual driver configurations, and no operating system deprecation. '
                                'For a single $39 lifetime investment, it works on Mac, Windows, Linux, and Chromebooks '
                                'forever.\n'
@@ -238,8 +238,8 @@ CAMPAIGNS = [   {   'badge': 'HARDWARE MAINTENANCE · BATTERY DECAY',
         'subject': 'The 32-bit driver extinction'},
     {   'badge': 'HARDWARE TEARDOWN · CABLE FORENSICS',
         'call_to_action_text': '\n'
-                               "bipluk's Web MIDI engine verifies incoming packet integrity and checksums in real "
-                               'time. If your interface drops packets or corrupts byte streams, bipluk catches it '
+                               "Bipluk's Web MIDI engine verifies incoming packet integrity and checksums in real "
+                               'time. If your interface drops packets or corrupts byte streams, Bipluk catches it '
                                'before it touches your hardware memory registers.\n'
                                '        ',
         'cta_button': 'Run a Free Interface Diagnostic',
@@ -251,7 +251,7 @@ CAMPAIGNS = [   {   'badge': 'HARDWARE MAINTENANCE · BATTERY DECAY',
         'headline': 'The Dangerous Scam of Cheap MIDI Interfaces',
         'id': 'cheap_midi_cables',
         'preheader': 'Why counterfeit $10 adapters drop bytes on bulk dumps.',
-        'ps_text': "Wondering if your current cable drops SysEx packets? Plug it into Chrome and run bipluk's "
+        'ps_text': "Wondering if your current cable drops SysEx packets? Plug it into Chrome and run Bipluk's "
                    'real-time packet integrity check: <a '
                    'href="https://bipluk.com/?utm_source=email&utm_medium=drip&utm_campaign=cheap_cables" '
                    'style="color: #ffffff; text-decoration: underline;">Test your cable integrity free &rarr;</a>',
@@ -276,7 +276,7 @@ CAMPAIGNS = [   {   'badge': 'HARDWARE MAINTENANCE · BATTERY DECAY',
         'subject': 'Why $10 USB-MIDI cables fail'},
     {   'badge': 'ALGORITHM ANALYSIS · YAMAHA DX7',
         'call_to_action_text': '\n'
-                               'bipluk features a dedicated, byte-accurate DX7 parser. It extracts all 32 patch names '
+                               'Bipluk features a dedicated, byte-accurate DX7 parser. It extracts all 32 patch names '
                                'automatically, verifies checksum validity, and lets you audition and search your '
                                'library in real time right in your browser.\n'
                                '        ',
@@ -289,7 +289,7 @@ CAMPAIGNS = [   {   'badge': 'HARDWARE MAINTENANCE · BATTERY DECAY',
         'headline': 'The Strange Binary Math Behind the DX7',
         'id': 'dx7_nibble_packing',
         'preheader': 'Why generic librarians turn warm electric pianos into static.',
-        'ps_text': 'We pre-loaded full, byte-verified DX7 factory and classic artist libraries inside the bipluk '
+        'ps_text': 'We pre-loaded full, byte-verified DX7 factory and classic artist libraries inside the Bipluk '
                    'cloud. You can audition and flash them into your DX7 in 1 click: <a '
                    'href="https://bipluk.com/home?utm_source=email&utm_medium=drip&utm_campaign=dx7_nibble" '
                    'style="color: #ffffff; text-decoration: underline;">Explore DX7 soundbanks &rarr;</a>',
@@ -313,7 +313,7 @@ CAMPAIGNS = [   {   'badge': 'HARDWARE MAINTENANCE · BATTERY DECAY',
         'subject': 'The Yamaha DX7 operator mystery'},
     {   'badge': 'ICONIC SOUND DESIGN · YAMAHA TX81Z',
         'call_to_action_text': '\n'
-                               "bipluk's dedicated TX81Z parser captures both voice algorithms and multi-timbral "
+                               "Bipluk's dedicated TX81Z parser captures both voice algorithms and multi-timbral "
                                'performance maps simultaneously. Preserve your exact LatelyBass tweaks and custom FM '
                                'splits forever.\n'
                                '        ',
@@ -352,7 +352,7 @@ CAMPAIGNS = [   {   'badge': 'HARDWARE MAINTENANCE · BATTERY DECAY',
         'subject': 'The Yamaha TX81Z LatelyBass secret'},
     {   'badge': 'PROTOCOL SECRETS · MIDI SPECS',
         'call_to_action_text': '\n'
-                               "bipluk's Web MIDI engine was engineered specifically for vintage hardware. It "
+                               "Bipluk's Web MIDI engine was engineered specifically for vintage hardware. It "
                                'automatically segments outbound dumps into safe byte-chunks with 60ms pause intervals, '
                                'ensuring 100% byte-accurate delivery with zero buffer crashes.\n'
                                '        ',
@@ -366,7 +366,7 @@ CAMPAIGNS = [   {   'badge': 'HARDWARE MAINTENANCE · BATTERY DECAY',
         'headline': 'Why Modern Computers Choke 1980s Synthesizers',
         'id': 'baud_rate_bottleneck',
         'preheader': 'Why cheap USB cables trigger silent buffer overruns.',
-        'ps_text': "You don't need to buy a $300 specialized MIDI interface to fix buffer overruns. bipluk handles the "
+        'ps_text': "You don't need to buy a $300 specialized MIDI interface to fix buffer overruns. Bipluk handles the "
                    '31,250 baud byte-pacing natively in Chrome. <a '
                    'href="https://bipluk.com/?utm_source=email&utm_medium=drip&utm_campaign=baud_rate" style="color: '
                    '#ffffff; text-decoration: underline;">Run a free handshake test with your synth now &rarr;</a>',
@@ -389,7 +389,7 @@ CAMPAIGNS = [   {   'badge': 'HARDWARE MAINTENANCE · BATTERY DECAY',
         'subject': 'The 1983 baud rate bottleneck'},
     {   'badge': 'RAVE ARCHAEOLOGY · ROLAND ALPHA JUNO',
         'call_to_action_text': '\n'
-                               'bipluk turns your modern web browser into a full visual librarian for the Roland Alpha '
+                               'Bipluk turns your modern web browser into a full visual librarian for the Roland Alpha '
                                'Juno 1, 2, and MKS-50. Pull, audition, and safely vault your entire preset library '
                                'with zero driver setup.\n'
                                '        ',
@@ -402,7 +402,7 @@ CAMPAIGNS = [   {   'badge': 'HARDWARE MAINTENANCE · BATTERY DECAY',
         'headline': 'The Genius Synth Design Trapped Behind a Single Rotary Dial',
         'id': 'alpha_juno_hoover',
         'preheader': 'Skip paying $400 for a PG-300 hardware programmer.',
-        'ps_text': "Don't spend $400 on a vintage PG-300 hardware controller just to manage your Alpha Juno. bipluk "
+        'ps_text': "Don't spend $400 on a vintage PG-300 hardware controller just to manage your Alpha Juno. Bipluk "
                    'handles full SysEx patch dumps and parameter parsing right in Chrome: <a '
                    'href="https://bipluk.com/home?utm_source=email&utm_medium=drip&utm_campaign=alpha_juno" '
                    'style="color: #ffffff; text-decoration: underline;">Unlock your Alpha Juno vault &rarr;</a>',
@@ -424,7 +424,7 @@ CAMPAIGNS = [   {   'badge': 'HARDWARE MAINTENANCE · BATTERY DECAY',
         'subject': 'The Alpha Juno PG-300 problem'},
     {   'badge': 'ANALOG HISTORY · SEQUENTIAL CIRCUITS',
         'call_to_action_text': '\n'
-                               'bipluk was built with vintage CPU timing curves. It communicates with both original '
+                               'Bipluk was built with vintage CPU timing curves. It communicates with both original '
                                'Sequential firmware and upgraded GliGli Teensy processors with 100% byte-accurate '
                                'fidelity.\n'
                                '        ',
@@ -437,7 +437,7 @@ CAMPAIGNS = [   {   'badge': 'HARDWARE MAINTENANCE · BATTERY DECAY',
         'headline': 'Inside the Microprocessor That Made MIDI History',
         'id': 'prophet_600_gligli',
         'preheader': 'Auto-calibrating byte pacing for stock ROMs and GliGli upgrades.',
-        'ps_text': 'Whether you run stock Sequential ROMs or the modern GliGli Teensy upgrade, bipluk auto-calibrates '
+        'ps_text': 'Whether you run stock Sequential ROMs or the modern GliGli Teensy upgrade, Bipluk auto-calibrates '
                    'byte pacing so your Prophet-600 never drops a patch: <a '
                    'href="https://bipluk.com/home?utm_source=email&utm_medium=drip&utm_campaign=prophet_600" '
                    'style="color: #ffffff; text-decoration: underline;">Back up your Prophet-600 &rarr;</a>',
@@ -462,7 +462,7 @@ CAMPAIGNS = [   {   'badge': 'HARDWARE MAINTENANCE · BATTERY DECAY',
         'subject': 'The Prophet-600 CPU bottleneck'},
     {   'badge': 'VINTAGE CPU FORENSICS · OBERHEIM',
         'call_to_action_text': '\n'
-                               'bipluk throttles SysEx packets with micro-second buffer spacing designed specifically '
+                               'Bipluk throttles SysEx packets with micro-second buffer spacing designed specifically '
                                'for the Oberheim 8031 CPU. Back up, audition, and restore all 1,000 Matrix patches '
                                'with zero voice dropouts or processor crashes.\n'
                                '        ',
@@ -475,7 +475,7 @@ CAMPAIGNS = [   {   'badge': 'HARDWARE MAINTENANCE · BATTERY DECAY',
         'headline': 'Why Vintage Oberheims Lock Up During SysEx Dumps',
         'id': 'oberheim_matrix_bug',
         'preheader': 'Manage all 1,000 Matrix presets in Chrome with zero CPU lockups.',
-        'ps_text': 'Own an Oberheim Matrix-1000? bipluk lets you access and manage all 1,000 factory and user presets '
+        'ps_text': 'Own an Oberheim Matrix-1000? Bipluk lets you access and manage all 1,000 factory and user presets '
                    'directly in Chrome with zero firmware lockups: <a '
                    'href="https://bipluk.com/home?utm_source=email&utm_medium=drip&utm_campaign=oberheim_matrix" '
                    'style="color: #ffffff; text-decoration: underline;">Access your Oberheim vault &rarr;</a>',
@@ -497,7 +497,7 @@ CAMPAIGNS = [   {   'badge': 'HARDWARE MAINTENANCE · BATTERY DECAY',
         'subject': 'The Oberheim Matrix CPU freeze'},
     {   'badge': 'HARDWARE FORENSICS · ROLAND D-50',
         'call_to_action_text': '\n'
-                               "bipluk's Web MIDI engine was engineered specifically for Roland's handshake timing. It "
+                               "Bipluk's Web MIDI engine was engineered specifically for Roland's handshake timing. It "
                                "automatically respects the D-50's ACK/NAK delays and backs up your complete Linear "
                                'Arithmetic banks in 15 seconds directly from Chrome.\n'
                                '        ',
@@ -511,7 +511,7 @@ CAMPAIGNS = [   {   'badge': 'HARDWARE MAINTENANCE · BATTERY DECAY',
         'headline': 'The Delicate Binary Heart of Linear Arithmetic Synthesis',
         'id': 'd50_la_synthesis',
         'preheader': "How to prevent the dreaded 'MIDI Communication Error' on Roland racks.",
-        'ps_text': "The Roland D-50's ACK/NAK handshake protocol is notoriously sensitive. bipluk handles the exact "
+        'ps_text': "The Roland D-50's ACK/NAK handshake protocol is notoriously sensitive. Bipluk handles the exact "
                    "two-way confirmation protocol so you never see a 'MIDI Communication Error' again: <a "
                    'href="https://bipluk.com/home?utm_source=email&utm_medium=drip&utm_campaign=d50_handshake" '
                    'style="color: #ffffff; text-decoration: underline;">Back up your D-50 presets &rarr;</a>',
@@ -532,7 +532,7 @@ CAMPAIGNS = [   {   'badge': 'HARDWARE MAINTENANCE · BATTERY DECAY',
         'subject': 'The Roland D-50 handshake error'},
     {   'badge': 'SYNTH ARCHAEOLOGY · CASIO CZ',
         'call_to_action_text': '\n'
-                               'bipluk includes full, verified support for the entire Casio CZ series (CZ-101, '
+                               'Bipluk includes full, verified support for the entire Casio CZ series (CZ-101, '
                                'CZ-1000, CZ-3000, CZ-5000, CZ-1). It decodes CZ nibbles accurately and displays patch '
                                'names in clean, readable text.\n'
                                '        ',
@@ -567,7 +567,7 @@ CAMPAIGNS = [   {   'badge': 'HARDWARE MAINTENANCE · BATTERY DECAY',
         'subject': 'The Casio CZ phase distortion trick'},
     {   'badge': 'WAVETABLE ARCHITECTURE · WALDORF',
         'call_to_action_text': '\n'
-                               "bipluk's Web MIDI engine incorporates automated Waldorf compilation pacing. It safely "
+                               "Bipluk's Web MIDI engine incorporates automated Waldorf compilation pacing. It safely "
                                'delivers wavetable packets with verified hardware response timing, keeping your custom '
                                'wavetables pristine.\n'
                                '        ',
@@ -603,7 +603,7 @@ CAMPAIGNS = [   {   'badge': 'HARDWARE MAINTENANCE · BATTERY DECAY',
         'subject': 'The Waldorf Microwave timeout'},
     {   'badge': 'CIRCUIT RESCUE · ENSONIQ ESQ-1',
         'call_to_action_text': '\n'
-                               'Back up your 40 ESQ-1 programs to bipluk before your battery reaches the failure '
+                               'Back up your 40 ESQ-1 programs to Bipluk before your battery reaches the failure '
                                'threshold. Once your new battery is installed, restore your entire synth bank in one '
                                'click right from your browser.\n'
                                '        ',
@@ -637,7 +637,7 @@ CAMPAIGNS = [   {   'badge': 'HARDWARE MAINTENANCE · BATTERY DECAY',
         'subject': 'The Ensoniq KBD CAL ERROR'},
     {   'badge': 'VINTAGE RACK FORENSICS · ALESIS',
         'call_to_action_text': '\n'
-                               'bipluk backs up your entire 90-program Quadraverb patch bank in 10 seconds via Web '
+                               'Bipluk backs up your entire 90-program Quadraverb patch bank in 10 seconds via Web '
                                'MIDI. Save unlimited custom reverb chains, rename them easily, and flash them back to '
                                'your hardware anytime.\n'
                                '        ',
@@ -674,7 +674,7 @@ CAMPAIGNS = [   {   'badge': 'HARDWARE MAINTENANCE · BATTERY DECAY',
         'subject': 'The Alesis Quadraverb battery leak'},
     {   'badge': 'DIGITAL SAMPLING HISTORY · E-MU SYSTEMS',
         'call_to_action_text': '\n'
-                               "bipluk automatically queries and auto-configures your E-mu hardware's Device ID over "
+                               "Bipluk automatically queries and auto-configures your E-mu hardware's Device ID over "
                                'Web MIDI, verifying that every patch bank is 100% captured and safely archived.\n'
                                '        ',
         'cta_button': 'Back Up Your E-mu Racks Now',
@@ -686,7 +686,7 @@ CAMPAIGNS = [   {   'badge': 'HARDWARE MAINTENANCE · BATTERY DECAY',
         'headline': 'The Compression Genius That Powered 90s Television & Pop',
         'id': 'emu_proteus_rom',
         'preheader': 'How to verify E-mu $18 manufacturer handshake without fake dumps.',
-        'ps_text': "bipluk auto-detects E-mu's proprietary $18 manufacturer ID and verifies handshake reception so you "
+        'ps_text': "Bipluk auto-detects E-mu's proprietary $18 manufacturer ID and verifies handshake reception so you "
                    "never get a fake 'successful' dump again: <a "
                    'href="https://bipluk.com/home?utm_source=email&utm_medium=drip&utm_campaign=emu_proteus" '
                    'style="color: #ffffff; text-decoration: underline;">Back up your E-mu rack now &rarr;</a>',
@@ -711,7 +711,7 @@ CAMPAIGNS = [   {   'badge': 'HARDWARE MAINTENANCE · BATTERY DECAY',
         'subject': '16-bit sound in 4MB of ROM'},
     {   'badge': 'DSP ARCHITECTURE · NORD LEAD',
         'call_to_action_text': '\n'
-                               'bipluk gives your Nord Lead unlimited cloud memory banks. Swap entire 40-patch banks '
+                               'Bipluk gives your Nord Lead unlimited cloud memory banks. Swap entire 40-patch banks '
                                'into your hardware in seconds directly from your laptop or studio computer for $0 in '
                                'extra hardware costs.\n'
                                '        ',
@@ -724,7 +724,7 @@ CAMPAIGNS = [   {   'badge': 'HARDWARE MAINTENANCE · BATTERY DECAY',
         'headline': 'The Red Synth That Started the Virtual Analog Revolution',
         'id': 'nord_lead_virtual_analog',
         'preheader': 'Turn your browser into an infinite bank switcher without PCMCIA cards.',
-        'ps_text': 'Skip paying $200 on eBay for vintage PCMCIA cards. bipluk turns your browser into an infinite bank '
+        'ps_text': 'Skip paying $200 on eBay for vintage PCMCIA cards. Bipluk turns your browser into an infinite bank '
                    'switcher for the Nord Lead 1 and 2: <a '
                    'href="https://bipluk.com/home?utm_source=email&utm_medium=drip&utm_campaign=nord_lead" '
                    'style="color: #ffffff; text-decoration: underline;">Expand your Nord Lead banks &rarr;</a>',
