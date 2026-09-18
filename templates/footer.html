@@ -166,10 +166,10 @@
         <!-- Bottom Brand Bar -->
         <div class="pt-8 flex flex-col md:flex-row items-center justify-between gap-6">
             <div class="flex flex-col items-center md:items-start gap-1">
-                <div class="flex items-center gap-2.5">
-                    <div class="relative spin-minecraft flex items-center justify-center"
+                <div class="flex items-center gap-2.5 group cursor-pointer">
+                    <div class="relative brand-icon-wrap flex items-center justify-center"
                         style="transform-style: preserve-3d; width: 20px; height: 20px;">
-                        <img src="/static/logo.svg" alt="bipluk Logo" width="20" height="20"
+                        <img src="/static/logo.svg" alt="Bipluk Logo" width="20" height="20"
                             class="absolute w-5 h-5 object-contain"
                             style="transform: translateZ(0px); image-rendering: pixelated;">
                         <img src="/static/logo.svg" alt="" width="20" height="20"
@@ -182,7 +182,7 @@
                             class="absolute w-5 h-5 object-contain"
                             style="transform: translateZ(-1.5px); filter: brightness(0.2); image-rendering: pixelated;">
                     </div>
-                    <span class="font-roman uppercase text-xs text-white tracking-widest">bipluk™</span>
+                    <span class="font-roman uppercase text-xs text-white tracking-widest group-hover:text-blue-400 transition-colors">Bipluk™</span>
 
                     <!-- TradingView-Style "MADE BY HUMANS" Badge (Signature Lapis Lazuli Theme) -->
                     <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded bg-gradient-to-r from-[#0e213b] via-[#1B4F8C] to-[#26619C] border border-[#4A7FB8]/40 shadow-inner select-none transition-transform hover:scale-105">
@@ -343,11 +343,29 @@
         }
     }
 
-    .spin-minecraft {
-        animation: minecraft-spin 8s linear infinite;
-        transform-style: preserve-3d;
-        backface-visibility: visible;
-    }
+        /* Brand logo Twitch / Jitter animation on hover */
+        @keyframes brand-twitch {
+            0% { transform: scale(1) rotate(0deg); }
+            15% { transform: scale(1.15) rotate(-9deg) translateY(-1px); }
+            30% { transform: scale(1.15) rotate(7deg) translateY(1px); }
+            45% { transform: scale(1.18) rotate(-5deg) translateY(-1px); }
+            60% { transform: scale(1.12) rotate(4deg) translateY(0); }
+            75% { transform: scale(1.06) rotate(-2deg); }
+            100% { transform: scale(1) rotate(0deg); }
+        }
+
+        .brand-icon-wrap {
+            transform: scale(1) rotate(0deg);
+            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.2s ease;
+            transform-style: preserve-3d;
+            backface-visibility: visible;
+        }
+
+        .group:hover .brand-icon-wrap,
+        .brand-icon-wrap:hover {
+            animation: brand-twitch 0.45s ease-in-out forwards;
+            filter: drop-shadow(0 0 8px rgba(74, 127, 184, 0.6));
+        }
 
     @keyframes led-glow {
 
