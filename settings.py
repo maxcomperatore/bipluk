@@ -78,7 +78,7 @@ SMTP_REPLY_TO = getenv("SMTP_REPLY_TO", "support@bipluk.com")
 SMTP_FROM = getenv("SMTP_FROM", "bipluk Support <support@bipluk.com>")
 SMTP_FROM_SUPPORT = getenv("SMTP_FROM_SUPPORT", "bipluk Support <support@bipluk.com>")
 SMTP_FROM_BILLING = getenv("SMTP_FROM_BILLING", "bipluk Billing <support@bipluk.com>")
-SMTP_FROM_MARKETING = getenv("SMTP_FROM_MARKETING", "Max from bipluk <max@bipluk.com>")
+SMTP_FROM_MARKETING = getenv("SMTP_FROM_MARKETING", "bipluk Support <support@bipluk.com>")
 SMTP_FROM_NEWSLETTER = getenv("SMTP_FROM_NEWSLETTER", "bipluk Dispatch <support@bipluk.com>")
 
 # Cron / internal auth
