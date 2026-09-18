@@ -1091,7 +1091,7 @@ SMTP_REPLY_TO = getattr(settings, "SMTP_REPLY_TO", "support@bipluk.com")
 SMTP_FROM = getattr(settings, "SMTP_FROM", "bipluk Support <support@bipluk.com>")
 SMTP_FROM_SUPPORT = getattr(settings, "SMTP_FROM_SUPPORT", "bipluk Support <support@bipluk.com>")
 SMTP_FROM_BILLING = getattr(settings, "SMTP_FROM_BILLING", "bipluk Billing <support@bipluk.com>")
-SMTP_FROM_MARKETING = getattr(settings, "SMTP_FROM_MARKETING", "bipluk Support <support@bipluk.com>")
+SMTP_FROM_MARKETING = getattr(settings, "SMTP_FROM_MARKETING", "Max from bipluk <support@bipluk.com>")
 SMTP_FROM_NEWSLETTER = getattr(settings, "SMTP_FROM_NEWSLETTER", "bipluk Dispatch <support@bipluk.com>")
 CRON_SECRET = settings.CRON_SECRET or ""
 
