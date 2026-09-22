@@ -6170,6 +6170,7 @@ async def newsletter_pending(request: Request):
     return {
         "status": "ready",
         "subject": subject,
+        "body_template": body_template,
         "from": SMTP_FROM_NEWSLETTER,
         "reply_to": SMTP_REPLY_TO,
         "recipients": prepared,
@@ -6223,4 +6224,3 @@ async def trigger_newsletter_cron(request: Request):
         "message": "Run scripts/send_newsletter.py from the Newsletter Cron workflow.",
         "recipient_count": len(recipients),
     }
-
