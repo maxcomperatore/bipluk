@@ -1,7 +1,7 @@
-# bipluk: Web MIDI SysEx Librarian & Vintage Hardware Synth Vault
+# Bipluk: Web MIDI SysEx Librarian & Vintage Hardware Synth Vault
 
 <p align="center">
-  <img src="static/logo.png" alt="bipluk logo" width="80" height="80" style="image-rendering: pixelated;" />
+  <img src="static/logo.png" alt="Bipluk logo" width="80" height="80" style="image-rendering: pixelated;" />
 </p>
 
 <p align="center">
@@ -20,9 +20,9 @@
 
 ---
 
-## 🎹 Table of Contents
+## Table of Contents
 
-- [Why bipluk?](#why-bipluk)
+- [Why Bipluk?](#why-bipluk)
 - [The Dying Battery Crisis](#the-dying-battery-crisis)
 - [Key Capabilities](#key-capabilities)
 - [System Architecture](#system-architecture)
@@ -55,7 +55,7 @@
 
 ---
 
-## Why bipluk?
+## Why Bipluk?
 
 If you own vintage hardware synthesizers (from a 1983 **Yamaha DX7** or a 1984 **Roland Juno-106** to a **Sequential Prophet-5** or **Korg M1**), managing your patch banks has historically been painful:
 
@@ -64,7 +64,7 @@ If you own vintage hardware synthesizers (from a 1983 **Yamaha DX7** or a 1984 *
 3. **Desktop Clutter & Driver Conflicts:** Soundcheck and studio recording sessions are no place for driver troubleshooting, COM port configurations, and USB permission crashes.
 
 > [!NOTE]
-> bipluk runs entirely inside modern web browsers using the open **W3C Web MIDI API**. Open a tab, connect your 5-pin DIN or USB-MIDI interface, back up your soundbanks, search patch names by text, and flash banks back to your instrument in one click.
+> Bipluk runs entirely inside modern web browsers using the open **W3C Web MIDI API**. Open a tab, connect your 5-pin DIN or USB-MIDI interface, back up your soundbanks, search patch names by text, and flash banks back to your instrument in one click.
 
 ---
 
@@ -80,16 +80,16 @@ Inside nearly every 1980s and 1990s hardware synthesizer sits a soldered 3-Volt 
 
 ```mermaid
 flowchart LR
-    A["🔋 Factory Battery (3.0V)"] --> B["⚠️ Voltage Drops (< 2.6V)"]
-    B --> C["💥 SRAM Power Collapses"]
-    C --> D["❌ Custom Soundbanks Wiped Forever"]
+    A["Factory Battery (3.0V)"] --> B["Voltage Drops (< 2.6V)"]
+    B --> C["SRAM Power Collapses"]
+    C --> D["Custom Soundbanks Wiped Forever"]
     
-    B -.->|"Emergency bipluk Web MIDI Dump"| E["☁️ Safe Cloud Vault (.syx)"]
-    E --> F["🔧 Solder New Battery"]
-    F --> G["⚡ One-Click Restore to Hardware"]
+    B -.->|"Emergency Bipluk Web MIDI Dump"| E["Safe Cloud Vault (.syx)"]
+    E --> F["Solder New Battery"]
+    F --> G["One-Click Restore to Hardware"]
 ```
 
-bipluk provides an instant, zero-install emergency backup flow to capture raw `.syx` binary snapshots before opening the chassis or servicing the motherboard.
+Bipluk provides an instant, zero-install emergency backup flow to capture raw `.syx` binary snapshots before opening the chassis or servicing the motherboard.
 
 ---
 
@@ -104,7 +104,7 @@ bipluk provides an instant, zero-install emergency backup flow to capture raw `.
 - **Global Purchasing Power Parity (PPP):** Automated regional pricing calibrated to local economies across 150+ countries.
 
 > [!TIP]
-> **Lossless Guarantee:** bipluk never converts your soundbank into a proprietary closed format. Your data remains 100% standard uncompressed System Exclusive binary (`.syx`), downloadable anytime.
+> **Lossless Guarantee:** Bipluk never converts your soundbank into a proprietary closed format. Your data remains 100% standard uncompressed System Exclusive binary (`.syx`), downloadable anytime.
 
 ---
 
@@ -113,16 +113,16 @@ bipluk provides an instant, zero-install emergency backup flow to capture raw `.
 ```mermaid
 flowchart TD
     subgraph Hardware ["Physical Studio Rig"]
-        Synth["🎹 Vintage Hardware Synth<br>(DX7, Juno-106, Prophet-5, M1)"]
-        MIDI_IF["🔌 Hardware MIDI Interface<br>(5-pin DIN to USB)"]
+        Synth["Vintage Hardware Synth<br>(DX7, Juno-106, Prophet-5, M1)"]
+        MIDI_IF["Hardware MIDI Interface<br>(5-pin DIN to USB)"]
         Synth <-->|"31.25 kbaud Serial UART"| MIDI_IF
     end
 
     subgraph Browser ["Modern Browser (Client)"]
-        WebMIDI["🌐 W3C Web MIDI API<br>(sysex: true)"]
-        Scheduler["⏱️ Microsecond Pacing Engine<br>(performance.now offsets)"]
-        Decoder["🔍 Binary Stream Decapsulator<br>(ASCII, 7-bit unpack, Checksums)"]
-        UI["💻 bipluk Web Interface<br>(Oscilloscope, Bank Slots, Search)"]
+        WebMIDI["W3C Web MIDI API<br>(sysex: true)"]
+        Scheduler["Microsecond Pacing Engine<br>(performance.now offsets)"]
+        Decoder["Binary Stream Decapsulator<br>(ASCII, 7-bit unpack, Checksums)"]
+        UI["Bipluk Web Interface<br>(Oscilloscope, Bank Slots, Search)"]
         
         MIDI_IF <-->|"USB-MIDI Packets"| WebMIDI
         WebMIDI --> Decoder
@@ -131,12 +131,12 @@ flowchart TD
         Scheduler -->|"Paced F0...F7 Chunks"| WebMIDI
     end
 
-    subgraph Cloud ["bipluk Cloud Services"]
-        Server["🚀 FastAPI Backend Application"]
-        Vault[("💾 Encrypted Soundbank Vault<br>SQLite / PostgreSQL")]
-        PPP["🌍 Live Purchasing Power Parity Engine"]
-        Stripe["💳 Stripe Payment Gateway"]
-        Resend["📬 CAN-SPAM Email System"]
+    subgraph Cloud ["Bipluk Cloud Services"]
+        Server["FastAPI Backend Application"]
+        Vault[("Encrypted Soundbank Vault<br>SQLite / PostgreSQL")]
+        PPP["Live Purchasing Power Parity Engine"]
+        Stripe["Stripe Payment Gateway"]
+        Resend["CAN-SPAM Email System"]
 
         UI <-->|"HTTPS JSON / REST"| Server
         Server <--> Vault
@@ -172,7 +172,7 @@ Optocouplers used in 1980s synthesizer inputs (such as the Sharp PC-900 or HP 6N
 
 $$t_r \approx 1.5\ \mu\text{s} \text{ to } 3.0\ \mu\text{s}, \quad t_f \approx 0.5\ \mu\text{s} \text{ to } 1.5\ \mu\text{s}$$
 
-When modern multi-gigahertz host computers blast packets without inter-byte pacing, optocoupler slew asymmetry combined with 1-byte FIFO buffers on vintage microcontrollers (Intel 8031, Zilog Z80) induces frame framing errors and buffer overrun interrupts. bipluk schedules packet dispatches with microsecond timestamps calibrated to vintage receive envelopes.
+When modern multi-gigahertz host computers blast packets without inter-byte pacing, optocoupler slew asymmetry combined with 1-byte FIFO buffers on vintage microcontrollers (Intel 8031, Zilog Z80) induces frame framing errors and buffer overrun interrupts. Bipluk schedules packet dispatches with microsecond timestamps calibrated to vintage receive envelopes.
 
 ---
 
@@ -212,7 +212,7 @@ This achieves an efficient transmission ratio:
 
 $$\text{Expansion Ratio} = \frac{5}{4} = 125\%$$
 
-bipluk implements automated bidirectional decapsulation for both schemes in real time.
+Bipluk implements automated bidirectional decapsulation for both schemes in real time.
 
 ---
 
@@ -261,7 +261,7 @@ If the remainder of the sum is zero, the checksum simplifies to zero:
 
 $$\text{If } \sum \text{PayloadByte}_i \equiv 0 \pmod{128} \implies \text{Checksum} = 0$$
 
-bipluk re-computes and verifies this checksum on every Roland patch transfer to guarantee soundbank integrity before sending byte streams to physical hardware.
+Bipluk re-computes and verifies this checksum on every Roland patch transfer to guarantee soundbank integrity before sending byte streams to physical hardware.
 
 ---
 
@@ -294,7 +294,7 @@ Once voltage drops beneath the SRAM transistor holding voltage $V_{\text{hold}} 
 
 ## Synthesizer Hardware Matrix (110+ Models)
 
-bipluk includes hardware decoders and SysEx adaptations for historic synthesizers across all major manufacturers:
+Bipluk includes hardware decoders and SysEx adaptations for historic synthesizers across all major manufacturers:
 
 ### Yamaha (FM & AWM Synthesis)
 
@@ -380,7 +380,7 @@ bipluk includes hardware decoders and SysEx adaptations for historic synthesizer
 
 ## Interactive Synthesizer Wiki Directory
 
-Explore in-depth technical specifications, factory patch listings, filter schematics, and memory protect guides on the live bipluk wiki:
+Explore in-depth technical specifications, factory patch listings, filter schematics, and memory protect guides on the live Bipluk wiki:
 
 | Synthesizer | Architecture Profile | Era | Live Interactive Wiki Link |
 |---|---|---|---|
@@ -413,7 +413,7 @@ Standard JavaScript `setTimeout()` and `setInterval()` run on an unprioritized b
 sequenceDiagram
     autonumber
     actor User as Musician / Producer
-    participant Browser as bipluk Engine (Browser)
+    participant Browser as Bipluk Engine (Browser)
     participant Driver as Web MIDI Output Queue
     participant Synth as Vintage Synth UART (8031 CPU)
 
@@ -448,7 +448,7 @@ function sendSysExWithPacing(midiOutput, bytes, chunkSize = 256, delayMs = 40) {
 
 ### Base-8 Hardware Addressing
 
-Synthesizers like the Roland Juno-106, Juno-60, and Sequential Prophet-5 feature front panels with 8 bank buttons and 8 patch buttons (numbered 1 to 8). Decimal indexing (0 to 63) confuses musicians during live sets. bipluk natively converts these to physical labels:
+Synthesizers like the Roland Juno-106, Juno-60, and Sequential Prophet-5 feature front panels with 8 bank buttons and 8 patch buttons (numbered 1 to 8). Decimal indexing (0 to 63) confuses musicians during live sets. Bipluk natively converts these to physical labels:
 
 $$\text{Display Number} = \left(\left\lfloor \frac{\text{index}}{8} \right\rfloor + 1\right) \times 10 + \left((\text{index} \bmod 8) + 1\right)$$
 
@@ -458,7 +458,7 @@ $$\text{Display Number} = \left(\left\lfloor \frac{\text{index}}{8} \right\rfloo
 
 ## Comparison Matrix
 
-| Feature | bipluk | MIDI-OX | Snoize SysEx Librarian | SoundTower | MIDI Quest |
+| Feature | Bipluk | MIDI-OX | Snoize SysEx Librarian | SoundTower | MIDI Quest |
 |---|---|---|---|---|---|
 | **Platform** | Any modern web browser | Windows only (x86) | macOS only | Windows / macOS | Windows / macOS |
 | **Setup Time** | **0 Seconds (Zero Install)** | Manual `.exe` setup | Manual `.dmg` setup | Heavy desktop app | Heavy desktop app |
@@ -502,8 +502,28 @@ $$\text{Display Number} = \left(\left\lfloor \frac{\text{index}}{8} \right\rfloo
 
 ### Prerequisites
 - Python 3.12 or 3.13
+- uv (recommended ultra-fast package manager: `pip install uv` or `winget install astral-sh.uv`)
 - Google Chrome, Microsoft Edge, Brave, or any Chromium browser with Web MIDI support
-- A USB-to-MIDI interface (e.g. Roland UM-ONE mk2, iConnectivity mio)
+- A USB-to-MIDI interface (for example Roland UM-ONE mk2, iConnectivity mio)
+
+### Deterministic Builds with uv
+
+Bipluk enforces 100% deterministic builds using a two-file architecture:
+
+1. **`requirements.in` (Human Wishlist):** Defines direct, top-level project dependencies with minimal version constraints.
+2. **`requirements.txt` (Machine Lockfile):** Fully compiled by `uv pip compile` with exact `==` pinned versions for all packages and their sub-dependencies.
+
+#### Compiling and Upgrading Dependencies
+
+To re-lock dependencies after modifying `requirements.in`:
+```bash
+uv pip compile requirements.in -o requirements.txt
+```
+
+To recalculate and upgrade the entire dependency tree:
+```bash
+uv pip compile --upgrade requirements.in -o requirements.txt
+```
 
 ### Installation
 
@@ -513,18 +533,22 @@ $$\text{Display Number} = \left(\left\lfloor \frac{\text{index}}{8} \right\rfloo
    cd bipluk
    ```
 
-2. **Create and activate a virtual environment:**
+2. **Create and activate a virtual environment with uv:**
    ```bash
-   python -m venv venv
+   uv venv
    # On Windows:
-   .\venv\Scripts\Activate.ps1
+   .\.venv\Scripts\activate
    # On macOS/Linux:
-   source venv/bin/activate
+   source .venv/bin/activate
    ```
 
-3. **Install dependencies:**
+3. **Install pinned dependencies:**
    ```bash
-   pip install -r requirements.txt
+   # Synchronize exact deterministic lockfile:
+   uv pip sync requirements.txt
+
+   # Or standard pip installation:
+   uv pip install -r requirements.txt
    ```
 
 4. **Configure environment variables:**
@@ -541,7 +565,31 @@ $$\text{Display Number} = \left(\left\lfloor \frac{\text{index}}{8} \right\rfloo
    Navigate to [http://localhost:8000](http://localhost:8000) and allow Web MIDI permissions when prompted.
 
 > [!IMPORTANT]
-> Web MIDI requires secure context (`https://` or `http://localhost`). Browsers will not permit System Exclusive access over insecure HTTP connections on external IP addresses.
+> Web MIDI requires a secure context (`https://` or `http://localhost`). Browsers will not permit System Exclusive access over insecure HTTP connections on external IP addresses.
+
+---
+
+### Cloud Deployment to Vercel
+
+Bipluk is configured for zero-friction serverless deployment to Vercel via `@vercel/python` using `vercel.json`:
+
+1. **Install Vercel CLI (if needed):**
+   ```bash
+   npm install -g vercel
+   ```
+
+2. **Deploy preview build:**
+   ```bash
+   vercel
+   ```
+
+3. **Deploy to production (bipluk.com):**
+   ```bash
+   vercel deploy --prod
+   ```
+
+The locked `requirements.txt` ensures that every Vercel build installs identical byte-for-byte packages, preventing production runtime surprises.
+
 
 ---
 
@@ -571,7 +619,7 @@ To add support for a new hardware synthesizer:
 
 ## API & AI Agent Discovery
 
-bipluk exposes discovery endpoints for Large Language Models and AI web agents:
+Bipluk exposes discovery endpoints for Large Language Models and AI web agents:
 
 - **AI Discovery Document:** [`/static/llms.txt`](https://bipluk.com/static/llms.txt): Plain-text engineering specification and feature summary.
 - **OpenAPI Schema:** [`/openapi.json`](https://bipluk.com/openapi.json): Complete machine-readable API definitions with Stripe `x-payment-info` declarations.
@@ -584,14 +632,14 @@ bipluk exposes discovery endpoints for Large Language Models and AI web agents:
 
 If you are researching Web MIDI implementation, synthesizer memory decay, or musical instrument software longevity, you may cite our published field studies:
 
-- **2026 Vintage Synth Owner Survey:** Half Radiation LLC, *2026 Vintage Synth Owner Survey*, bipluk, July 2026. (First-party survey of 2,417 synthesists regarding battery failure, driver extinction, and Web MIDI reliability).
-- **Lessons from Launching a Browser SysEx Vault:** Half Radiation LLC, *Lessons from Launching a Browser SysEx Vault*, bipluk, June 2026. (Analysis of Web MIDI packet pacing, UART bottlenecks, and pricing psychology).
+- **2026 Vintage Synth Owner Survey:** Half Radiation LLC, *2026 Vintage Synth Owner Survey*, Bipluk, July 2026. (First-party survey of 2,417 synthesists regarding battery failure, driver extinction, and Web MIDI reliability).
+- **Lessons from Launching a Browser SysEx Vault:** Half Radiation LLC, *Lessons from Launching a Browser SysEx Vault*, Bipluk, June 2026. (Analysis of Web MIDI packet pacing, UART bottlenecks, and pricing psychology).
 
 ---
 
 ## Corporate & Legal Entity
 
-bipluk is engineered and operated by **Half Radiation LLC**, an independent technology studio organized under the laws of the State of New Mexico, United States.
+Bipluk is engineered and operated by **Half Radiation LLC**, an independent technology studio organized under the laws of the State of New Mexico, United States.
 
 ```
 Half Radiation LLC
