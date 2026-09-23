@@ -76,10 +76,11 @@ SMTP_USER = getenv("SMTP_USER", "resend")
 SMTP_PASSWORD = getenv("SMTP_PASSWORD") or RESEND_API_KEY
 SMTP_REPLY_TO = getenv("SMTP_REPLY_TO", "support@bipluk.com")
 SMTP_FROM = getenv("SMTP_FROM", "Bipluk Support <support@bipluk.com>")
+SMTP_FROM_AUTH = getenv("SMTP_FROM_AUTH", "Bipluk <auth@bipluk.com>")
 SMTP_FROM_SUPPORT = getenv("SMTP_FROM_SUPPORT", "Bipluk Support <support@bipluk.com>")
 SMTP_FROM_BILLING = getenv("SMTP_FROM_BILLING", "Bipluk Billing <support@bipluk.com>")
-SMTP_FROM_MARKETING = getenv("SMTP_FROM_MARKETING", "Max from Bipluk <support@bipluk.com>")
-SMTP_FROM_NEWSLETTER = getenv("SMTP_FROM_NEWSLETTER", "Bipluk Dispatch <support@bipluk.com>")
+SMTP_FROM_MARKETING = getenv("SMTP_FROM_MARKETING", "Bipluk Team <team@news.bipluk.com>")
+SMTP_FROM_NEWSLETTER = getenv("SMTP_FROM_NEWSLETTER", "Bipluk Dispatch <team@news.bipluk.com>")
 
 # Cron / internal auth
 CRON_SECRET = getenv("CRON_SECRET")

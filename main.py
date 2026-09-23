@@ -1089,10 +1089,11 @@ SMTP_USER = settings.SMTP_USER
 SMTP_PASSWORD = settings.SMTP_PASSWORD
 SMTP_REPLY_TO = getattr(settings, "SMTP_REPLY_TO", "support@bipluk.com")
 SMTP_FROM = getattr(settings, "SMTP_FROM", "Bipluk Support <support@bipluk.com>")
+SMTP_FROM_AUTH = getattr(settings, "SMTP_FROM_AUTH", "Bipluk <auth@bipluk.com>")
 SMTP_FROM_SUPPORT = getattr(settings, "SMTP_FROM_SUPPORT", "Bipluk Support <support@bipluk.com>")
 SMTP_FROM_BILLING = getattr(settings, "SMTP_FROM_BILLING", "Bipluk Billing <support@bipluk.com>")
-SMTP_FROM_MARKETING = getattr(settings, "SMTP_FROM_MARKETING", "Max from Bipluk <support@bipluk.com>")
-SMTP_FROM_NEWSLETTER = getattr(settings, "SMTP_FROM_NEWSLETTER", "Bipluk Dispatch <support@bipluk.com>")
+SMTP_FROM_MARKETING = getattr(settings, "SMTP_FROM_MARKETING", "Bipluk Team <team@news.bipluk.com>")
+SMTP_FROM_NEWSLETTER = getattr(settings, "SMTP_FROM_NEWSLETTER", "Bipluk Dispatch <team@news.bipluk.com>")
 CRON_SECRET = settings.CRON_SECRET or ""
 
 
@@ -2238,7 +2239,7 @@ async def do_magic_request(request: Request):
     </div>
     """
 
-    send_email_via_resend(email_clean, subject, body, html=html_content)
+    send_email_via_resend(email_clean, subject, body, html=html_content, from_addr=SMTP_FROM_AUTH)
 
     trigger_alert(
         "magic_link_sent",
@@ -2451,7 +2452,7 @@ async def do_forgot_password(request: Request, email: str = Form(...)):
         </div>
     </div>
     """
-    send_email_via_resend(email_clean, subject, body, html=html_content)
+    send_email_via_resend(email_clean, subject, body, html=html_content, from_addr=SMTP_FROM_AUTH)
     
     trigger_alert(
         "password_reset_code_sent",
@@ -2634,6 +2635,7 @@ async def test_reengagement_email(email: str = "max@gmail.com", send: str = None
             subject="We miss you at Bipluk",
             body=plain_body,
             html=html_content,
+            from_addr=SMTP_FROM_MARKETING,
             reply_to="support@bipluk.com",
         )
         return {
@@ -5585,7 +5587,7 @@ async def drip_pending(request: Request):
     return {
         "subject": DRIP_SUBJECT,
         "body": DRIP_BODY_TEMPLATE,
-        "from": SMTP_FROM,
+        "from": SMTP_FROM_MARKETING,
         "reply_to": "support@bipluk.com",
         "users": eligible,
         "skipped_young": skipped_young,
