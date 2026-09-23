@@ -1,3 +1,4 @@
+from contextlib import asynccontextmanager
 from fastapi import FastAPI, Request, Form, UploadFile, File, HTTPException, Response, BackgroundTasks
 from fastapi.responses import HTMLResponse, StreamingResponse, RedirectResponse, FileResponse, JSONResponse
 from fastapi.templating import Jinja2Templates
@@ -220,7 +221,16 @@ def trigger_alert(event_type: str, message: str, properties: dict = None, distin
     thread.daemon = True
     thread.start()
 
-app = FastAPI(title="Bipluk - Vintage Synth Patch Manager")
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Initialize database on startup
+    try:
+        database.init_db()
+    except Exception as e:
+        print(f"Warning: Database initialization skipped on startup (DB down/quota reached): {e}")
+    yield
+
+app = FastAPI(title="Bipluk - Vintage Synth Patch Manager", lifespan=lifespan)
 
 from starlette.middleware.gzip import GZipMiddleware
 app.add_middleware(GZipMiddleware, minimum_size=1000)
@@ -1174,13 +1184,6 @@ def assert_cron_authorized(request: Request) -> None:
     if not CRON_SECRET or auth != f"Bearer {CRON_SECRET}":
         raise HTTPException(status_code=401, detail="Unauthorized cron trigger")
 
-# Initialize database on startup
-@app.on_event("startup")
-async def startup_event():
-    try:
-        database.init_db()
-    except Exception as e:
-        print(f"Warning: Database initialization skipped on startup (DB down/quota reached): {e}")
 
 # Secure Cookie Session signing key
 SESSION_SECRET_KEY = settings.SESSION_SECRET_KEY
@@ -1474,12 +1477,41 @@ async def upgrade_redirect(request: Request):
         return RedirectResponse(url="/home?upgrade=1", status_code=303)
     return RedirectResponse(url="/login?redirect=/home?upgrade=1", status_code=303)
 
-@app.get("/pricing")
-async def pricing_redirect(request: Request):
+@app.get("/pricing", response_class=HTMLResponse)
+@app.get("/pricing/", response_class=HTMLResponse)
+async def pricing_page(request: Request):
     user = get_current_user(request)
-    if user:
-        return RedirectResponse(url="/home?upgrade=1", status_code=303)
-    return RedirectResponse(url="/#pricing", status_code=307)
+    country_code = get_request_country_code(request)
+    client_ip, is_private = resolve_client_ip(request)
+    geo = lookup_geo_country(client_ip, is_private)
+    accept_lang = request.headers.get("accept-language")
+    pricing_title = pricing_geo_titles.build_pricing_title(country_code, geo.get("country_name"), accept_language=accept_lang)
+    return render_template(
+        "pricing.html",
+        request,
+        {
+            "user": user,
+            "pricing": enrich_regional_pricing(country_code),
+            "pricing_title_html": pricing_title["html"],
+            "pricing_title_fallback": pricing_geo_titles.DEFAULT_PRICING_TITLE,
+            "eur_pricing_enabled": eur_pricing_enabled(),
+            "gbp_pricing_enabled": gbp_pricing_enabled(),
+            "cad_pricing_enabled": cad_pricing_enabled(),
+            "aud_pricing_enabled": aud_pricing_enabled(),
+            "chf_pricing_enabled": chf_pricing_enabled(),
+            "jpy_pricing_enabled": jpy_pricing_enabled(),
+            "eu_country_codes": sorted(EU_EUR_COUNTRY_CODES),
+            "gb_country_codes": sorted(GB_GBP_COUNTRY_CODES),
+            "ca_country_codes": sorted(CA_CAD_COUNTRY_CODES),
+            "au_country_codes": sorted(AU_AUD_COUNTRY_CODES),
+            "ch_country_codes": sorted(CH_CHF_COUNTRY_CODES),
+            "jp_country_codes": sorted(JP_JPY_COUNTRY_CODES),
+            "faq_suggestions": faq_knowledge.FAQ_SUGGESTIONS,
+            "seo_canonical": "https://bipluk.com/pricing",
+            "seo_title": "Bipluk Pricing & Plans — Web MIDI SysEx Librarian (No Subscriptions)",
+            "seo_description": "Explore Bipluk pricing plans. One-time payment for lifetime access — no monthly subscriptions. Free tier, bipluk+ lifetime ($39), and Studio license. Full feature comparison matrix, FAQs, and refund policy.",
+        },
+    )
 
 @app.head("/")
 @app.head("/health")
@@ -4129,6 +4161,7 @@ def build_sitemap_xml() -> str:
     today = date.today().isoformat()
     entries: list[tuple[str, str, str]] = [
         (f"{SITE_BASE}/", "weekly", "1.0"),
+        (f"{SITE_BASE}/pricing", "weekly", "0.95"),
         (f"{SITE_BASE}/shop", "weekly", "0.9"),
         (f"{SITE_BASE}/vintage-synth-cloud-backup", "weekly", "1.0"),
         (f"{SITE_BASE}/sysex-librarian-alternatives", "weekly", "0.95"),

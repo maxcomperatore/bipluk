@@ -1,0 +1,1033 @@
+<!DOCTYPE html>
+<html lang="en" class="overflow-x-hidden">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% include "partials/local_fonts.html" %}
+    {% include 'partials/favicon.html' %}
+    <title>Bipluk Pricing &amp; Plans — Web MIDI SysEx Librarian (No Subscriptions)</title>
+    <meta name="description" content="Explore Bipluk pricing plans. One-time payment for lifetime access — no monthly subscriptions. Free tier, bipluk+ lifetime ($39), and Studio license. Full feature comparison matrix, FAQs, and refund policy.">
+    <meta name="keywords" content="bipluk pricing, sysex librarian pricing, web midi librarian, vintage synth backup cost, dx7 patch librarian, juno 106 patch backup, no subscription midi software">
+    <link rel="canonical" href="https://bipluk.com/pricing">
+    <link rel="alternate" hreflang="en" href="https://bipluk.com/pricing">
+    <link rel="alternate" hreflang="x-default" href="https://bipluk.com/pricing">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:site_name" content="bipluk">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:url" content="https://bipluk.com/pricing">
+    <meta property="og:title" content="Bipluk Pricing &amp; Plans — Web MIDI SysEx Librarian (No Subscriptions)">
+    <meta property="og:description" content="One-time payment for lifetime access. No subscriptions, no legacy driver headaches. Full tier breakdowns, feature matrix, and FAQs.">
+    <meta property="og:image" content="{{ asset_abs_url('og_image.png') }}">
+    <meta property="og:image:secure_url" content="{{ asset_abs_url('og_image.png') }}">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Bipluk Pricing &amp; Tier Breakdown">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@bipluk">
+    <meta name="twitter:creator" content="@bipluk">
+    <meta name="twitter:url" content="https://bipluk.com/pricing">
+    <meta name="twitter:title" content="Bipluk Pricing &amp; Plans — Web MIDI SysEx Librarian">
+    <meta name="twitter:description" content="One-time payment for lifetime access. No subscriptions. Compare Free, bipluk+ Lifetime, and Studio tiers.">
+    <meta name="twitter:image" content="{{ asset_abs_url('og_image.png') }}">
+    <meta name="twitter:image:alt" content="Bipluk Pricing &amp; Tier Breakdown">
+    <meta name="theme-color" content="#09090b">
+
+    <!-- Google SERP Rich Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "SoftwareApplication",
+          "name": "bipluk",
+          "operatingSystem": "Web Browser (Chrome, Edge, Opera with Web MIDI)",
+          "applicationCategory": "MultimediaApplication",
+          "description": "Browser-native cloud SysEx librarian and patch manager for vintage synthesizers. Direct Web MIDI hardware transfer with zero drivers.",
+          "url": "https://bipluk.com",
+          "image": "https://bipluk.com/static/og_image.png",
+          "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "4.9",
+            "reviewCount": "142",
+            "bestRating": "5",
+            "worstRating": "1"
+          },
+          "offers": [
+            {
+              "@type": "Offer",
+              "name": "bipluk Free",
+              "price": "0",
+              "priceCurrency": "USD",
+              "availability": "https://schema.org/InStock",
+              "url": "https://bipluk.com/pricing",
+              "description": "1 soundbank cloud slot, Web MIDI hardware communication testing, Web SysEx Hex Inspector & Checksum calculation."
+            },
+            {
+              "@type": "Offer",
+              "name": "bipluk+ Lifetime",
+              "price": "39.00",
+              "priceCurrency": "USD",
+              "availability": "https://schema.org/InStock",
+              "url": "https://bipluk.com/pricing",
+              "description": "Unlimited soundbank vault, proprietary decoders for DX7, Juno-106, M1, Prophet-5, 60ms buffer pacing, and 1:1 dump recovery support."
+            },
+            {
+              "@type": "Offer",
+              "name": "bipluk Studio Commercial",
+              "price": "199.00",
+              "priceCurrency": "USD",
+              "availability": "https://schema.org/InStock",
+              "url": "https://bipluk.com/pricing",
+              "description": "Multi-seat studio license, commercial sound design resale rights, custom firmware decoder scripting, and bulk librarian migration."
+            }
+          ]
+        },
+        {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": "https://bipluk.com"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Pricing",
+              "item": "https://bipluk.com/pricing"
+            }
+          ]
+        },
+        {
+          "@type": "FAQPage",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "Is bipluk really a one-time purchase with no subscription?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes. bipluk is 100% subscription-free. When you purchase bipluk+ Lifetime, you pay once ($39 USD or regional equivalent) and keep your cloud soundbank vault forever. There are zero recurring monthly or annual charges, no automatic renewals, and no paywalls on your saved patches."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Can I start with the Free plan and upgrade later?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Absolutely. You can start with our Free tier to test Web MIDI communication with your physical synthesizers, inspect SysEx dumps in our hex inspector, and store 1 soundbank in your cloud vault. When you are ready for unlimited storage and proprietary decoders, you can upgrade to bipluk+ in one click."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "What is the difference between bipluk+ and Studio Commercial?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "bipluk+ Lifetime is designed for individual synth players, producers, and collectors who need unlimited patch storage and instant recall across their synths. The Studio Commercial tier is designed for commercial sound designers, multi-seat recording facilities, and repair shops needing commercial soundbank distribution rights, multi-user seats, bulk folder migration from legacy libraries, and custom SysEx decoder scripting."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "What synthesizers are officially supported by bipluk?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "We feature dedicated patch-name decoders and parameter parsers for the Yamaha DX7 (and DX7II, TX7, TX81Z), Roland Juno-106, Korg M1, Roland Jupiter-6 (Europa-modded), Sequential Prophet-5 / Rev4, Casio CZ series, Oberheim Matrix-1000, and Roland D-50. For any other vintage synth, our Universal ASCII Heuristic Scanner extracts patch names and allows seamless two-way Web MIDI transmission."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "What is bipluk's refund and cancellation policy?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Because bipluk is a one-time lifetime payment with no recurring subscriptions, there are no cancellation fees and nothing to cancel. Per Section 2 of our Terms of Service, digital software access and cloud provisioning are fulfilled immediately upon payment and are non-refundable. However, we back our platform with a White-Glove Dump Recovery Guarantee: if you have a vintage synth dump that fails to transfer or parse, our engineering team provides direct 1:1 support to inspect your raw binary data and resolve the issue."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Do I need special drivers or software installed on my computer?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "No drivers or local background executables are required. bipluk runs directly in modern Web MIDI browsers (Google Chrome, Microsoft Edge, Opera, Brave). Plug any standard class-compliant USB-MIDI interface into your computer, open bipluk, and your hardware is instantly recognized."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "How does bipluk support regional and Purchasing Power Parity (PPP) currencies?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "bipluk automatically detects your country and provides localized pricing in EUR, GBP, CAD, AUD, CHF, and JPY, as well as live PPP (Purchasing Power Parity) adjustments for emerging markets to keep pricing fair and accessible for musicians worldwide."
+              }
+            }
+          ]
+        }
+      ]
+    }
+    </script>
+
+    {% include 'partials/tailwind_lapis.html' %}
+
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+
+        ::selection {
+            background-color: rgba(41, 151, 255, 0.25);
+            color: #ffffff;
+        }
+
+        html, body {
+            background-color: #09090b !important;
+            background-image: radial-gradient(ellipse 90% 60% at 50% -10%, rgba(38, 97, 156, 0.22), transparent 70%) !important;
+            background-attachment: fixed !important;
+        }
+
+        .studio-dot-grid {
+            background-image: radial-gradient(circle, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+            background-size: 28px 28px;
+            background-position: 0 0;
+            -webkit-mask-image: radial-gradient(ellipse 85% 65% at 50% 15%, black 25%, rgba(0, 0, 0, 0.5) 60%, transparent 90%);
+            mask-image: radial-gradient(ellipse 85% 65% at 50% 15%, black 25%, rgba(0, 0, 0, 0.5) 60%, transparent 90%);
+        }
+
+        @keyframes logo-spin {
+            0% { transform: rotateY(0deg); }
+            100% { transform: rotateY(360deg); }
+        }
+
+        .spin-logo {
+            animation: logo-spin 8s linear infinite;
+            transform-style: preserve-3d;
+            backface-visibility: visible;
+        }
+
+        .pricing-card-hover {
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .pricing-card-hover:hover {
+            border-color: rgba(59, 130, 246, 0.6);
+            transform: translateY(-3px);
+            box-shadow: 0 16px 36px -10px rgba(37, 99, 235, 0.25);
+        }
+
+        details summary::-webkit-details-marker {
+            display: none;
+        }
+        details summary {
+            list-style: none;
+        }
+    </style>
+    {% include 'posthog.html' %}
+</head>
+
+<body class="bg-black text-zinc-100 font-sans antialiased overflow-x-hidden relative min-h-screen flex flex-col justify-between selection:bg-blue-500/20 selection:text-white">
+
+    <!-- Precision Hardware Dot Grid -->
+    <div class="fixed inset-0 pointer-events-none z-0 studio-dot-grid"></div>
+
+    <!-- Sticky Header Navigation -->
+    <header class="sticky top-0 bg-black/85 backdrop-blur-md border-b border-zinc-900 h-16 flex items-center justify-between px-6 z-40">
+        <div class="max-w-6xl w-full mx-auto flex items-center justify-between">
+            <div class="flex items-center gap-2.5">
+                <a href="/" class="flex items-center gap-2.5 group">
+                    <div class="relative spin-logo flex items-center justify-center" style="transform-style: preserve-3d; width: 24px; height: 24px;">
+                        <img src="/static/logo.svg" alt="Bipluk Logo" width="24" height="24" class="absolute w-6 h-6 object-contain" style="transform: translateZ(0px); image-rendering: pixelated;">
+                        <img src="/static/logo.svg" alt="" width="24" height="24" class="absolute w-6 h-6 object-contain" style="transform: translateZ(-0.5px); filter: brightness(0.6); image-rendering: pixelated;">
+                        <img src="/static/logo.svg" alt="" width="24" height="24" class="absolute w-6 h-6 object-contain" style="transform: translateZ(-1.0px); filter: brightness(0.4); image-rendering: pixelated;">
+                        <img src="/static/logo.svg" alt="" width="24" height="24" class="absolute w-6 h-6 object-contain" style="transform: translateZ(-1.5px); filter: brightness(0.2); image-rendering: pixelated;">
+                    </div>
+                    <span class="font-pixel uppercase text-sm text-white tracking-widest group-hover:text-blue-400 transition-colors">bipluk™</span>
+                </a>
+            </div>
+
+            <nav class="hidden md:flex items-center gap-8 text-xs font-pixel text-zinc-400 uppercase tracking-wider">
+                <a href="/#features" class="hover:text-white transition-colors duration-200">Features</a>
+                <a href="/pricing" class="text-white font-semibold underline decoration-blue-500 underline-offset-8 transition-colors duration-200">Pricing</a>
+                <span class="text-zinc-600 select-none">/</span>
+                <a href="/resources" class="hover:text-white transition-colors duration-200">Resources</a>
+                <a href="/shop" class="hover:text-white transition-colors duration-200">Shop</a>
+            </nav>
+
+            <div class="flex items-center gap-3">
+                {% if user %}
+                <a href="/home" class="bg-white hover:bg-zinc-200 text-black px-4 py-2 rounded-full text-2xs font-pixel uppercase tracking-wider transition-all duration-200 active:scale-95 flex items-center shadow-sm">
+                    Open Vault
+                </a>
+                {% else %}
+                <a href="/login" class="text-zinc-400 hover:text-white text-xs font-pixel uppercase tracking-wider px-3 py-2 transition-colors">
+                    Sign In
+                </a>
+                <a href="/signup" class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-full text-2xs font-pixel uppercase tracking-wider transition-all duration-200 active:scale-95 shadow-lg shadow-blue-600/30">
+                    Start Free
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+
+    <main class="relative z-10 max-w-6xl mx-auto px-6 pt-12 pb-24 w-full">
+        {% if pricing is not defined %}
+        {% set pricing = {'region': 'usd', 'symbol': '$', 'personal_amount': '39', 'studio_amount': '199', 'billing_label': 'USD / ONE-TIME', 'free_price_display': '$0'} %}
+        {% endif %}
+
+        <!-- Breadcrumbs -->
+        <nav aria-label="Breadcrumb" class="mb-6">
+            <ol class="flex items-center gap-2 text-[11px] font-mono text-zinc-500 uppercase tracking-wider">
+                <li><a href="/" class="hover:text-zinc-300 transition-colors">Home</a></li>
+                <li class="text-zinc-700">/</li>
+                <li class="text-zinc-300 font-semibold" aria-current="page">Pricing &amp; Plans</li>
+            </ol>
+        </nav>
+
+        <!-- Hero Section -->
+        <div class="text-center max-w-3xl mx-auto mb-16">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-blue-500/30 bg-blue-500/10 text-blue-400 text-[10px] font-mono uppercase tracking-widest mb-4">
+                <span class="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse"></span>
+                <span>One-Time Payment · Lifetime Access · Zero Subscriptions</span>
+            </div>
+            <h1 class="text-3xl md:text-5xl font-pixel uppercase text-white tracking-tight leading-tight">
+                Simple, Honest Synth Backup Pricing
+            </h1>
+            <p class="text-sm md:text-base text-zinc-400 mt-4 leading-relaxed font-sans max-w-2xl mx-auto">
+                Vintage synthesizers don't pay rent. Neither should you. Protect your patches forever with a transparent one-time purchase, zero monthly fees, and no driver nightmare setups.
+            </p>
+
+            <!-- Dynamic Regional Indicator -->
+            <div id="pricing-region-banner" class="mt-5 inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg border border-zinc-800 bg-zinc-950/70 text-[11px] font-mono text-zinc-400">
+                <span class="inline-flex items-center gap-1.5">
+                    <img src="/static/icons/dinkie/globe-meridians.svg" alt="" width="14" height="14" class="w-3.5 h-3.5 brightness-0 invert opacity-70">
+                    <span id="visitor-geo-tag">Region: USD ($) · Automatic PPP &amp; Local Currencies Active</span>
+                </span>
+            </div>
+        </div>
+
+        <!-- 3-Tier Breakdown Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch mb-20">
+            <!-- Tier 1: Free Forever -->
+            <div class="pricing-card-hover rounded-2xl border border-zinc-800 bg-zinc-950/80 p-6 md:p-8 flex flex-col justify-between relative overflow-hidden backdrop-blur-md">
+                <div class="space-y-6">
+                    <div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-[10px] font-mono uppercase tracking-widest text-zinc-500">Starter</span>
+                        </div>
+                        <h2 class="text-xl font-pixel uppercase text-white tracking-wide mt-1">Free Forever</h2>
+                        <p class="text-xs text-zinc-400 mt-2 leading-relaxed">
+                            Essential Web MIDI communication test and soundbank backup for hobbyists.
+                        </p>
+                    </div>
+
+                    <div class="py-2 border-y border-zinc-900">
+                        <div class="flex items-baseline gap-1">
+                            <span class="text-4xl font-lcd text-white tracking-tight">$0</span>
+                            <span class="text-xs font-mono uppercase text-zinc-500">USD / FREE FOREVER</span>
+                        </div>
+                        <div class="text-[10px] font-mono text-zinc-500 mt-1 uppercase tracking-wider">
+                            No credit card required
+                        </div>
+                    </div>
+
+                    <ul class="space-y-3 text-xs text-zinc-400 font-sans">
+                        <li class="flex items-start gap-2.5">
+                            <img src="/static/icons/dinkie/checkmark-circled-small.svg" alt="✓" width="14" height="14" class="w-3.5 h-3.5 mt-0.5 shrink-0 brightness-0 invert" style="image-rendering: pixelated;">
+                            <span><strong>1 Soundbank Cloud Vault</strong> slot</span>
+                        </li>
+                        <li class="flex items-start gap-2.5">
+                            <img src="/static/icons/dinkie/checkmark-circled-small.svg" alt="✓" width="14" height="14" class="w-3.5 h-3.5 mt-0.5 shrink-0 brightness-0 invert" style="image-rendering: pixelated;">
+                            <span>Direct <strong>Web MIDI send &amp; receive</strong></span>
+                        </li>
+                        <li class="flex items-start gap-2.5">
+                            <img src="/static/icons/dinkie/checkmark-circled-small.svg" alt="✓" width="14" height="14" class="w-3.5 h-3.5 mt-0.5 shrink-0 brightness-0 invert" style="image-rendering: pixelated;">
+                            <span>Web SysEx Hex Inspector &amp; Checksum Tool</span>
+                        </li>
+                        <li class="flex items-start gap-2.5">
+                            <img src="/static/icons/dinkie/checkmark-circled-small.svg" alt="✓" width="14" height="14" class="w-3.5 h-3.5 mt-0.5 shrink-0 brightness-0 invert" style="image-rendering: pixelated;">
+                            <span>Generic ASCII patch name extraction</span>
+                        </li>
+                        <li class="flex items-start gap-2.5">
+                            <img src="/static/icons/dinkie/checkmark-circled-small.svg" alt="✓" width="14" height="14" class="w-3.5 h-3.5 mt-0.5 shrink-0 brightness-0 invert" style="image-rendering: pixelated;">
+                            <span>Standard community documentation</span>
+                        </li>
+                        <li class="flex items-start gap-2.5 text-zinc-600">
+                            <span class="text-zinc-600 font-mono text-xs w-3.5 text-center shrink-0">✕</span>
+                            <span>No dedicated hardware decoders</span>
+                        </li>
+                        <li class="flex items-start gap-2.5 text-zinc-600">
+                            <span class="text-zinc-600 font-mono text-xs w-3.5 text-center shrink-0">✕</span>
+                            <span>No 1:1 sysex dump recovery support</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="mt-8 pt-4">
+                    {% if user %}
+                    <a href="/home" class="w-full py-3 rounded-xl border border-zinc-700 bg-zinc-900 hover:bg-zinc-800 text-white text-xs font-pixel uppercase tracking-widest text-center block transition-all">
+                        Included in Account
+                    </a>
+                    {% else %}
+                    <a href="/signup" class="w-full py-3 rounded-xl border border-zinc-800 bg-zinc-900 hover:bg-zinc-800 text-white text-xs font-pixel uppercase tracking-widest text-center block transition-all active:scale-[0.98]">
+                        Start Free
+                    </a>
+                    {% endif %}
+                    <div class="text-[10px] font-mono text-zinc-500 text-center mt-2.5 uppercase">
+                        Instant access · Zero setup
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tier 2: bipluk+ Lifetime (FEATURED) -->
+            <div class="pricing-card-hover rounded-2xl border-2 border-blue-500/80 bg-zinc-950/90 p-6 md:p-8 flex flex-col justify-between relative overflow-hidden shadow-2xl shadow-blue-500/10 scale-100 md:scale-105 z-20">
+                <!-- Most Popular Top Ribbon -->
+                <div class="absolute top-0 left-1/2 -translate-x-1/2 bg-blue-600 text-white text-[9px] font-pixel uppercase tracking-widest px-4 py-1 rounded-b border-x border-b border-blue-400 shadow-lg z-20 flex items-center gap-1.5 select-none">
+                    <span>★ MOST POPULAR · LIFETIME ACCESS</span>
+                </div>
+
+                <div class="space-y-6 pt-4">
+                    <div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-[10px] font-mono uppercase tracking-widest text-blue-400 font-semibold">Pro Musician &amp; Collector</span>
+                            <span class="text-[10px] font-mono text-emerald-400 bg-emerald-950/60 border border-emerald-800 px-2 py-0.5 rounded">Save >60% vs Desktop</span>
+                        </div>
+                        <h2 class="text-2xl font-pixel uppercase text-white tracking-wide mt-1">bipluk+ Lifetime</h2>
+                        <p class="text-xs text-zinc-300 mt-2 leading-relaxed">
+                            Total peace of mind, unlimited patch storage, and proprietary decoders for your vintage rack.
+                        </p>
+                    </div>
+
+                    <div class="py-2 border-y border-blue-500/20 bg-blue-500/5 -mx-6 md:-mx-8 px-6 md:px-8">
+                        <div class="flex items-baseline gap-2">
+                            <span class="text-5xl font-lcd text-white tracking-tight flex items-baseline">
+                                <span id="pricing-personal-symbol" class="text-blue-400">{{ pricing.symbol }}</span>
+                                <span id="pricing-personal-amount" class="text-white">{{ pricing.personal_amount }}</span>
+                            </span>
+                            <span id="pricing-personal-billing" class="text-xs font-mono uppercase text-zinc-400">{{ pricing.billing_label }}</span>
+                        </div>
+                        <div class="text-[10px] font-mono text-blue-300/80 mt-1 uppercase tracking-wider flex items-center gap-1.5 flex-wrap">
+                            <span class="text-emerald-400 font-semibold">Own it forever.</span>
+                            <span>·</span>
+                            <span>No subscriptions</span>
+                            <span>·</span>
+                            <span>Zero monthly fees</span>
+                        </div>
+                    </div>
+
+                    <ul class="space-y-3 text-xs text-zinc-300 font-sans">
+                        <li class="flex items-start gap-2.5">
+                            <img src="/static/icons/dinkie/checkmark-circled-small.svg" alt="✓" width="14" height="14" class="w-3.5 h-3.5 mt-0.5 shrink-0 brightness-0 invert" style="image-rendering: pixelated;">
+                            <span><strong>Unlimited Soundbank Cloud Vault</strong> (no storage limits)</span>
+                        </li>
+                        <li class="flex items-start gap-2.5">
+                            <img src="/static/icons/dinkie/checkmark-circled-small.svg" alt="✓" width="14" height="14" class="w-3.5 h-3.5 mt-0.5 shrink-0 brightness-0 invert" style="image-rendering: pixelated;">
+                            <span><strong>Proprietary Hardware Decoders</strong> (DX7, Juno-106, Korg M1, Prophet-5, Casio CZ, Matrix-1000, D-50)</span>
+                        </li>
+                        <li class="flex items-start gap-2.5">
+                            <img src="/static/icons/dinkie/checkmark-circled-small.svg" alt="✓" width="14" height="14" class="w-3.5 h-3.5 mt-0.5 shrink-0 brightness-0 invert" style="image-rendering: pixelated;">
+                            <span><strong>Hardware Base-8 &amp; Roland Numbered Export</strong> (11-88 bank display)</span>
+                        </li>
+                        <li class="flex items-start gap-2.5">
+                            <img src="/static/icons/dinkie/checkmark-circled-small.svg" alt="✓" width="14" height="14" class="w-3.5 h-3.5 mt-0.5 shrink-0 brightness-0 invert" style="image-rendering: pixelated;">
+                            <span><strong>Automated 60ms Buffer Pacing</strong> (prevents MIDI buffer overflow crashes)</span>
+                        </li>
+                        <li class="flex items-start gap-2.5">
+                            <img src="/static/icons/dinkie/checkmark-circled-small.svg" alt="✓" width="14" height="14" class="w-3.5 h-3.5 mt-0.5 shrink-0 brightness-0 invert" style="image-rendering: pixelated;">
+                            <span><strong>1-on-1 Dump Hex Recovery</strong> support by audio engineers</span>
+                        </li>
+                        <li class="flex items-start gap-2.5">
+                            <img src="/static/icons/dinkie/checkmark-circled-small.svg" alt="✓" width="14" height="14" class="w-3.5 h-3.5 mt-0.5 shrink-0 brightness-0 invert" style="image-rendering: pixelated;">
+                            <span><strong>Zero Vendor Lock-In</strong> — instant raw .syx, .mid &amp; CSV export</span>
+                        </li>
+                        <li class="flex items-start gap-2.5">
+                            <img src="/static/icons/dinkie/checkmark-circled-small.svg" alt="✓" width="14" height="14" class="w-3.5 h-3.5 mt-0.5 shrink-0 brightness-0 invert" style="image-rendering: pixelated;">
+                            <span><strong>Lifetime Updates</strong> and new synthesizer decoders included</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="mt-8 pt-4">
+                    {% if user %}
+                    <a href="/home?upgrade=1" class="btn-upgrade-tv w-full !h-12 !rounded-xl !p-[1px] block active:scale-[0.98] shadow-lg shadow-blue-600/30">
+                        <span class="btn-upgrade-tv-inner !rounded-xl px-4 !text-xs font-pixel uppercase tracking-widest text-white flex items-center justify-center gap-2">
+                            <img src="/static/icons/dinkie/lock.svg" class="w-3.5 h-3.5 brightness-0 invert" alt="">
+                            <span>Upgrade My Account</span>
+                        </span>
+                    </a>
+                    {% else %}
+                    <a href="/login?redirect=/home?upgrade=1" class="btn-upgrade-tv w-full !h-12 !rounded-xl !p-[1px] block active:scale-[0.98] shadow-lg shadow-blue-600/30">
+                        <span class="btn-upgrade-tv-inner !rounded-xl px-4 !text-xs font-pixel uppercase tracking-widest text-white flex items-center justify-center gap-2">
+                            <img src="/static/icons/dinkie/lock.svg" class="w-3.5 h-3.5 brightness-0 invert" alt="">
+                            <span>Get Lifetime Access</span>
+                        </span>
+                    </a>
+                    {% endif %}
+                    <div class="flex items-center justify-center gap-2 text-[10px] font-mono text-zinc-400 uppercase tracking-wider mt-3">
+                        <span>256-Bit SSL</span>
+                        <span>·</span>
+                        <span>One Payment</span>
+                        <span>·</span>
+                        <span>Yours Forever</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tier 3: Studio / Commercial -->
+            <div class="pricing-card-hover rounded-2xl border border-zinc-800 bg-zinc-950/80 p-6 md:p-8 flex flex-col justify-between relative overflow-hidden backdrop-blur-md">
+                <div class="space-y-6">
+                    <div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-[10px] font-mono uppercase tracking-widest text-zinc-500">Commercial &amp; Enterprise</span>
+                        </div>
+                        <h2 class="text-xl font-pixel uppercase text-white tracking-wide mt-1">Studio / Commercial</h2>
+                        <p class="text-xs text-zinc-400 mt-2 leading-relaxed">
+                            For recording studios, commercial sound designers, and synth technicians.
+                        </p>
+                    </div>
+
+                    <div class="py-2 border-y border-zinc-900">
+                        <div class="flex items-baseline gap-1">
+                            <span class="text-4xl font-lcd text-white tracking-tight">$199</span>
+                            <span class="text-xs font-mono uppercase text-zinc-500">USD / ONE-TIME</span>
+                        </div>
+                        <div class="text-[10px] font-mono text-zinc-500 mt-1 uppercase tracking-wider">
+                            Or custom multi-site quote · Invoiced via Stripe
+                        </div>
+                    </div>
+
+                    <ul class="space-y-3 text-xs text-zinc-400 font-sans">
+                        <li class="flex items-start gap-2.5">
+                            <img src="/static/icons/dinkie/checkmark-circled-small.svg" alt="✓" width="14" height="14" class="w-3.5 h-3.5 mt-0.5 shrink-0 brightness-0 invert" style="image-rendering: pixelated;">
+                            <span><strong>Everything in bipluk+ Lifetime</strong></span>
+                        </li>
+                        <li class="flex items-start gap-2.5">
+                            <img src="/static/icons/dinkie/checkmark-circled-small.svg" alt="✓" width="14" height="14" class="w-3.5 h-3.5 mt-0.5 shrink-0 brightness-0 invert" style="image-rendering: pixelated;">
+                            <span><strong>Multi-Seat Studio License</strong> (multi-rig / control room setup)</span>
+                        </li>
+                        <li class="flex items-start gap-2.5">
+                            <img src="/static/icons/dinkie/checkmark-circled-small.svg" alt="✓" width="14" height="14" class="w-3.5 h-3.5 mt-0.5 shrink-0 brightness-0 invert" style="image-rendering: pixelated;">
+                            <span><strong>Commercial Preset Pack Rights</strong> (resell soundbanks royalty-free)</span>
+                        </li>
+                        <li class="flex items-start gap-2.5">
+                            <img src="/static/icons/dinkie/checkmark-circled-small.svg" alt="✓" width="14" height="14" class="w-3.5 h-3.5 mt-0.5 shrink-0 brightness-0 invert" style="image-rendering: pixelated;">
+                            <span><strong>Priority Reverse-Engineering</strong> for rare synth firmware dumps</span>
+                        </li>
+                        <li class="flex items-start gap-2.5">
+                            <img src="/static/icons/dinkie/checkmark-circled-small.svg" alt="✓" width="14" height="14" class="w-3.5 h-3.5 mt-0.5 shrink-0 brightness-0 invert" style="image-rendering: pixelated;">
+                            <span><strong>Bulk Librarian Migration</strong> (import legacy MIDI-OX/Snoize folders)</span>
+                        </li>
+                        <li class="flex items-start gap-2.5">
+                            <img src="/static/icons/dinkie/checkmark-circled-small.svg" alt="✓" width="14" height="14" class="w-3.5 h-3.5 mt-0.5 shrink-0 brightness-0 invert" style="image-rendering: pixelated;">
+                            <span><strong>Tax/VAT Invoicing</strong> &amp; direct wire/ACH support</span>
+                        </li>
+                        <li class="flex items-start gap-2.5">
+                            <img src="/static/icons/dinkie/checkmark-circled-small.svg" alt="✓" width="14" height="14" class="w-3.5 h-3.5 mt-0.5 shrink-0 brightness-0 invert" style="image-rendering: pixelated;">
+                            <span><strong>Direct Slack / Email Access</strong> to lead engineer Max</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="mt-8 pt-4">
+                    <a href="mailto:support@bipluk.com?subject=Studio%20License%20Inquiry&body=Hi%20Max%2C%0A%0AWe%20are%20interested%20in%20the%20bipluk%20Studio%20%2F%20Commercial%20license.%0A-%20Studio%20%2F%20Company%20Name%3A%20%0A-%20Number%20of%20Synthesizers%20%2F%20Rooms%3A%20%0A-%20Primary%20Hardware%20Models%3A%20%0A%0ABest%2C"
+                        class="w-full py-3 rounded-xl border border-zinc-700 bg-zinc-900 hover:bg-zinc-800 text-white text-xs font-pixel uppercase tracking-widest text-center block transition-all active:scale-[0.98]">
+                        Contact Studio Support
+                    </a>
+                    <div class="text-[10px] font-mono text-zinc-500 text-center mt-2.5 uppercase">
+                        Fixed quotes · Invoiced via Stripe
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Value Anchor Callout -->
+        <div class="max-w-4xl mx-auto mb-20 p-6 rounded-2xl border border-zinc-800 bg-gradient-to-r from-zinc-950 via-zinc-900/50 to-zinc-950 text-center">
+            <p class="text-xs md:text-sm text-zinc-400 font-mono leading-relaxed">
+                Legacy desktop librarians (like MIDI Quest or SoundTower) charge <span class="text-rose-400 font-semibold font-mono">$199–$399+</span> per version update or synth model.
+                <span class="text-blue-400 font-semibold">bipluk+</span> gives you lifetime cloud vault access, zero driver bloat, and universal compatibility for just
+                <span class="text-white font-bold">{{ pricing.symbol }}{{ pricing.personal_amount }}</span> once.
+            </p>
+        </div>
+
+        <!-- Full Feature Comparison Matrix -->
+        <section class="mb-24">
+            <div class="text-center max-w-2xl mx-auto mb-10">
+                <span class="text-[10px] font-mono uppercase tracking-widest text-blue-400 font-semibold">Detailed Comparison</span>
+                <h2 class="text-2xl md:text-3xl font-pixel uppercase text-white tracking-wide mt-1">
+                    Feature Comparison Matrix
+                </h2>
+                <p class="text-xs font-mono text-zinc-400 mt-2">
+                    Review every capability across our Free, bipluk+ Lifetime, and Studio Commercial plans.
+                </p>
+            </div>
+
+            <div class="overflow-x-auto rounded-2xl border border-zinc-800 bg-zinc-950/70 shadow-2xl backdrop-blur-md">
+                <table class="w-full text-left border-collapse text-xs">
+                    <thead>
+                        <tr class="border-b border-zinc-800 bg-zinc-900/60 font-pixel uppercase text-[11px] text-zinc-300">
+                            <th class="py-4 px-5 font-semibold w-2/5">Capability / Feature</th>
+                            <th class="py-4 px-4 font-normal text-zinc-400 text-center w-1/5">Free</th>
+                            <th class="py-4 px-4 font-bold text-blue-400 bg-blue-500/10 border-x border-blue-500/20 text-center w-1/5">
+                                <div class="flex items-center justify-center gap-1.5">
+                                    <img src="/static/logo.svg" class="w-4 h-4 inline-block" alt="" style="image-rendering: pixelated;">
+                                    <span>bipluk+ Lifetime</span>
+                                </div>
+                            </th>
+                            <th class="py-4 px-4 font-normal text-zinc-300 text-center w-1/5">Studio</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-zinc-900/80 font-sans text-zinc-300">
+                        <!-- SECTION: STORAGE & CLOUD VAULT -->
+                        <tr class="bg-zinc-900/40 text-white font-pixel text-[10px] uppercase tracking-wider">
+                            <td colspan="4" class="py-3 px-5 text-blue-400">1. Cloud Vault &amp; Patch Storage</td>
+                        </tr>
+                        <tr class="hover:bg-zinc-900/30 transition-colors">
+                            <td class="py-3 px-5 font-mono">Soundbank Storage Capacity</td>
+                            <td class="py-3 px-4 text-center font-mono text-zinc-400">1 Soundbank</td>
+                            <td class="py-3 px-4 text-center font-mono font-semibold text-emerald-400 bg-blue-500/5 border-x border-blue-500/20">Unlimited Vault</td>
+                            <td class="py-3 px-4 text-center font-mono font-semibold text-emerald-400">Unlimited Vault</td>
+                        </tr>
+                        <tr class="hover:bg-zinc-900/30 transition-colors">
+                            <td class="py-3 px-5 font-mono">Individual Patches Stored</td>
+                            <td class="py-3 px-4 text-center font-mono text-zinc-400">Up to 128</td>
+                            <td class="py-3 px-4 text-center font-mono font-semibold text-emerald-400 bg-blue-500/5 border-x border-blue-500/20">Unlimited</td>
+                            <td class="py-3 px-4 text-center font-mono font-semibold text-emerald-400">Unlimited</td>
+                        </tr>
+                        <tr class="hover:bg-zinc-900/30 transition-colors">
+                            <td class="py-3 px-5 font-mono">Multi-Device Cloud Sync (Mac, PC, Tablet)</td>
+                            <td class="py-3 px-4 text-center text-emerald-400">✓</td>
+                            <td class="py-3 px-4 text-center text-emerald-400 font-semibold bg-blue-500/5 border-x border-blue-500/20">✓</td>
+                            <td class="py-3 px-4 text-center text-emerald-400">✓</td>
+                        </tr>
+                        <tr class="hover:bg-zinc-900/30 transition-colors">
+                            <td class="py-3 px-5 font-mono">Raw .syx, .mid &amp; CSV Export</td>
+                            <td class="py-3 px-4 text-center text-emerald-400">✓</td>
+                            <td class="py-3 px-4 text-center text-emerald-400 font-semibold bg-blue-500/5 border-x border-blue-500/20">✓</td>
+                            <td class="py-3 px-4 text-center text-emerald-400">✓</td>
+                        </tr>
+
+                        <!-- SECTION: HARDWARE & WEB MIDI -->
+                        <tr class="bg-zinc-900/40 text-white font-pixel text-[10px] uppercase tracking-wider">
+                            <td colspan="4" class="py-3 px-5 text-blue-400">2. Hardware Engine &amp; Web MIDI</td>
+                        </tr>
+                        <tr class="hover:bg-zinc-900/30 transition-colors">
+                            <td class="py-3 px-5 font-mono">Zero-Driver Browser-Native Web MIDI</td>
+                            <td class="py-3 px-4 text-center text-emerald-400">✓</td>
+                            <td class="py-3 px-4 text-center text-emerald-400 font-semibold bg-blue-500/5 border-x border-blue-500/20">✓</td>
+                            <td class="py-3 px-4 text-center text-emerald-400">✓</td>
+                        </tr>
+                        <tr class="hover:bg-zinc-900/30 transition-colors">
+                            <td class="py-3 px-5 font-mono">Two-Way Hardware Dump &amp; Memory Restore</td>
+                            <td class="py-3 px-4 text-center text-emerald-400">✓</td>
+                            <td class="py-3 px-4 text-center text-emerald-400 font-semibold bg-blue-500/5 border-x border-blue-500/20">✓</td>
+                            <td class="py-3 px-4 text-center text-emerald-400">✓</td>
+                        </tr>
+                        <tr class="hover:bg-zinc-900/30 transition-colors">
+                            <td class="py-3 px-5 font-mono">Automated 60ms Buffer Overflow Pacing</td>
+                            <td class="py-3 px-4 text-center text-zinc-500">Basic</td>
+                            <td class="py-3 px-4 text-center text-emerald-400 font-semibold bg-blue-500/5 border-x border-blue-500/20">✓ Hardware Optimized</td>
+                            <td class="py-3 px-4 text-center text-emerald-400 font-semibold">✓ Hardware Optimized</td>
+                        </tr>
+                        <tr class="hover:bg-zinc-900/30 transition-colors">
+                            <td class="py-3 px-5 font-mono">Hardware Base-8 / Roland Display Export (11-88)</td>
+                            <td class="py-3 px-4 text-center text-zinc-600 font-mono">✕</td>
+                            <td class="py-3 px-4 text-center text-emerald-400 font-semibold bg-blue-500/5 border-x border-blue-500/20">✓ Included</td>
+                            <td class="py-3 px-4 text-center text-emerald-400 font-semibold">✓ Included</td>
+                        </tr>
+                        <tr class="hover:bg-zinc-900/30 transition-colors">
+                            <td class="py-3 px-5 font-mono">Web SysEx Hex Inspector &amp; Checksum Splitter</td>
+                            <td class="py-3 px-4 text-center text-emerald-400">✓</td>
+                            <td class="py-3 px-4 text-center text-emerald-400 font-semibold bg-blue-500/5 border-x border-blue-500/20">✓</td>
+                            <td class="py-3 px-4 text-center text-emerald-400">✓</td>
+                        </tr>
+
+                        <!-- SECTION: DECODERS -->
+                        <tr class="bg-zinc-900/40 text-white font-pixel text-[10px] uppercase tracking-wider">
+                            <td colspan="4" class="py-3 px-5 text-blue-400">3. Synthesizer Decoders &amp; Parsers</td>
+                        </tr>
+                        <tr class="hover:bg-zinc-900/30 transition-colors">
+                            <td class="py-3 px-5 font-mono">Universal ASCII Heuristic Scanner</td>
+                            <td class="py-3 px-4 text-center text-emerald-400">✓</td>
+                            <td class="py-3 px-4 text-center text-emerald-400 font-semibold bg-blue-500/5 border-x border-blue-500/20">✓</td>
+                            <td class="py-3 px-4 text-center text-emerald-400">✓</td>
+                        </tr>
+                        <tr class="hover:bg-zinc-900/30 transition-colors">
+                            <td class="py-3 px-5 font-mono">Yamaha DX7 / DX7II / TX7 / TX81Z Full Decoders</td>
+                            <td class="py-3 px-4 text-center text-zinc-600 font-mono">✕</td>
+                            <td class="py-3 px-4 text-center text-emerald-400 font-semibold bg-blue-500/5 border-x border-blue-500/20">✓ Full Decoding</td>
+                            <td class="py-3 px-4 text-center text-emerald-400 font-semibold">✓ Full Decoding</td>
+                        </tr>
+                        <tr class="hover:bg-zinc-900/30 transition-colors">
+                            <td class="py-3 px-5 font-mono">Roland Juno-106 Switch &amp; Slider Parameter Decoder</td>
+                            <td class="py-3 px-4 text-center text-zinc-600 font-mono">✕</td>
+                            <td class="py-3 px-4 text-center text-emerald-400 font-semibold bg-blue-500/5 border-x border-blue-500/20">✓ Full Decoding</td>
+                            <td class="py-3 px-4 text-center text-emerald-400 font-semibold">✓ Full Decoding</td>
+                        </tr>
+                        <tr class="hover:bg-zinc-900/30 transition-colors">
+                            <td class="py-3 px-5 font-mono">Korg M1 &amp; 01/W Multi-Bank Offset Parsers</td>
+                            <td class="py-3 px-4 text-center text-zinc-600 font-mono">✕</td>
+                            <td class="py-3 px-4 text-center text-emerald-400 font-semibold bg-blue-500/5 border-x border-blue-500/20">✓ Full Decoding</td>
+                            <td class="py-3 px-4 text-center text-emerald-400 font-semibold">✓ Full Decoding</td>
+                        </tr>
+                        <tr class="hover:bg-zinc-900/30 transition-colors">
+                            <td class="py-3 px-5 font-mono">Prophet-5, Casio CZ, Matrix-1000, Roland D-50</td>
+                            <td class="py-3 px-4 text-center text-zinc-600 font-mono">✕</td>
+                            <td class="py-3 px-4 text-center text-emerald-400 font-semibold bg-blue-500/5 border-x border-blue-500/20">✓ Full Decoding</td>
+                            <td class="py-3 px-4 text-center text-emerald-400 font-semibold">✓ Full Decoding</td>
+                        </tr>
+                        <tr class="hover:bg-zinc-900/30 transition-colors">
+                            <td class="py-3 px-5 font-mono">Custom Firmware Dump Scripting (Rare Hardware)</td>
+                            <td class="py-3 px-4 text-center text-zinc-600 font-mono">✕</td>
+                            <td class="py-3 px-4 text-center text-zinc-500 font-mono text-[10px] bg-blue-500/5 border-x border-blue-500/20">On Roadmap</td>
+                            <td class="py-3 px-4 text-center text-emerald-400 font-semibold">✓ Custom Scripted</td>
+                        </tr>
+
+                        <!-- SECTION: COMMERCIAL & RIGHTS -->
+                        <tr class="bg-zinc-900/40 text-white font-pixel text-[10px] uppercase tracking-wider">
+                            <td colspan="4" class="py-3 px-5 text-blue-400">4. Licensing &amp; Commercial Terms</td>
+                        </tr>
+                        <tr class="hover:bg-zinc-900/30 transition-colors">
+                            <td class="py-3 px-5 font-mono">Personal Studio / Production Use</td>
+                            <td class="py-3 px-4 text-center text-emerald-400">✓</td>
+                            <td class="py-3 px-4 text-center text-emerald-400 font-semibold bg-blue-500/5 border-x border-blue-500/20">✓</td>
+                            <td class="py-3 px-4 text-center text-emerald-400">✓</td>
+                        </tr>
+                        <tr class="hover:bg-zinc-900/30 transition-colors">
+                            <td class="py-3 px-5 font-mono">Commercial Soundbank Resale &amp; Distribution Rights</td>
+                            <td class="py-3 px-4 text-center text-zinc-600 font-mono">✕</td>
+                            <td class="py-3 px-4 text-center text-zinc-400 font-mono text-[10px] bg-blue-500/5 border-x border-blue-500/20">Personal</td>
+                            <td class="py-3 px-4 text-center text-emerald-400 font-semibold">✓ Royalty-Free Commercial</td>
+                        </tr>
+                        <tr class="hover:bg-zinc-900/30 transition-colors">
+                            <td class="py-3 px-5 font-mono">Multi-User / Multi-Room Studio License</td>
+                            <td class="py-3 px-4 text-center font-mono text-zinc-500">1 Seat</td>
+                            <td class="py-3 px-4 text-center font-mono text-zinc-300 bg-blue-500/5 border-x border-blue-500/20">Single Producer</td>
+                            <td class="py-3 px-4 text-center font-mono text-emerald-400 font-semibold">Multi-Seat Studio</td>
+                        </tr>
+                        <tr class="hover:bg-zinc-900/30 transition-colors">
+                            <td class="py-3 px-5 font-mono">Bulk Legacy Folder Migration (Snoize/MIDI-OX)</td>
+                            <td class="py-3 px-4 text-center text-zinc-600 font-mono">✕</td>
+                            <td class="py-3 px-4 text-center text-zinc-500 font-mono text-[10px] bg-blue-500/5 border-x border-blue-500/20">Self-Service</td>
+                            <td class="py-3 px-4 text-center text-emerald-400 font-semibold">✓ Done-For-You Ingest</td>
+                        </tr>
+
+                        <!-- SECTION: SUPPORT & BILLING -->
+                        <tr class="bg-zinc-900/40 text-white font-pixel text-[10px] uppercase tracking-wider">
+                            <td colspan="4" class="py-3 px-5 text-blue-400">5. Support, Billing &amp; Commitments</td>
+                        </tr>
+                        <tr class="hover:bg-zinc-900/30 transition-colors">
+                            <td class="py-3 px-5 font-mono">Support Level</td>
+                            <td class="py-3 px-4 text-center font-mono text-zinc-400">Community</td>
+                            <td class="py-3 px-4 text-center font-mono font-semibold text-emerald-400 bg-blue-500/5 border-x border-blue-500/20">1:1 Engineer Support</td>
+                            <td class="py-3 px-4 text-center font-mono font-semibold text-emerald-400">VIP Direct Slack / Phone</td>
+                        </tr>
+                        <tr class="hover:bg-zinc-900/30 transition-colors">
+                            <td class="py-3 px-5 font-mono">1:1 Broken Dump Hex Recovery Guarantee</td>
+                            <td class="py-3 px-4 text-center text-zinc-600 font-mono">✕</td>
+                            <td class="py-3 px-4 text-center text-emerald-400 font-semibold bg-blue-500/5 border-x border-blue-500/20">✓ Included</td>
+                            <td class="py-3 px-4 text-center text-emerald-400 font-semibold">✓ Priority Turnaround</td>
+                        </tr>
+                        <tr class="hover:bg-zinc-900/30 transition-colors">
+                            <td class="py-3 px-5 font-mono">Monthly or Annual Recurring Fee</td>
+                            <td class="py-3 px-4 text-center font-mono text-emerald-400">$0 / None</td>
+                            <td class="py-3 px-4 text-center font-mono font-semibold text-emerald-400 bg-blue-500/5 border-x border-blue-500/20">$0 / None</td>
+                            <td class="py-3 px-4 text-center font-mono font-semibold text-emerald-400">$0 / None</td>
+                        </tr>
+                        <tr class="hover:bg-zinc-900/30 transition-colors">
+                            <td class="py-3 px-5 font-mono font-semibold text-white">Upfront Price</td>
+                            <td class="py-3 px-4 text-center font-mono font-semibold text-white">$0</td>
+                            <td class="py-3 px-4 text-center font-mono font-bold text-blue-400 bg-blue-500/10 border-x border-blue-500/20">
+                                {{ pricing.symbol }}{{ pricing.personal_amount }} One-Time
+                            </td>
+                            <td class="py-3 px-4 text-center font-mono font-semibold text-white">$199 One-Time</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Dedicated Refund & Cancellation Policy Section -->
+        <section id="refund-policy" class="mb-24 rounded-2xl border border-zinc-800 bg-zinc-950/80 p-6 md:p-10 backdrop-blur-md">
+            <div class="flex items-center gap-3 mb-6">
+                <div class="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-500/30 flex items-center justify-center shrink-0">
+                    <img src="/static/icons/dinkie/lock.svg" alt="" width="20" height="20" class="w-5 h-5 brightness-0 invert">
+                </div>
+                <div>
+                    <span class="text-[10px] font-mono uppercase tracking-widest text-blue-400 font-semibold">Clear &amp; Transparent Terms</span>
+                    <h2 class="text-xl md:text-2xl font-pixel uppercase text-white tracking-wide">
+                        Refund &amp; Cancellation Policy
+                    </h2>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-xs text-zinc-300 leading-relaxed font-sans">
+                <!-- Cancellation Policy Column -->
+                <div class="space-y-3 p-5 rounded-xl border border-zinc-900 bg-black/40">
+                    <div class="flex items-center gap-2">
+                        <img src="/static/icons/dinkie/checkmark-circled-small.svg" alt="" width="16" height="16" class="w-4 h-4 brightness-0 invert">
+                        <h3 class="font-pixel uppercase text-white text-xs tracking-wider">Cancellation Policy</h3>
+                    </div>
+                    <p class="font-semibold text-emerald-400 font-mono text-[11px]">
+                        Zero Subscriptions · Zero Automatic Renewals · Nothing to Cancel
+                    </p>
+                    <p class="text-zinc-400">
+                        Because all paid bipluk plans are <strong>one-time lifetime purchases</strong>, there is no recurring billing or automatic card charging of any kind. You never have to log into an account portal to cancel, worry about unexpected monthly bank charges, or jump through customer service loops to stop a subscription. What you pay upfront is all you will ever pay.
+                    </p>
+                </div>
+
+                <!-- Refund Policy Column -->
+                <div class="space-y-3 p-5 rounded-xl border border-zinc-900 bg-black/40">
+                    <div class="flex items-center gap-2">
+                        <img src="/static/icons/dinkie/thumbs-up-sign.svg" alt="" width="16" height="16" class="w-4 h-4 brightness-0 invert">
+                        <h3 class="font-pixel uppercase text-white text-xs tracking-wider">Refund Policy &amp; Guarantee</h3>
+                    </div>
+                    <p class="font-semibold text-blue-400 font-mono text-[11px]">
+                        Instant Cloud Provisioning · White-Glove Dump Recovery Guarantee
+                    </p>
+                    <p class="text-zinc-400">
+                        In accordance with Section 2 of our <a href="/terms" class="text-blue-400 hover:underline">Terms of Service</a>, all digital lifetime purchases and software access are provisioned immediately upon Stripe confirmation and are non-refundable.
+                    </p>
+                    <p class="text-zinc-400">
+                        However, we stand 100% behind our Web MIDI transmission engine: if you encounter a stubborn vintage synthesizer dump that fails to decode or causes buffer errors, our engineering team provides direct <strong>1-on-1 broken dump hex recovery</strong>. Email <a href="mailto:support@bipluk.com" class="text-blue-400 hover:underline">support@bipluk.com</a> and we will manually inspect your raw bytes to ensure your synth communicates reliably.
+                    </p>
+                </div>
+            </div>
+
+            <div class="mt-6 pt-4 border-t border-zinc-900 flex items-center justify-between flex-wrap gap-4 text-[11px] font-mono text-zinc-500">
+                <div class="flex items-center gap-4">
+                    <a href="/terms" class="text-zinc-400 hover:text-white transition-colors underline">Full Terms of Service</a>
+                    <span>·</span>
+                    <a href="/privacy" class="text-zinc-400 hover:text-white transition-colors underline">Privacy &amp; Data Security</a>
+                    <span>·</span>
+                    <a href="/payment-methods" class="text-zinc-400 hover:text-white transition-colors underline">Payment Methods Guide</a>
+                </div>
+                <div>
+                    All transactions securely encrypted via Stripe 256-bit SSL
+                </div>
+            </div>
+        </section>
+
+        <!-- Dedicated Pricing FAQs Section -->
+        <section class="mb-24">
+            <div class="text-center max-w-2xl mx-auto mb-12">
+                <span class="text-[10px] font-mono uppercase tracking-widest text-blue-400 font-semibold">Got Questions?</span>
+                <h2 class="text-2xl md:text-3xl font-pixel uppercase text-white tracking-wide mt-1">
+                    Frequently Asked Questions
+                </h2>
+                <p class="text-xs font-mono text-zinc-400 mt-2">
+                    Everything you need to know about bipluk lifetime access, hardware compatibility, and billing.
+                </p>
+            </div>
+
+            <div class="max-w-3xl mx-auto space-y-4">
+                <!-- FAQ Item 1 -->
+                <details class="group rounded-2xl border border-zinc-800 bg-zinc-950/70 p-5 transition-colors hover:border-zinc-700" open>
+                    <summary class="flex items-center justify-between cursor-pointer font-pixel uppercase text-xs text-white tracking-wider">
+                        <span>Is bipluk really a one-time purchase with no subscription?</span>
+                        <span class="text-blue-400 font-mono text-base transition-transform group-open:rotate-45">+</span>
+                    </summary>
+                    <p class="text-xs text-zinc-400 mt-4 leading-relaxed font-sans border-t border-zinc-900 pt-3">
+                        Yes, 100%. bipluk is completely subscription-free. When you buy bipluk+ Lifetime, you pay once ($39 USD or your localized equivalent) and keep access to your cloud soundbank vault forever. There are no recurring monthly or yearly fees, no renewal surprises, and no paywalls on your saved sound designs.
+                    </p>
+                </details>
+
+                <!-- FAQ Item 2 -->
+                <details class="group rounded-2xl border border-zinc-800 bg-zinc-950/70 p-5 transition-colors hover:border-zinc-700">
+                    <summary class="flex items-center justify-between cursor-pointer font-pixel uppercase text-xs text-white tracking-wider">
+                        <span>Can I start with the Free plan and upgrade later?</span>
+                        <span class="text-blue-400 font-mono text-base transition-transform group-open:rotate-45">+</span>
+                    </summary>
+                    <p class="text-xs text-zinc-400 mt-4 leading-relaxed font-sans border-t border-zinc-900 pt-3">
+                        Yes! You can create a free account with no credit card to test Web MIDI communication with your physical hardware, verify that your browser connects to your MIDI interface, inspect SysEx files in our hex tool, and store 1 soundbank in the cloud. When you are ready for unlimited storage and specialized decoders, upgrading to bipluk+ Lifetime takes less than 30 seconds.
+                    </p>
+                </details>
+
+                <!-- FAQ Item 3 -->
+                <details class="group rounded-2xl border border-zinc-800 bg-zinc-950/70 p-5 transition-colors hover:border-zinc-700">
+                    <summary class="flex items-center justify-between cursor-pointer font-pixel uppercase text-xs text-white tracking-wider">
+                        <span>What is the difference between bipluk+ and Studio Commercial?</span>
+                        <span class="text-blue-400 font-mono text-base transition-transform group-open:rotate-45">+</span>
+                    </summary>
+                    <p class="text-xs text-zinc-400 mt-4 leading-relaxed font-sans border-t border-zinc-900 pt-3">
+                        bipluk+ Lifetime is designed for individual artists, producers, and collectors who need unlimited patch storage and instant recall across their synths. The Studio Commercial tier is built for commercial sound designers, multi-seat recording facilities, and repair technicians needing commercial soundbank resale rights, multi-user seats, bulk folder migration from legacy software, and custom SysEx decoder scripting.
+                    </p>
+                </details>
+
+                <!-- FAQ Item 4 -->
+                <details class="group rounded-2xl border border-zinc-800 bg-zinc-950/70 p-5 transition-colors hover:border-zinc-700">
+                    <summary class="flex items-center justify-between cursor-pointer font-pixel uppercase text-xs text-white tracking-wider">
+                        <span>Which synthesizers are officially supported?</span>
+                        <span class="text-blue-400 font-mono text-base transition-transform group-open:rotate-45">+</span>
+                    </summary>
+                    <p class="text-xs text-zinc-400 mt-4 leading-relaxed font-sans border-t border-zinc-900 pt-3">
+                        We offer dedicated patch-name decoders and parameter parsers for the Yamaha DX7 (and DX7II, TX7, TX81Z), Roland Juno-106, Korg M1, Roland Jupiter-6 (Europa-modded), Sequential Prophet-5 / Rev4, Casio CZ series, Oberheim Matrix-1000, and Roland D-50. For any other vintage synth, our Universal ASCII Heuristic Scanner extracts patch names and allows seamless two-way Web MIDI transmission.
+                    </p>
+                </details>
+
+                <!-- FAQ Item 5 -->
+                <details class="group rounded-2xl border border-zinc-800 bg-zinc-950/70 p-5 transition-colors hover:border-zinc-700">
+                    <summary class="flex items-center justify-between cursor-pointer font-pixel uppercase text-xs text-white tracking-wider">
+                        <span>Do I need special drivers or software installed on my Mac or PC?</span>
+                        <span class="text-blue-400 font-mono text-base transition-transform group-open:rotate-45">+</span>
+                    </summary>
+                    <p class="text-xs text-zinc-400 mt-4 leading-relaxed font-sans border-t border-zinc-900 pt-3">
+                        No background drivers or software installation are needed. bipluk runs directly inside modern web browsers with Web MIDI support (Google Chrome, Microsoft Edge, Opera, Brave). Plug your standard class-compliant USB-MIDI cable into your computer, open bipluk, and your synthesizers are recognized immediately.
+                    </p>
+                </details>
+
+                <!-- FAQ Item 6 -->
+                <details class="group rounded-2xl border border-zinc-800 bg-zinc-950/70 p-5 transition-colors hover:border-zinc-700">
+                    <summary class="flex items-center justify-between cursor-pointer font-pixel uppercase text-xs text-white tracking-wider">
+                        <span>How does bipluk prevent buffer overflow errors on older synths?</span>
+                        <span class="text-blue-400 font-mono text-base transition-transform group-open:rotate-45">+</span>
+                    </summary>
+                    <p class="text-xs text-zinc-400 mt-4 leading-relaxed font-sans border-t border-zinc-900 pt-3">
+                        Vintage synthesizers from the 1980s utilize slow 8-bit microprocessors that easily crash when blasted with high-speed USB-MIDI data. bipluk automatically paces outbound SysEx dumps into calibrated packages with 60ms pauses, ensuring the receiving instrument can commit the patches to battery-backed SRAM without buffer overflow errors.
+                    </p>
+                </details>
+
+                <!-- FAQ Item 7 -->
+                <details class="group rounded-2xl border border-zinc-800 bg-zinc-950/70 p-5 transition-colors hover:border-zinc-700">
+                    <summary class="flex items-center justify-between cursor-pointer font-pixel uppercase text-xs text-white tracking-wider">
+                        <span>Can I access my soundbank vault from multiple computers or tablets?</span>
+                        <span class="text-blue-400 font-mono text-base transition-transform group-open:rotate-45">+</span>
+                    </summary>
+                    <p class="text-xs text-zinc-400 mt-4 leading-relaxed font-sans border-t border-zinc-900 pt-3">
+                        Yes! Because bipluk is cloud-native, you can log in from your studio Mac, your stage PC laptop, a Chromebook, or an Android tablet and access all your saved banks instantly without manually copying files via thumb drives.
+                    </p>
+                </details>
+
+                <!-- FAQ Item 8 -->
+                <details class="group rounded-2xl border border-zinc-800 bg-zinc-950/70 p-5 transition-colors hover:border-zinc-700">
+                    <summary class="flex items-center justify-between cursor-pointer font-pixel uppercase text-xs text-white tracking-wider">
+                        <span>What payment methods do you accept?</span>
+                        <span class="text-blue-400 font-mono text-base transition-transform group-open:rotate-45">+</span>
+                    </summary>
+                    <p class="text-xs text-zinc-400 mt-4 leading-relaxed font-sans border-t border-zinc-900 pt-3">
+                        We accept Visa, Mastercard, American Express, Discover, Apple Pay, Google Pay, Pix (Brazil), and major regional bank options via Stripe. All payment data is processed securely through Stripe's certified Level 1 PCI DSS infrastructure.
+                    </p>
+                </details>
+            </div>
+        </section>
+
+        <!-- Final CTA Banner -->
+        <div class="rounded-2xl border border-blue-500/30 bg-gradient-to-b from-blue-950/30 via-zinc-950 to-black p-8 md:p-12 text-center relative overflow-hidden shadow-2xl">
+            <div class="relative z-10 max-w-xl mx-auto space-y-4">
+                <h2 class="text-2xl md:text-3xl font-pixel uppercase text-white tracking-tight">
+                    Ready to Protect Your Synth Collection?
+                </h2>
+                <p class="text-xs md:text-sm text-zinc-400 font-sans leading-relaxed">
+                    Internal lithium batteries are ticking time bombs. Back up your synthesizers in 30 seconds with zero software setup.
+                </p>
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-3 pt-3">
+                    {% if user %}
+                    <a href="/home?upgrade=1" class="btn-upgrade-tv !h-12 !w-full sm:!w-auto !rounded-xl !p-[1px] shrink-0 active:scale-[0.98]">
+                        <span class="btn-upgrade-tv-inner !rounded-xl px-8 !text-xs font-pixel uppercase tracking-widest text-white">
+                            Upgrade to bipluk+
+                        </span>
+                    </a>
+                    <a href="/home" class="w-full sm:w-auto px-6 py-3 rounded-xl border border-zinc-800 bg-zinc-900 hover:bg-zinc-800 text-white text-xs font-pixel uppercase tracking-widest transition-all">
+                        Go to My Vault
+                    </a>
+                    {% else %}
+                    <a href="/login?redirect=/home?upgrade=1" class="btn-upgrade-tv !h-12 !w-full sm:!w-auto !rounded-xl !p-[1px] shrink-0 active:scale-[0.98]">
+                        <span class="btn-upgrade-tv-inner !rounded-xl px-8 !text-xs font-pixel uppercase tracking-widest text-white">
+                            Get Lifetime Access ({{ pricing.symbol }}{{ pricing.personal_amount }})
+                        </span>
+                    </a>
+                    <a href="/signup" class="w-full sm:w-auto px-6 py-3 rounded-xl border border-zinc-800 bg-zinc-900 hover:bg-zinc-800 text-white text-xs font-pixel uppercase tracking-widest transition-all">
+                        Start Free
+                    </a>
+                    {% endif %}
+                </div>
+                <div class="text-[10px] font-mono text-zinc-500 uppercase tracking-wider pt-2">
+                    One-time payment · 256-bit SSL encrypted · Lifetime updates
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    {% include "footer.html" %}
+
+    <script>
+        const RECT_FLAGS_MAP = {{ (rect_flags_map or {}) | tojson | safe }};
+        function getFlagUrl(code) {
+            const codeUpper = (code || '').toUpperCase();
+            const filename = RECT_FLAGS_MAP[codeUpper];
+            if (filename) return `/static/icons/flags/Rect/${filename}`;
+            return `/static/icons/flags/Rect/${codeUpper}_rect.png`;
+        }
+
+        const EU_COUNTRY_CODES = {{ eu_country_codes | tojson if eu_country_codes is defined else '[]' }};
+        const GB_COUNTRY_CODES = {{ gb_country_codes | tojson if gb_country_codes is defined else '[]' }};
+        const CA_COUNTRY_CODES = {{ ca_country_codes | tojson if ca_country_codes is defined else '[]' }};
+        const AU_COUNTRY_CODES = {{ au_country_codes | tojson if au_country_codes is defined else '[]' }};
+        const CH_COUNTRY_CODES = {{ ch_country_codes | tojson if ch_country_codes is defined else '[]' }};
+
+        const REGIONAL_PRICING_DISPLAY = {
+            eur: { symbol: '€', billing: 'EUR / ONE-TIME', personal: '99', label: 'Eurozone (EUR €)' },
+            gbp: { symbol: '£', billing: 'GBP / ONE-TIME', personal: '99', label: 'United Kingdom (GBP £)' },
+            cad: { symbol: '$', billing: 'CAD / ONE-TIME', personal: '139', label: 'Canada (CAD $)' },
+            aud: { symbol: '$', billing: 'AUD / ONE-TIME', personal: '149', label: 'Australia (AUD $)' },
+            chf: { symbol: 'Fr.', billing: 'CHF / ONE-TIME', personal: '99', label: 'Switzerland (CHF Fr.)' },
+            jpy: { symbol: '¥', billing: 'JPY / ONE-TIME', personal: '15,800', label: 'Japan (JPY ¥)' },
+        };
+
+        function applyRegionalPricingDisplay(region) {
+            const cfg = REGIONAL_PRICING_DISPLAY[region];
+            if (!cfg) return;
+            const personalSymbol = document.getElementById('pricing-personal-symbol');
+            const personalAmount = document.getElementById('pricing-personal-amount');
+            const personalBilling = document.getElementById('pricing-personal-billing');
+            if (personalSymbol) personalSymbol.textContent = cfg.symbol;
+            if (personalAmount) personalAmount.textContent = cfg.personal;
+            if (personalBilling) personalBilling.textContent = cfg.billing;
+        }
+
+        const fetchGeoData = () => {
+            return fetch('/api/geoip')
+                .then(res => {
+                    if (!res.ok) throw new Error();
+                    return res.json().catch(() => ({}));
+                })
+                .catch(() => ({}));
+        };
+
+        fetchGeoData()
+            .then(data => {
+                if (data && data.country) {
+                    const code = data.country.toUpperCase();
+                    let detectedRegion = null;
+                    if (data.pricing_region === 'jpy' || code === 'JP') detectedRegion = 'jpy';
+                    else if (data.pricing_region === 'gbp' || GB_COUNTRY_CODES.includes(code)) detectedRegion = 'gbp';
+                    else if (data.pricing_region === 'chf' || CH_COUNTRY_CODES.includes(code)) detectedRegion = 'chf';
+                    else if (data.pricing_region === 'cad' || CA_COUNTRY_CODES.includes(code)) detectedRegion = 'cad';
+                    else if (data.pricing_region === 'aud' || AU_COUNTRY_CODES.includes(code)) detectedRegion = 'aud';
+                    else if (data.pricing_region === 'eur' || EU_COUNTRY_CODES.includes(code)) detectedRegion = 'eur';
+
+                    if (detectedRegion) {
+                        applyRegionalPricingDisplay(detectedRegion);
+                    }
+
+                    const visitorTag = document.getElementById('visitor-geo-tag');
+                    if (visitorTag && data.country_name) {
+                        const flagUrl = getFlagUrl(code);
+                        visitorTag.innerHTML = `Detected: ${data.country_name} `;
+                        const flagImg = document.createElement('img');
+                        flagImg.src = flagUrl;
+                        flagImg.width = 16;
+                        flagImg.height = 12;
+                        flagImg.className = 'h-3 w-auto inline-block align-middle mx-1';
+                        flagImg.alt = data.country_name;
+                        visitorTag.appendChild(flagImg);
+                        visitorTag.appendChild(document.createTextNode('· Local pricing active'));
+                    }
+                }
+            })
+            .catch(() => {});
+    </script>
+</body>
+</html>

@@ -69,6 +69,8 @@ VALID_LITERAL_PATHS = {
     "/api/geoip",
     "/login",
     "/signup",
+    "/pricing",
+    "/pricing/",
     "/logout",
     "/home",
     "/banks",
