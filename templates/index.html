@@ -2079,6 +2079,21 @@
 
         // --- Ingest and Pull SysEx Logic ---
         function initiateDumpSequence() {
+            // Auto-select ports if only one input or output is available
+            if (midiAccess) {
+                if (!selectedInput && midiAccess.inputs && midiAccess.inputs.size === 1) {
+                    selectedInput = midiAccess.inputs.keys().next().value;
+                    const inputSelect = document.getElementById('midi-input-select');
+                    if (inputSelect) inputSelect.value = selectedInput;
+                }
+                if (!selectedOutput && midiAccess.outputs && midiAccess.outputs.size === 1) {
+                    selectedOutput = midiAccess.outputs.keys().next().value;
+                    const outputSelect = document.getElementById('midi-output-select');
+                    if (outputSelect) outputSelect.value = selectedOutput;
+                }
+                updateMidiPortLabel();
+            }
+
             const synthModelElem = document.getElementById('pull-synth-model');
             const bankNameElem = document.getElementById('pull-bank-name');
             const synthModel = synthModelElem ? synthModelElem.value : "Generic Synth";
@@ -2092,13 +2107,6 @@
                 if (heroInput) heroInput.value = bankName;
             }
 
-            logToPostHog('dump_sequence_initiated', {
-                synth_model: synthModel,
-                bank_name: bankName,
-                input_port: selectedInput,
-                output_port: selectedOutput
-            });
-
             if (!selectedInput || !selectedOutput) {
                 const popover = document.getElementById('device-popover');
                 if (popover) {
@@ -2108,6 +2116,13 @@
                 logToPostHog('dump_sequence_aborted_no_ports');
                 return;
             }
+
+            logToPostHog('dump_sequence_initiated', {
+                synth_model: synthModel,
+                bank_name: bankName,
+                input_port: selectedInput,
+                output_port: selectedOutput
+            });
 
             showStatusOverlay("Backing Up Synth", "Sending backup request to synthesizer...", true);
             startMidiIngestion(bankName, synthModel);
@@ -2436,7 +2451,12 @@
             }
 
             if (start !== -1) {
-                throw new Error('SysEx dump is missing an F7 terminator.');
+                // If trailing message was missing 0xF7, salvage it by appending 0xF7
+                const unterminated = bytes.slice(start);
+                const fixed = new Uint8Array(unterminated.length + 1);
+                fixed.set(unterminated);
+                fixed[fixed.length - 1] = 0xF7;
+                messages.push(fixed);
             }
 
             if (messages.length === 0) {
@@ -2468,7 +2488,18 @@
 
                 let offset = 0;
 
-                messages.forEach((message, index) => {
+                messages.forEach((rawMessage, index) => {
+                    let message = rawMessage;
+                    if (!(message instanceof Uint8Array)) {
+                        message = new Uint8Array(message);
+                    }
+                    // Web MIDI API requires SysEx messages starting with 0xF0 to end with 0xF7
+                    if (message.length > 0 && message[0] === 0xF0 && message[message.length - 1] !== 0xF7) {
+                        const terminated = new Uint8Array(message.length + 1);
+                        terminated.set(message);
+                        terminated[terminated.length - 1] = 0xF7;
+                        message = terminated;
+                    }
                     outputPort.send(message, performance.now() + offset);
                     const fireAt = offset;
                     activeFlashTimers.push(setTimeout(() => {

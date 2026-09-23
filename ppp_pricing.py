@@ -190,8 +190,38 @@ def _snap_ending_99(whole: float) -> int:
     return min(candidates, key=lambda c: abs(c - n))
 
 
+# Stripe enforces strict minimum transaction amounts (~$0.50 USD equivalent)
+# Below these amounts, Stripe's API rejects checkout session creation.
+STRIPE_MINIMUM_UNIT_AMOUNTS: dict[str, int] = {
+    # Zero-decimal currencies (whole units)
+    "IDR": 10_000,
+    "JPY": 100,
+    "KRW": 1_000,
+    "VND": 15_000,
+    "CLP": 500,
+    "PYG": 4_000,
+    "HUF": 200,
+    # Standard currencies (cents)
+    "USD": 50,
+    "EUR": 50,
+    "GBP": 30,
+    "CAD": 50,
+    "AUD": 50,
+    "CHF": 50,
+    "BRL": 100,
+    "MXN": 1000,
+    "ARS": 50_000,
+    "INR": 4_000,
+    "PHP": 3_000,
+    "THB": 2_000,
+    "MYR": 250,
+    "TRY": 2_000,
+    "ZAR": 1_000,
+}
+
+
 def _psychological_round(amount: float, currency: str) -> int:
-    """Round to culture-local price endings."""
+    """Round to culture-local price endings, respecting Stripe minimums."""
     zero_decimal = {"JPY", "KRW", "VND", "IDR", "CLP", "PYG", "HUF"}
     round_to_x999 = {"ARS", "COP", "UYU", "BOB", "DOP", "NGN", "EGP", "PKR", "BDT"}
     whole_ending_9 = {
@@ -206,34 +236,48 @@ def _psychological_round(amount: float, currency: str) -> int:
     if cur in zero_decimal:
         snapped = _snap_ending_9(amount) if amount < 1000 else _snap_ending_99(amount)
         if amount >= 1000:
-            return int(round(amount / 100.0) * 100)
-        return max(1, snapped)
+            res = int(round(amount / 100.0) * 100)
+        else:
+            res = max(1, snapped)
+        min_floor = STRIPE_MINIMUM_UNIT_AMOUNTS.get(cur, 100)
+        return max(res, min_floor)
 
     if cur in round_to_x999:
         rounded = round(amount / 100.0) * 100
         thousands = rounded / 1000
         snapped = (math.floor(thousands) + 0.999) * 1000
-        return int(round(snapped * 100))
+        res = int(round(snapped * 100))
+        min_floor = STRIPE_MINIMUM_UNIT_AMOUNTS.get(cur, 100)
+        return max(res, min_floor)
 
     if cur in ending_90:
         floor_major = math.floor(amount)
         candidates = [floor_major - 1 + 0.90, floor_major + 0.90, floor_major + 1 + 0.90]
         snapped = min((c for c in candidates if c >= 0.90), key=lambda c: abs(c - amount))
-        return max(90, int(round(snapped * 100)))
+        res = max(90, int(round(snapped * 100)))
+        min_floor = STRIPE_MINIMUM_UNIT_AMOUNTS.get(cur, 100)
+        return max(res, min_floor)
 
     if cur in whole_ending_9:
         whole = _snap_ending_9(amount) if amount < 1000 else _snap_ending_99(amount)
-        return max(900, whole * 100)
+        res = max(900, whole * 100)
+        min_floor = STRIPE_MINIMUM_UNIT_AMOUNTS.get(cur, 100)
+        return max(res, min_floor)
 
     if cur in ending_99:
         if abs(amount - round(amount)) < 0.01:
-            return int(round(amount * 100))
-        floored = math.floor(amount)
-        snapped = (floored - 1 + 0.99) if amount - floored < 0.5 else (floored + 0.99)
-        return max(99, int(round(snapped * 100)))
+            res = int(round(amount * 100))
+        else:
+            floored = math.floor(amount)
+            snapped = (floored - 1 + 0.99) if amount - floored < 0.5 else (floored + 0.99)
+            res = max(99, int(round(snapped * 100)))
+        min_floor = STRIPE_MINIMUM_UNIT_AMOUNTS.get(cur, 50)
+        return max(res, min_floor)
 
     whole = _snap_ending_9(amount)
-    return max(900, whole * 100)
+    res = max(900, whole * 100)
+    min_floor = STRIPE_MINIMUM_UNIT_AMOUNTS.get(cur, 100)
+    return max(res, min_floor)
 
 
 # ---------------------------------------------------------------------------

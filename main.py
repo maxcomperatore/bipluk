@@ -717,6 +717,7 @@ REGIONAL_PRICING_CATALOG = {
         "currency": "USD",
         "symbol": "$",
         "personal_amount": "39",
+        "studio_amount": "99",
         "competitor_amount": "200",
         "billing_label": "USD / ONE-TIME",
     },
@@ -725,6 +726,7 @@ REGIONAL_PRICING_CATALOG = {
         "currency": "EUR",
         "symbol": "€",
         "personal_amount": "99",
+        "studio_amount": "199",
         "competitor_amount": "200",
         "billing_label": "EUR / ONE-TIME",
     },
@@ -733,6 +735,7 @@ REGIONAL_PRICING_CATALOG = {
         "currency": "GBP",
         "symbol": "£",
         "personal_amount": "99",
+        "studio_amount": "199",
         "competitor_amount": "200",
         "billing_label": "GBP / ONE-TIME",
     },
@@ -741,6 +744,7 @@ REGIONAL_PRICING_CATALOG = {
         "currency": "CAD",
         "symbol": "$",
         "personal_amount": "139",
+        "studio_amount": "299",
         "competitor_amount": "280",
         "billing_label": "CAD / ONE-TIME",
     },
@@ -749,6 +753,7 @@ REGIONAL_PRICING_CATALOG = {
         "currency": "AUD",
         "symbol": "$",
         "personal_amount": "149",
+        "studio_amount": "299",
         "competitor_amount": "280",
         "billing_label": "AUD / ONE-TIME",
     },
@@ -757,6 +762,7 @@ REGIONAL_PRICING_CATALOG = {
         "currency": "CHF",
         "symbol": "Fr.",
         "personal_amount": "99",
+        "studio_amount": "199",
         "competitor_amount": "200",
         "billing_label": "CHF / ONE-TIME",
     },
@@ -765,6 +771,7 @@ REGIONAL_PRICING_CATALOG = {
         "currency": "JPY",
         "symbol": "¥",
         "personal_amount": "15,800",
+        "studio_amount": "39,800",
         "competitor_amount": "32,000",
         "billing_label": "JPY / ONE-TIME",
     },
@@ -919,8 +926,13 @@ PLAN_CATALOG = {
 }
 
 def normalize_plan(plan: str) -> str:
-    if not plan or plan == "free":
+    if not plan:
         return "free"
+    p = str(plan).strip().lower()
+    if p in ("free", "guest"):
+        return "free"
+    if p in ("studio", "commercial"):
+        return "studio"
     return "personal"
 
 def user_has_premium(user: dict) -> bool:
@@ -1003,11 +1015,21 @@ def create_pack_checkout_session(user: dict, pack_id: str, pack: dict):
     return stripe.checkout.Session.create(**build_pack_checkout_kwargs(user, pack_id, pack))
 
 def get_plan_price_id(plan: str = "personal", country_code: str | None = None) -> str:
+    norm = normalize_plan(plan)
+    if norm == "studio":
+        pid = STRIPE_PRICE_ID_STUDIO or ""
+        if pid and not pid.startswith("price_STUDIO_SET_IN_ENV"):
+            return pid
+        return ""
     return STRIPE_PRICE_ID_PERSONAL or STRIPE_PRICE_ID_LIFETIME or ""
 
 
 def format_plan_price_display(regional: dict, plan: str = "personal") -> str:
-    amount = regional["personal_amount"]
+    norm = normalize_plan(plan)
+    if norm == "studio":
+        amount = regional.get("studio_amount", "99")
+    else:
+        amount = regional["personal_amount"]
     symbol = regional["symbol"]
     if regional["region"] in ("usd", "jpy"):
         return f"{symbol}{amount}"
@@ -1019,6 +1041,7 @@ def format_plan_price_display(regional: dict, plan: str = "personal") -> str:
 def get_plan_catalog(country_code: str | None = None) -> dict:
     regional = get_regional_pricing(country_code)
     personal_clean = int(str(regional["personal_amount"]).replace(",", ""))
+    studio_clean = int(str(regional.get("studio_amount", "99")).replace(",", ""))
     return {
         "personal": {
             "label": "Personal",
@@ -1026,6 +1049,13 @@ def get_plan_catalog(country_code: str | None = None) -> dict:
             "amount_cents": personal_clean * 100,
             "stripe_price_id": get_plan_price_id("personal", country_code),
             "commercial": False,
+        },
+        "studio": {
+            "label": "Studio",
+            "price_display": format_plan_price_display(regional, "studio"),
+            "amount_cents": studio_clean * 100,
+            "stripe_price_id": get_plan_price_id("studio", country_code),
+            "commercial": True,
         },
     }
 
@@ -1053,18 +1083,26 @@ async def build_plan_checkout_line_items(plan: str, country_code: str | None) ->
     """
     normalized = normalize_plan(plan)
     use_catalog = os.environ.get("STRIPE_PLAN_USE_CATALOG_PRICE", "").strip().lower() in ("1", "true", "yes")
-    if use_catalog:
-        return [{"price": get_plan_price_id(normalized, country_code), "quantity": 1}]
+    catalog_price_id = get_plan_price_id(normalized, country_code)
+    if use_catalog and catalog_price_id:
+        return [{"price": catalog_price_id, "quantity": 1}]
 
     _ppp_raw = os.environ.get("PPP_ENABLED_COUNTRIES", "ALL").upper()
     code = (country_code or "US").upper().strip()
     ppp_active = _ppp_raw == "ALL" or code in _ppp_raw.split(",")
-    description = "Unlimited soundbank vault, Web MIDI live capture, hardware base-8 numbered export, and Prophet-5/DX7/Juno decoders. One-time payment, zero monthly rent."
+
+    if normalized == "studio":
+        description = "bipluk+ Studio lifetime license (commercial use, multi-seat location, full soundbank archive, priority SysEx support). One-time payment, zero monthly rent."
+        name = "bipluk+ Studio"
+    else:
+        description = "Unlimited soundbank vault, Web MIDI live capture, hardware base-8 numbered export, and Prophet-5/DX7/Juno decoders. One-time payment, zero monthly rent."
+        name = "bipluk+"
 
     # US + EU: never PPP — keep static catalog (€99 / $39 / etc).
-    if ppp_active and code != "US" and code not in EU_EUR_COUNTRY_CODES:
+    # Also skip PPP for studio plan to keep fixed commercial studio pricing
+    if normalized != "studio" and ppp_active and code != "US" and code not in EU_EUR_COUNTRY_CODES:
         try:
-            ppp_result = await ppp_pricing.compute_ppp_checkout(code)
+            ppp_result = await ppp_pricing.compute_ppp_checkout(code, product_name=name, product_description=description)
             line_item = {k: v for k, v in ppp_result.items() if k != "_meta"}
             return [line_item]
         except Exception as exc:
@@ -1073,9 +1111,11 @@ async def build_plan_checkout_line_items(plan: str, country_code: str | None) ->
     # Static regional path (existing behaviour)
     regional = get_regional_pricing(country_code)
     currency = regional["currency"].lower()
-    personal_clean = int(str(regional["personal_amount"]).replace(",", ""))
-    unit_amount = personal_clean * 100
-    name = "bipluk+"
+    if normalized == "studio":
+        clean_amount = int(str(regional.get("studio_amount", 99)).replace(",", ""))
+    else:
+        clean_amount = int(str(regional["personal_amount"]).replace(",", ""))
+    unit_amount = clean_amount * 100
 
     return [
         {
@@ -5450,11 +5490,22 @@ async def test_inactivity_warning(email: str = "test@example.com", send: str = "
     username = name_part.capitalize() if name_part else "there"
     return HTMLResponse(content=template.render({"username": username, "email": email}))
 
+EXEMPT_PAID_TIERS = {"vip", "studio", "pro", "personal", "premium"}
+
 def send_abandoned_checkout_email_task(email: str, username: str = None):
     if not email:
         return
     email_clean = email.lower().strip()
     try:
+        user = database.get_user_by_email(email_clean) if hasattr(database, "get_user_by_email") else None
+        if user:
+            tier = (user.get("tier") or "free").lower()
+            if tier in EXEMPT_PAID_TIERS or user.get("stripe_customer_id"):
+                logger.info(f"Skipping abandoned checkout email for paid/existing user: {email_clean}")
+                if hasattr(database, "mark_abandoned_checkout_sent") and user.get("id"):
+                    database.mark_abandoned_checkout_sent(int(user["id"]))
+                return
+
         if not username:
             name_part = email_clean.split('@')[0]
             first_name = re.split(r'[\._-]', name_part)[0]
@@ -5497,19 +5548,24 @@ def send_abandoned_checkout_email_task(email: str, username: str = None):
 
 @app.get("/api/cron/abandoned-checkout")
 async def trigger_abandoned_checkout_cron(request: Request, background_tasks: BackgroundTasks):
-    """Triggers automated abandoned checkout email to free users registered over 1 hour ago."""
+    """Triggers automated abandoned checkout email to users who initiated checkout >= 1 hour ago and haven't purchased."""
     assert_cron_authorized(request)
     users = database.get_all_users() if hasattr(database, "get_all_users") else []
     count = 0
     now = datetime.now()
     for u in users:
-        if u.get("tier", "free") in ["vip", "studio", "pro", "personal"]:
+        tier = (u.get("tier") or "free").lower()
+        if tier in EXEMPT_PAID_TIERS or u.get("stripe_customer_id"):
             continue
         if u.get("abandoned_checkout_sent"):
             continue
         try:
-            created_at = datetime.fromisoformat(str(u["created_at"]))
-            elapsed_hours = (now - created_at).total_seconds() / 3600
+            checkout_ts = u.get("last_checkout_initiated_at")
+            if not checkout_ts:
+                continue
+            ts_str = str(checkout_ts).replace("Z", "").split("+")[0]
+            ts_dt = datetime.fromisoformat(ts_str)
+            elapsed_hours = (now - ts_dt).total_seconds() / 3600
             if elapsed_hours >= 1:
                 email = u["email"]
                 username = u.get("username") or email.split("@")[0].capitalize()
@@ -5540,7 +5596,8 @@ async def get_abandoned_checkout_eligible_users() -> tuple[list[dict], int, int]
     skipped_young = 0
     now = datetime.now()
     for u in users:
-        if u.get("tier", "free") in ["vip", "studio", "pro", "personal"]:
+        tier = (u.get("tier") or "free").lower()
+        if tier in EXEMPT_PAID_TIERS or u.get("stripe_customer_id"):
             continue
         if u.get("abandoned_checkout_sent"):
             continue
