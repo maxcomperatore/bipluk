@@ -70,7 +70,7 @@
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "{{ seo_schema_type | default('TechArticle') }}",
+  "@type": "{{ 'TechArticle' if (seo_schema_type == 'HowTo' or not seo_schema_type) else seo_schema_type }}",
   "headline": {{ seo_title | tojson }},
   "description": {{ seo_description | tojson }},
   "image": {{ asset_abs_url('og_image.svg') | tojson }},
@@ -89,6 +89,10 @@
       "@type": "ImageObject",
       "url": "https://bipluk.com/static/logo.svg"
     }
+  },
+  "speakable": {
+    "@type": "SpeakableSpecification",
+    "cssSelector": ["h1", "article p", "main p"]
   },
   "mainEntityOfPage": {
     "@type": "WebPage",

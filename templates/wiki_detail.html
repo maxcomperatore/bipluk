@@ -16,6 +16,50 @@
         {% set seo_description = seo.description %}
         {% include 'partials/seo_article_meta.html' %}
     {% endif %}
+
+    <!-- Schema.org HowTo and Product Structured Data for Google Rich Snippets -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "HowTo",
+      "name": "How to Turn Off Memory Protect & Enable SysEx on {{ wiki.name }}",
+      "description": "Step-by-step instructions to configure {{ wiki.name }} hardware memory protect registers and enable SysEx communication for patch backups.",
+      "step": [
+        {
+          "@type": "HowToStep",
+          "position": 1,
+          "name": "Connect MIDI Cables",
+          "text": "Ensure MIDI IN and MIDI OUT DIN or USB cables are connected properly between the {{ wiki.name }} and your computer."
+        },
+        {
+          "@type": "HowToStep",
+          "position": 2,
+          "name": "Configure Hardware Memory Protect",
+          "text": {{ (seo.docs.content | striptags) | tojson if (seo and seo.docs and seo.docs.content) else ("Bypass memory protect and enable SysEx receive in the system menus of " + wiki.name) | tojson }}
+        },
+        {
+          "@type": "HowToStep",
+          "position": 3,
+          "name": "Initiate Web MIDI Handshake",
+          "text": "Open bipluk in Google Chrome or Microsoft Edge and click Start MIDI Engine to back up patches to the cloud."
+        }
+      ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Product",
+      "name": {{ wiki.name | tojson }},
+      "category": "Synthesizer",
+      "brand": {
+        "@type": "Brand",
+        "name": {{ wiki.brand | tojson }}
+      },
+      "description": {{ (wiki.wiki_text or (seo.description if seo else '')) | tojson }},
+      "releaseDate": {{ wiki.year | tojson }}
+    }
+    </script>
     {% include 'partials/tailwind_lapis.html' %}
 
     <style>

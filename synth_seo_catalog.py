@@ -214,6 +214,13 @@ SYNTH_SPEC_DB: Dict[str, Dict[str, Any]] = {
         "famous_tracks": ["Sasha - Airdrawndagger", "Noisia", "The Chemical Brothers"],
         "protect_steps": "Press SYSTEM/CONFIG, scroll to MIDI System, set 'Midi Dump Rx: Enable', and set Memory Lock to OFF."
     },
+    "access-virus-c": {
+        "engine": "Virtual Analog Polyphonic DSP Synthesizer (Motorola 56311 DSP)",
+        "polyphony": "32 voices",
+        "year": "2002",
+        "famous_tracks": ["Sasha - Airdrawndagger", "Noisia", "The Prodigy", "Paul van Dyk"],
+        "protect_steps": "Press SYSTEM / CONFIG, scroll to the MIDI System menu, set 'Midi Dump Rx: Enable', and ensure Memory Protect is set to OFF."
+    },
     "akai-ax80": {
         "engine": "Analog Subtractive (2 DCOs per voice with CEM3372 Analog VCF/VCA)",
         "polyphony": "8 voices",
@@ -368,8 +375,116 @@ def build_programmatic_records() -> Tuple[Dict[str, Dict[str, Any]], Dict[str, D
             "funny_anecdote": f"Known in studios worldwide for its unmistakable sound character and timeless hardware workflow."
         }
 
+    # Ensure synths explicitly defined in SYNTH_SPEC_DB that were not in adapters are also generated
+    for spec_slug, spec in SYNTH_SPEC_DB.items():
+        if spec_slug in seo_data:
+            continue
+        # Also check if already covered by another key
+        if any(spec_slug in k or k in spec_slug for k in seo_data) and spec_slug not in ("access-virus-c", "access-virus"):
+            continue
+
+        brand = "Vintage"
+        for k, v in BRAND_MAP.items():
+            if k in spec_slug.lower():
+                brand = v
+                break
+
+        display_name = spec_slug.replace("-", " ").title()
+        if brand != "Vintage" and not display_name.lower().startswith(brand.lower()):
+            display_name = f"{brand} {display_name}"
+
+        engine = spec.get("engine", f"{brand} Synthesizer Engine")
+        polyphony = spec.get("polyphony", "Hardware Polyphonic")
+        year = spec.get("year", "Vintage Era")
+        famous_tracks = spec.get("famous_tracks", [f"Classic studio tracks featuring {display_name}"])
+        protect_steps = spec.get(
+            "protect_steps",
+            f"Enter Global / Utility MIDI settings on your {display_name}. Toggle Memory Protect to OFF and set System Exclusive (SysEx) Receive to ON."
+        )
+
+        title = f"{display_name} SysEx Librarian & Web MIDI Cloud Backup | bipluk"
+        description = (
+            f"Browser-native SysEx librarian and patch manager for the {display_name}. "
+            f"Back up, organize, and restore {display_name} soundbanks directly via Web MIDI in Chrome. "
+            f"Zero driver installation, instant 1-click transfers."
+        )
+        keywords = (
+            f"{display_name.lower()} sysex librarian, {display_name.lower()} backup, "
+            f"how to save {display_name.lower()} presets, {brand.lower()} sysex transfer mac, "
+            f"cloud backup for synthesizers, web midi {display_name.lower()}"
+        )
+        docs_content = f"""<p class="text-zinc-400 mb-4 text-sm md:text-base">To dump or load soundbanks on the {display_name}, internal memory protection must be disabled and System Exclusive communication enabled.</p>
+<ol class="list-decimal list-inside space-y-3 text-zinc-300 text-sm md:text-base font-medium">
+    <li>Ensure MIDI IN and MIDI OUT DIN/USB cables are connected properly.</li>
+    <li>{protect_steps}</li>
+    <li>Click <strong>Start MIDI Engine</strong> below to initiate the Web MIDI SysEx handshake.</li>
+</ol>
+<p class="text-zinc-400 mt-5 text-sm md:text-base">Your {display_name} is now ready for 1-click cloud backup and patch recall.</p>"""
+
+        seo_data[spec_slug] = {
+            "title": title,
+            "description": description,
+            "keywords": keywords,
+            "synth_name": display_name,
+            "hero_title": f"The iCloud for your <br class=\"hidden sm:inline\"><span class=\"text-zinc-550\">{display_name}.</span>",
+            "hero_subtitle": (
+                f"The easiest way to manage {display_name} soundbanks and patches directly from your browser. "
+                f"Zero setup, zero driver headaches, instant Web MIDI transfers."
+            ),
+            "docs": {
+                "title": f"How to Turn Off Memory Protect & Enable SysEx on {display_name}",
+                "content": docs_content,
+            }
+        }
+
+        wiki_data[spec_slug] = {
+            "brand": brand,
+            "name": display_name,
+            "year": year,
+            "engine": engine,
+            "polyphony": polyphony,
+            "dac": "Hardware DSP Architecture",
+            "presets_count": "Full Soundbank Support",
+            "rarity": "⭐⭐⭐★★",
+            "famous_tracks": famous_tracks,
+            "factory_presets": [f"{display_name} Bank A", f"{display_name} User Presets"],
+            "wiki_text": (
+                f"The {display_name} by {brand} is a celebrated hardware synthesizer known for its distinct acoustic profile "
+                f"and sonic flexibility. bipluk provides instant, zero-install Web MIDI SysEx library management, "
+                f"soundbank diagnostics, and cloud preservation for the {display_name} directly in your browser."
+            ),
+            "funny_anecdote": f"Known in studios worldwide for its unmistakable sound character and timeless hardware workflow."
+        }
+
     return seo_data, wiki_data
 
+
+# Canonical and community alias mappings
+SYNTH_ALIASES: Dict[str, str] = {
+    # Direct short slugs requested by community / links
+    "m1": "korg-m1",
+    "cz-101": "casio-cz-101",
+    "d-50": "roland-d-50",
+    "prophet-5": "sequential-prophet-5-rev4",
+    "matrix-1000": "oberheim-matrix-1000",
+    "tx81z": "yamaha-tx81z",
+    "juno-60": "roland-juno-60",
+    "wavestation": "korg-wavestation",
+    "andromeda-a6": "alesis-andromeda-a6",
+    "andromeda": "alesis-andromeda-a6",
+    "virus-c": "access-virus-c",
+    "access-virus": "access-virus-c",
+    "voyager": "moog-voyager",
+    "kijimi": "bc-kijimi",
+    # Brand-prefixed aliases for short slugs
+    "yamaha-dx7": "dx7",
+    "roland-juno-106": "juno-106",
+    "roland-jupiter-6": "jupiter-6",
+    "sequential-prophet-600": "prophet-600",
+    "sequential-prophet-5": "sequential-prophet-5-rev4",
+    "roland-d50": "roland-d-50",
+    "black-corporation-kijimi": "bc-kijimi",
+}
 
 # Cached singletons
 _EXPANDED_SEO_CACHE = None
@@ -383,9 +498,16 @@ def get_expanded_seo_data(base_seo: Dict[str, Any] = None) -> Dict[str, Any]:
         if base_seo:
             # User manual definitions take highest precedence
             merged.update(base_seo)
+        # Apply aliases
+        for alias, target in SYNTH_ALIASES.items():
+            if target in merged and alias not in merged:
+                merged[alias] = dict(merged[target])
         _EXPANDED_SEO_CACHE = merged
     elif base_seo:
         _EXPANDED_SEO_CACHE.update(base_seo)
+        for alias, target in SYNTH_ALIASES.items():
+            if target in _EXPANDED_SEO_CACHE and alias not in _EXPANDED_SEO_CACHE:
+                _EXPANDED_SEO_CACHE[alias] = dict(_EXPANDED_SEO_CACHE[target])
     return _EXPANDED_SEO_CACHE
 
 def get_expanded_wiki_data(base_wiki: Dict[str, Any] = None) -> Dict[str, Any]:
@@ -396,9 +518,16 @@ def get_expanded_wiki_data(base_wiki: Dict[str, Any] = None) -> Dict[str, Any]:
         if base_wiki:
             # User manual definitions take highest precedence
             merged.update(base_wiki)
+        # Apply aliases
+        for alias, target in SYNTH_ALIASES.items():
+            if target in merged and alias not in merged:
+                merged[alias] = dict(merged[target])
         _EXPANDED_WIKI_CACHE = merged
     elif base_wiki:
         _EXPANDED_WIKI_CACHE.update(base_wiki)
+        for alias, target in SYNTH_ALIASES.items():
+            if target in _EXPANDED_WIKI_CACHE and alias not in _EXPANDED_WIKI_CACHE:
+                _EXPANDED_WIKI_CACHE[alias] = dict(_EXPANDED_WIKI_CACHE[target])
     return _EXPANDED_WIKI_CACHE
 
 if __name__ == "__main__":

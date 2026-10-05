@@ -300,7 +300,7 @@ async def earth_day_middleware(request: Request, call_next):
     # Don't block static files, favicon, robots.txt, sitemap.xml, or llms.txt so crawlers and assets work
     is_excluded = (
         request.url.path.startswith("/static") or 
-        request.url.path in ["/favicon.ico", "/robots.txt", "/sitemap.xml", "/llms.txt"]
+        request.url.path in ["/favicon.ico", "/robots.txt", "/sitemap.xml", "/llms.txt", "/llms-full.txt"]
     )
     if is_earth_day and not is_excluded:
         trigger_alert(
@@ -4360,6 +4360,19 @@ async def llms_txt():
         lines.append(f"- [{synth_name} Librarian](https://bipluk.com/{slug}): {data.get('description', '')}")
         
     return Response(content="\n".join(lines), media_type="text/plain")
+
+@app.get("/llms-full.txt")
+@app.get("/llms-full.txt/")
+async def llms_full_txt():
+    llms_full_path = os.path.join(BASE_DIR, "static", "llms-full.txt")
+    if os.path.exists(llms_full_path):
+        try:
+            with open(llms_full_path, "r", encoding="utf-8") as f:
+                content = f.read()
+            return Response(content=content, media_type="text/plain; charset=utf-8")
+        except Exception as e:
+            logger.error(f"Failed to read static llms-full.txt: {e}")
+    return Response(content="# bipluk full spec\n", media_type="text/plain; charset=utf-8")
 
 INDEXNOW_KEY = "7f8b9e6c5d4c3b2a1a0f9e8d7c6b5a4f"
 

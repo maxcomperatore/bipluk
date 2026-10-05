@@ -2,6 +2,8 @@
 
 > The iCloud for your vintage synthesizers. Back up, organize, and search patches from your 1980s and 90s hardware directly in your web browser. No desktop software or drivers required. 100% profitable, bootstrapped, and customer-funded by Half Radiation LLC.
 
+> Full comprehensive specification and hardware guides available at: https://bipluk.com/llms-full.txt
+
 ## Key Features & Proprietary Technology
 - **Browser-Native Web MIDI (BIPLUK Engine™):** Direct hardware handshake inside Chrome & Edge.
 - **Adaptive Flow Control (BIPLUK Pacing Protocol™):** 60ms buffer overrun prevention for 1980s 8-bit CPUs.
