@@ -563,6 +563,14 @@
             background-position: 0 0;
         }
 
+        /* Hero Immediate Render Guarantee */
+        .hero-visible,
+        .hero-visible * {
+            opacity: 1 !important;
+            transform: none !important;
+            visibility: visible !important;
+        }
+
         /* Scroll Reveal System */
         .reveal {
             opacity: 0;
@@ -1378,9 +1386,9 @@
     <main class="pb-20 md:pb-0 overflow-x-clip max-w-full">
 
         <!-- Hero Section -->
-        <section class="max-w-6xl mx-auto px-6 pt-32 pb-16 text-center relative z-10">
+        <section class="max-w-6xl mx-auto px-6 pt-32 pb-16 text-center relative z-10 hero-visible">
             <h1
-                class="text-2xl sm:text-3xl md:text-5xl font-mono uppercase tracking-wider text-white leading-tight max-w-5xl mx-auto reveal">
+                class="text-2xl sm:text-3xl md:text-5xl font-mono uppercase tracking-wider text-white leading-tight max-w-5xl mx-auto">
                 {% if is_halloween_week %}
                 The Haunted Vault
                 <span class="inline-flex items-center align-middle mx-1">
@@ -1416,8 +1424,7 @@
                 {% endif %}
             </h1>
 
-            <p class="text-xs md:text-sm font-mono text-zinc-400 max-w-xl mx-auto mt-7 leading-relaxed reveal tracking-wide"
-                style="--delay: 150ms;">
+            <p class="text-xs md:text-sm font-mono text-zinc-400 max-w-xl mx-auto mt-7 leading-relaxed tracking-wide">
                 {% if is_halloween_week %}
                 Resurrect, exorcise, and summon lost patches from your 1980s and 90s hardware directly in your web
                 browser. No desktop software downloads or sacrificial driver installations required.
@@ -1431,7 +1438,7 @@
             </p>
 
             <!-- Mobile Only CTA: Send to Studio Computer & 1-Click Google -->
-            <div class="block lg:hidden max-w-sm mx-auto mt-7 px-3 reveal text-center" style="--delay: 200ms;">
+            <div class="block lg:hidden max-w-sm mx-auto mt-7 px-3 text-center">
                 <div class="mb-3">
                     <a href="/auth/google" onclick="if(window.posthog)posthog.capture('mobile_hero_google_click');"
                         class="w-full py-2.5 px-4 rounded-xl bg-white hover:bg-zinc-100 text-zinc-950 text-xs font-bold flex items-center justify-center gap-2.5 transition-all shadow-md active:scale-95">
@@ -1465,7 +1472,7 @@
             </div>
 
             <!-- Interactive MIDI Detector (Desktop Only) -->
-            <div class="hidden lg:block max-w-md mx-auto mt-10 reveal" style="--delay: 300ms;">
+            <div class="hidden lg:block max-w-md mx-auto mt-10">
                 <div
                     class="bg-zinc-950/80 backdrop-blur-md border border-white/10 rounded-2xl p-1.5 flex flex-col sm:flex-row items-stretch sm:items-center gap-2 shadow-[0_0_30px_rgba(255,255,255,0.03)] relative ring-1 ring-white/5">
                     <!-- Status Area: MIDI Icon + Text -->
@@ -1493,7 +1500,7 @@
 
 
             <!-- Press & Social Proof Trust Bar -->
-            <div class="mt-10 mb-6 max-w-2xl mx-auto flex flex-col items-center justify-center gap-2 text-xs font-mono text-zinc-400 select-none reveal text-center px-2">
+            <div class="mt-10 mb-6 max-w-2xl mx-auto flex flex-col items-center justify-center gap-2 text-xs font-mono text-zinc-400 select-none text-center px-2">
                 <span class="text-[9px] font-pixel uppercase tracking-widest text-zinc-500">AS FEATURED IN</span>
                 <div class="flex items-center justify-center gap-2 sm:gap-4 flex-wrap w-full">
                     <img src="/static/logos/musicradar.svg"
@@ -1532,7 +1539,7 @@
                             your laptop and read patch names directly from RAM memory bank registers.</p>
                     </div>
                     <div class="relative overflow-hidden aspect-[4/3] w-full border-t border-zinc-900 bg-black">
-                        <video autoplay loop muted playsinline preload="auto"
+                        <video autoplay loop muted playsinline preload="metadata"
                             aria-label="MIDI keyboard backup demo video"
                             class="demo-loop-video w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-500">
                             <source src="/static/1.mp4?v=20260701b" type="video/mp4">
@@ -1552,7 +1559,7 @@
                         <p class="text-xs text-zinc-400 mt-2 leading-relaxed font-normal">Synthesizers are built to last forever. Internal RAM batteries aren't. Protect decades of custom patch engineering in a private cloud vault. Search soundbanks, export patch catalogs to CSV, and restore your hardware with a single click.</p>
                     </div>
                     <div class="relative overflow-hidden aspect-[4/3] w-full border-t border-zinc-900 bg-black">
-                        <video autoplay loop muted playsinline preload="auto"
+                        <video autoplay loop muted playsinline preload="metadata"
                             aria-label="Web cloud patch editor database demo video"
                             class="demo-loop-video w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-500">
                             <source src="/static/2.mp4?v=20260701b" type="video/mp4">
@@ -2193,23 +2200,36 @@
                     if (pricingTitle) pricingTitle.textContent = {{ pricing_title_fallback | default('A pricing system built for fellow synth heads.') | tojson }};
                 });
 
-            // Scroll animation observer
-            document.addEventListener("DOMContentLoaded", () => {
+            // Scroll animation observer with safety net and immediate viewport activation
+            function initScrollReveal() {
                 const reveals = document.querySelectorAll('.reveal');
+                if (!reveals.length) return;
+                if (!('IntersectionObserver' in window)) {
+                    reveals.forEach(el => el.classList.add('active'));
+                    return;
+                }
                 const observer = new IntersectionObserver((entries) => {
                     entries.forEach(entry => {
                         if (entry.isIntersecting) {
                             entry.target.classList.add('active');
-                            // stop observing to run the animation only once
                             observer.unobserve(entry.target);
                         }
                     });
                 }, {
-                    threshold: 0.05,
-                    rootMargin: "0px 0px -40px 0px"
+                    threshold: 0.02,
+                    rootMargin: "40px 0px 40px 0px"
                 });
                 reveals.forEach(el => observer.observe(el));
-            });
+                // Safety net: reveal any delayed elements after 1.2s so content is never stuck hidden
+                setTimeout(() => {
+                    document.querySelectorAll('.reveal:not(.active)').forEach(el => el.classList.add('active'));
+                }, 1200);
+            }
+            if (document.readyState === 'loading') {
+                document.addEventListener("DOMContentLoaded", initScrollReveal);
+            } else {
+                initScrollReveal();
+            }
 
             // Footer email subscription logic (Tony's style validation)
             function submitFooterSubscribe(event) {

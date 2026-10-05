@@ -711,6 +711,26 @@ COUNTRY_NAME_TO_ISO = {
     "LIECHTENSTEIN": "LI",
 }
 
+ISO_TO_COUNTRY_NAME = {iso: name.title() for name, iso in COUNTRY_NAME_TO_ISO.items()}
+ISO_TO_COUNTRY_NAME.update({
+    "US": "United States",
+    "GB": "United Kingdom",
+    "JP": "Japan",
+    "AU": "Australia",
+    "CA": "Canada",
+    "DE": "Germany",
+    "FR": "France",
+    "BR": "Brazil",
+    "MX": "Mexico",
+    "AR": "Argentina",
+    "NZ": "New Zealand",
+    "KR": "South Korea",
+    "IN": "India",
+    "SG": "Singapore",
+    "NL": "the Netherlands",
+    "PH": "the Philippines",
+})
+
 REGIONAL_PRICING_CATALOG = {
     "usd": {
         "region": "usd",
@@ -882,38 +902,68 @@ def resolve_client_ip(request: Request) -> tuple[str, bool]:
         is_private = True
     return client_ip, is_private
 
+_GEO_CACHE: dict[str, tuple[dict, float]] = {}
+_GEO_CACHE_TTL = 86400.0  # 24 hours
+
 def lookup_geo_country(client_ip: str, is_private: bool) -> dict:
+    if is_private or client_ip in ("127.0.0.1", "localhost", "::1", "unknown", ""):
+        return {
+            "country_name": "everywhere",
+            "country": "US",
+            "ip": "127.0.0.1",
+        }
+
+    now = time.time()
+    cached = _GEO_CACHE.get(client_ip)
+    if cached and (now - cached[1] < _GEO_CACHE_TTL):
+        return cached[0]
+
+    if len(_GEO_CACHE) > 5000:
+        _GEO_CACHE.clear()
+
     import urllib.request
     import json
 
     try:
-        url = "https://ipwho.is/" if is_private else f"https://ipwho.is/{client_ip}"
+        url = f"https://ipwho.is/{client_ip}"
         req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"})
-        with urllib.request.urlopen(req, timeout=3) as response:
+        with urllib.request.urlopen(req, timeout=1.2) as response:
             data = json.loads(response.read().decode())
             if data.get("success"):
-                return {
-                    "country_name": data.get("country"),
+                res = {
+                    "country_name": data.get("country") or "everywhere",
                     "country": normalize_country_code(data.get("country_code") or data.get("country")),
-                    "ip": data.get("ip") if not is_private else "127.0.0.1",
+                    "ip": data.get("ip") or client_ip,
                 }
+                _GEO_CACHE[client_ip] = (res, now)
+                return res
     except Exception as e:
         logger.error(f"Server-side ipwho.is geoip lookup failed: {e}")
 
-    return {
+    fallback = {
         "country_name": "everywhere",
         "country": "US",
-        "ip": "127.0.0.1",
+        "ip": client_ip,
     }
+    _GEO_CACHE[client_ip] = (fallback, now)
+    return fallback
+
+def get_request_geo_and_country(request: Request) -> tuple[str, dict]:
+    client_ip, is_private = resolve_client_ip(request)
+    for header in ("cf-ipcountry", "x-vercel-ip-country"):
+        hdr_val = request.headers.get(header)
+        if hdr_val and len(hdr_val) == 2 and hdr_val.upper() != "XX":
+            country_code = normalize_country_code(hdr_val)
+            country_name = ISO_TO_COUNTRY_NAME.get(country_code, "everywhere")
+            return country_code, {"country": country_code, "country_name": country_name, "ip": client_ip}
+
+    geo = lookup_geo_country(client_ip, is_private)
+    country_code = normalize_country_code(geo.get("country"))
+    return country_code, geo
 
 def get_request_country_code(request: Request) -> str:
-    for header in ("cf-ipcountry", "x-vercel-ip-country"):
-        code = request.headers.get(header)
-        if code and len(code) == 2 and code.upper() != "XX":
-            return normalize_country_code(code)
-    client_ip, is_private = resolve_client_ip(request)
-    geo = lookup_geo_country(client_ip, is_private)
-    return normalize_country_code(geo.get("country"))
+    country_code, _ = get_request_geo_and_country(request)
+    return country_code
 
 PLAN_CATALOG = {
     "personal": {
@@ -1517,13 +1567,54 @@ async def upgrade_redirect(request: Request):
         return RedirectResponse(url="/home?upgrade=1", status_code=303)
     return RedirectResponse(url="/login?redirect=/home?upgrade=1", status_code=303)
 
+_HOMEPAGE_STATS_CACHE = {
+    "user_count": 6,
+    "paid_user_count": 2,
+    "total_patches": 1000,
+    "timestamp": 0.0,
+}
+_HOMEPAGE_STATS_TTL = 300.0  # 5 minutes
+
+def get_homepage_stats() -> tuple[int, int, int]:
+    now = time.time()
+    if now - _HOMEPAGE_STATS_CACHE["timestamp"] < _HOMEPAGE_STATS_TTL:
+        return (
+            _HOMEPAGE_STATS_CACHE["user_count"],
+            _HOMEPAGE_STATS_CACHE["paid_user_count"],
+            _HOMEPAGE_STATS_CACHE["total_patches"],
+        )
+    try:
+        conn = database.get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT COUNT(*) FROM users;")
+        u_count = cursor.fetchone()[0]
+
+        cursor.execute("SELECT COUNT(*) FROM users WHERE tier != 'free';")
+        p_count = cursor.fetchone()[0]
+
+        cursor.execute("SELECT COUNT(*) FROM patches;")
+        t_patches = cursor.fetchone()[0]
+        conn.close()
+
+        _HOMEPAGE_STATS_CACHE["user_count"] = u_count
+        _HOMEPAGE_STATS_CACHE["paid_user_count"] = p_count
+        _HOMEPAGE_STATS_CACHE["total_patches"] = t_patches
+        _HOMEPAGE_STATS_CACHE["timestamp"] = now
+        return u_count, p_count, t_patches
+    except Exception as e:
+        logger.error(f"Failed to query user and patches count: {e}")
+        _HOMEPAGE_STATS_CACHE["timestamp"] = now - (_HOMEPAGE_STATS_TTL - 60.0)
+        return (
+            _HOMEPAGE_STATS_CACHE["user_count"],
+            _HOMEPAGE_STATS_CACHE["paid_user_count"],
+            _HOMEPAGE_STATS_CACHE["total_patches"],
+        )
+
 @app.get("/pricing", response_class=HTMLResponse)
 @app.get("/pricing/", response_class=HTMLResponse)
 async def pricing_page(request: Request):
     user = get_current_user(request)
-    country_code = get_request_country_code(request)
-    client_ip, is_private = resolve_client_ip(request)
-    geo = lookup_geo_country(client_ip, is_private)
+    country_code, geo = get_request_geo_and_country(request)
     accept_lang = request.headers.get("accept-language")
     pricing_title = pricing_geo_titles.build_pricing_title(country_code, geo.get("country_name"), accept_language=accept_lang)
     return render_template(
@@ -1548,8 +1639,8 @@ async def pricing_page(request: Request):
             "jp_country_codes": sorted(JP_JPY_COUNTRY_CODES),
             "faq_suggestions": faq_knowledge.FAQ_SUGGESTIONS,
             "seo_canonical": "https://bipluk.com/pricing",
-            "seo_title": "Bipluk Pricing & Plans — Web MIDI SysEx Librarian (No Subscriptions)",
-            "seo_description": "Explore Bipluk pricing plans. One-time payment for lifetime access — no monthly subscriptions. Free tier, bipluk+ lifetime ($39), and Studio license. Full feature comparison matrix, FAQs, and refund policy.",
+            "seo_title": "Bipluk Pricing & Plans: Web MIDI SysEx Librarian (No Subscriptions)",
+            "seo_description": "Explore Bipluk pricing plans. One-time payment for lifetime access (no monthly subscriptions). Free tier, bipluk+ lifetime ($39), and Studio license. Full feature comparison matrix, FAQs, and refund policy.",
         },
     )
 
@@ -1564,27 +1655,9 @@ async def index(request: Request):
     user = get_current_user(request)
     if user:
         return RedirectResponse(url="/home", status_code=303)
-    user_count = 6
-    paid_user_count = 2
-    total_patches = 1000
-    try:
-        conn = database.get_db_connection()
-        cursor = conn.cursor()
-        cursor.execute("SELECT COUNT(*) FROM users;")
-        user_count = cursor.fetchone()[0]
-
-        cursor.execute("SELECT COUNT(*) FROM users WHERE tier != 'free';")
-        paid_user_count = cursor.fetchone()[0]
-
-        cursor.execute("SELECT COUNT(*) FROM patches;")
-        total_patches = cursor.fetchone()[0]
-        conn.close()
-    except Exception as e:
-        logger.error(f"Failed to query user and patches count: {e}")
+    user_count, paid_user_count, total_patches = get_homepage_stats()
     remaining_slots = max(0, 105 - user_count)
-    country_code = get_request_country_code(request)
-    client_ip, is_private = resolve_client_ip(request)
-    geo = lookup_geo_country(client_ip, is_private)
+    country_code, geo = get_request_geo_and_country(request)
     accept_lang = request.headers.get("accept-language")
     pricing_title = pricing_geo_titles.build_pricing_title(country_code, geo.get("country_name"), accept_language=accept_lang)
     return render_template(
@@ -1954,9 +2027,7 @@ async def status_page():
 
 @app.get("/api/geoip")
 async def get_geoip(request: Request):
-    client_ip, is_private = resolve_client_ip(request)
-    geo = lookup_geo_country(client_ip, is_private)
-    country_code = get_request_country_code(request)
+    country_code, geo = get_request_geo_and_country(request)
     pricing = get_regional_pricing(country_code)
     pricing_title = pricing_geo_titles.build_pricing_title(country_code, geo.get("country_name"))
     return {
