@@ -60,6 +60,38 @@
       "releaseDate": {{ wiki.year | tojson }}
     }
     </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How do I back up {{ wiki.name }} soundbanks without desktop software?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "bipluk connects directly to your physical {{ wiki.name }} via browser-native Web MIDI in Google Chrome or Microsoft Edge. Connect your USB-MIDI interface, disable memory protect on your {{ wiki.name }}, and click Start MIDI Engine to back up patches to your private cloud vault."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Why does my {{ wiki.name }} drop bytes or show buffer overrun errors during SysEx transfers?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Vintage microprocessors on instruments like the {{ wiki.name }} run on slow clock speeds (2 MHz to 12 MHz) and are easily overwhelmed by modern unthrottled USB-MIDI streams. bipluk implements adaptive 60ms hardware pacing chunks to eliminate buffer overruns and ensure 100% byte-accurate dumps."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can internal battery failure erase my {{ wiki.name }} custom presets?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Most vintage synthesizers from this era use a soldered 3V CR2032 lithium backup battery to keep SRAM registers energized. When the battery drops below 2.8V, custom patches are permanently lost. Archiving your banks to bipluk provides an off-device byte-exact digital backup."
+          }
+        }
+      ]
+    }
+    </script>
     {% include 'partials/tailwind_lapis.html' %}
 
     <style>
@@ -445,6 +477,121 @@
             </div>
 
         </div>
+
+        {% if shop_pack %}
+        <!-- Curated Sound Expansion Pack Callout -->
+        <section class="mt-12 p-6 md:p-8 bg-zinc-950/90 border border-blue-500/30 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden">
+            <div class="space-y-2 text-left max-w-xl">
+                <div class="flex items-center gap-2">
+                    <span class="text-[9px] font-pixel px-2 py-0.5 rounded uppercase bg-blue-500/10 text-blue-400 border border-blue-500/20">Official Soundbank</span>
+                    <span class="text-xs font-mono text-zinc-500">{{ shop_pack.count }} Curated Voices</span>
+                </div>
+                <h3 class="text-lg font-pixel uppercase text-white tracking-wide">{{ shop_pack.name }}</h3>
+                <p class="text-xs text-zinc-400 font-mono">{{ shop_pack.desc }}</p>
+            </div>
+            <div class="flex items-center gap-4 shrink-0">
+                <span class="text-2xl font-lcd text-emerald-400">{{ shop_pack.price }}</span>
+                <a href="/shop" class="bg-blue-600 hover:bg-blue-500 text-white font-pixel uppercase text-2xs px-6 py-3 rounded-xl tracking-wider transition-all shadow-lg shadow-blue-500/20">
+                    Get Soundpack
+                </a>
+            </div>
+        </section>
+        {% endif %}
+
+        <!-- Hardware Troubleshooting & SysEx FAQ Section -->
+        <section class="mt-12 pt-10 border-t border-zinc-900 space-y-6">
+            <div class="border-b border-zinc-900 pb-4">
+                <h2 class="text-xs font-pixel uppercase text-white tracking-wider flex items-center gap-2">
+                    <span class="text-blue-500 font-bold">#</span> {{ wiki.name }} SysEx &amp; Hardware Troubleshooting FAQ
+                </h2>
+                <p class="text-2xs font-mono text-zinc-500 mt-1">Frequently asked technical questions regarding Web MIDI communication, memory protection, and battery preservation.</p>
+            </div>
+
+            <div class="space-y-4">
+                <details class="group bg-zinc-950/70 border border-zinc-900 rounded-xl p-5 [&_summary::-webkit-details-marker]:hidden cursor-pointer">
+                    <summary class="flex items-center justify-between font-pixel text-xs text-zinc-200 group-hover:text-white transition-colors">
+                        <span>How do I back up {{ wiki.name }} soundbanks without installing software?</span>
+                        <span class="text-zinc-550 group-open:rotate-180 transition-transform">▼</span>
+                    </summary>
+                    <p class="mt-3 text-2xs text-zinc-400 leading-relaxed font-mono">
+                        bipluk connects directly to your physical {{ wiki.name }} via browser-native Web MIDI in Google Chrome or Microsoft Edge. Connect your USB-MIDI interface, disable memory protect on your {{ wiki.name }} using the steps above, and click Start MIDI Engine to dump and store your patches directly to your private cloud vault.
+                    </p>
+                </details>
+
+                <details class="group bg-zinc-950/70 border border-zinc-900 rounded-xl p-5 [&_summary::-webkit-details-marker]:hidden cursor-pointer">
+                    <summary class="flex items-center justify-between font-pixel text-xs text-zinc-200 group-hover:text-white transition-colors">
+                        <span>Why does my {{ wiki.name }} drop bytes or show buffer overrun errors during SysEx transfers?</span>
+                        <span class="text-zinc-550 group-open:rotate-180 transition-transform">▼</span>
+                    </summary>
+                    <p class="mt-3 text-2xs text-zinc-400 leading-relaxed font-mono">
+                        Vintage microprocessors on instruments like the {{ wiki.name }} run on slow clock speeds (2 MHz to 12 MHz) and are easily overwhelmed by modern unthrottled USB-MIDI streams. bipluk implements adaptive 60ms hardware pacing chunks to eliminate buffer overruns and ensure 100% byte-accurate dumps.
+                    </p>
+                </details>
+
+                <details class="group bg-zinc-950/70 border border-zinc-900 rounded-xl p-5 [&_summary::-webkit-details-marker]:hidden cursor-pointer">
+                    <summary class="flex items-center justify-between font-pixel text-xs text-zinc-200 group-hover:text-white transition-colors">
+                        <span>Can internal battery failure erase my {{ wiki.name }} custom presets?</span>
+                        <span class="text-zinc-550 group-open:rotate-180 transition-transform">▼</span>
+                    </summary>
+                    <p class="mt-3 text-2xs text-zinc-400 leading-relaxed font-mono">
+                        Yes. Most vintage synthesizers from this era use a soldered 3V CR2032 lithium backup battery to keep SRAM registers energized. When the battery drops below 2.8V, custom patches are permanently lost. Archiving your banks to bipluk provides an off-device byte-exact digital backup.
+                    </p>
+                </details>
+            </div>
+        </section>
+
+        {% if related_synths %}
+        <!-- Related Synthesizers Hub (Mesh Internal Linking) -->
+        <section class="mt-12 pt-10 border-t border-zinc-900 space-y-6">
+            <div class="flex items-center justify-between border-b border-zinc-900 pb-4">
+                <div>
+                    <h2 class="text-xs font-pixel uppercase text-white tracking-wider flex items-center gap-2">
+                        <span class="text-blue-500 font-bold">#</span> Explore Related Vintage Synthesizers
+                    </h2>
+                    <p class="text-2xs font-mono text-zinc-500 mt-1">Cross-compatible sound engines, manufacturer siblings, and classic hardware peers.</p>
+                </div>
+                <a href="/resources" class="text-3xs font-pixel uppercase text-blue-400 hover:text-blue-300 transition-colors">View All &gt;</a>
+            </div>
+
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
+                {% for rel in related_synths %}
+                <a href="/{{ rel.slug }}" class="bg-zinc-950/80 border border-zinc-900 hover:border-blue-500/50 p-4 rounded-xl space-y-2 transition-all hover:-translate-y-1 group block">
+                    <span class="text-[9px] font-mono text-zinc-500 uppercase">{{ rel.brand }}</span>
+                    <h4 class="text-xs font-pixel text-white group-hover:text-blue-400 transition-colors truncate">{{ rel.name }}</h4>
+                    <span class="text-[10px] font-mono text-zinc-600 block">{{ rel.year }}</span>
+                </a>
+                {% endfor %}
+            </div>
+        </section>
+        {% endif %}
+
+        <!-- Pillar Technical Engineering & Preservation Guides -->
+        <section class="mt-12 pt-10 border-t border-zinc-900 space-y-6">
+            <div class="border-b border-zinc-900 pb-4">
+                <h2 class="text-xs font-pixel uppercase text-white tracking-wider flex items-center gap-2">
+                    <span class="text-blue-500 font-bold">#</span> Hardware Preservation &amp; Engineering Research
+                </h2>
+                <p class="text-2xs font-mono text-zinc-500 mt-1">First-party studies on MIDI baud latency, lithium battery decay, and buffer architecture.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <a href="/why-your-vintage-synth-battery-is-killing-your-sounds" class="p-5 bg-zinc-950/60 border border-zinc-900 hover:border-zinc-700 rounded-xl space-y-2 transition-colors block">
+                    <span class="text-[9px] font-pixel text-amber-400 uppercase">Hardware Reliability</span>
+                    <h4 class="text-xs font-pixel text-white">Why Your Vintage Synth Battery Is Killing Your Sounds</h4>
+                    <p class="text-2xs text-zinc-400 font-mono">How CR2032 voltage degradation erases 1980s SRAM patch registers.</p>
+                </a>
+                <a href="/how-do-you-keep-web-midi-from-crashing-a-1983-synthesizer" class="p-5 bg-zinc-950/60 border border-zinc-900 hover:border-zinc-700 rounded-xl space-y-2 transition-colors block">
+                    <span class="text-[9px] font-pixel text-blue-400 uppercase">Protocol Engineering</span>
+                    <h4 class="text-xs font-pixel text-white">Keeping Web MIDI from Crashing a 1983 Synthesizer</h4>
+                    <p class="text-2xs text-zinc-400 font-mono">The 31,250 baud bottleneck and 60ms pacing protocol explained.</p>
+                </a>
+                <a href="/research/7600-vintage-synth-patches-database-study" class="p-5 bg-zinc-950/60 border border-zinc-900 hover:border-zinc-700 rounded-xl space-y-2 transition-colors block">
+                    <span class="text-[9px] font-pixel text-emerald-400 uppercase">Original Research</span>
+                    <h4 class="text-xs font-pixel text-white">7,600 Synthesizer Patches Database Study</h4>
+                    <p class="text-2xs text-zinc-400 font-mono">Empirical PostgreSQL analysis of nameless preset distribution across 96 owners.</p>
+                </a>
+            </div>
+        </section>
 
     </main>
 

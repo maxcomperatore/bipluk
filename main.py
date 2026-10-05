@@ -5304,11 +5304,58 @@ async def dynamic_synth_seo(synth_slug: str, request: Request):
             "wiki_text": SEO_DATA[synth_slug].get("description", "")
         })
 
+        # Calculate 6 related synths for deep internal mesh linking
+        brand = wiki_info.get("brand", "")
+        related_synths = []
+        for k, v in WIKI_DATA.items():
+            if k != synth_slug and v.get("brand") == brand and k not in synth_seo_catalog.SYNTH_ALIASES:
+                related_synths.append({"slug": k, "name": v.get("name"), "brand": v.get("brand"), "year": v.get("year")})
+            if len(related_synths) >= 4:
+                break
+        
+        flagships = ["dx7", "juno-106", "m1", "prophet-5", "matrix-1000", "tx81z", "d-50", "jupiter-6"]
+        for k in flagships:
+            if len(related_synths) >= 6:
+                break
+            if k != synth_slug and k in WIKI_DATA and not any(r["slug"] == k for r in related_synths):
+                v = WIKI_DATA[k]
+                related_synths.append({"slug": k, "name": v.get("name"), "brand": v.get("brand"), "year": v.get("year")})
+
+        # Determine if there is a curated sound pack in the shop
+        matched_pack = None
+        s_lower = synth_slug.lower()
+        if "dx7" in s_lower:
+            matched_pack = {
+                "id": "dx7_retro",
+                "name": "Yamaha DX7: Classic FM Leads & Basses",
+                "price": "$9.00",
+                "count": 32,
+                "desc": "Punchy FM basses, bell leads, and electric pianos. 32 curated DX7 voices."
+            }
+        elif "m1" in s_lower:
+            matched_pack = {
+                "id": "m1_matrix",
+                "name": "Korg M1: Off the Matrix",
+                "price": "$9.00",
+                "count": 32,
+                "desc": "Sample-keymap style programs with house pianos, pads, and basses. 32 curated programs."
+            }
+        elif "juno" in s_lower:
+            matched_pack = {
+                "id": "juno_nostalgia",
+                "name": "Roland Juno-106: Nostalgia Plucks & Pads",
+                "price": "$9.00",
+                "count": 128,
+                "desc": "Chorus pads, plucks, acid bass, and leads. Full 128-patch Juno bank."
+            }
+
         return render_template("wiki_detail.html", request, {
             "user": user,
             "seo": SEO_DATA[synth_slug],
             "seo_slug": synth_slug,
-            "wiki": wiki_info
+            "wiki": wiki_info,
+            "related_synths": related_synths,
+            "shop_pack": matched_pack
         })
     raise HTTPException(status_code=404)
 
