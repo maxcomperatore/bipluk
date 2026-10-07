@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none">
+  <rect width="48" height="48" rx="12" fill="#0b0f17"/>
+  <rect x="1" y="1" width="46" height="46" rx="11" stroke="rgba(255,255,255,0.1)" stroke-width="1.2"/>
+  <!-- Shield Contour -->
+  <path d="M24 6L10 11.5V22.5C10 31.8 16 39.5 24 42C32 39.5 38 31.8 38 22.5V11.5L24 6Z" fill="#0b1320" stroke="#10b981" stroke-width="2" stroke-linejoin="round"/>
+  <!-- Left Wing (Emerald) -->
+  <path d="M24 11.5L14 15.5V22.5C14 29 18.2 34.8 24 37V11.5Z" fill="url(#logoEmerald)"/>
+  <!-- Right Wing (Silver/Steel) -->
+  <path d="M24 11.5L34 15.5V22.5C34 29 29.8 34.8 24 37V11.5Z" fill="url(#logoSilver)" fill-opacity="0.85"/>
+  <!-- Stylized C Monogram Core -->
+  <path d="M29 18.5C27.6 17 25.9 16.2 24 16.2C19.6 16.2 16 19.8 16 24.2C16 28.6 19.6 32.2 24 32.2C25.9 32.2 27.6 31.4 29 29.9" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round"/>
+  <!-- Trust Center Anchor -->
+  <circle cx="24" cy="24.2" r="2.5" fill="#10b981"/>
+  <defs>
+    <linearGradient id="logoEmerald" x1="14" y1="11.5" x2="24" y2="37" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#34d399"/>
+      <stop offset="1" stop-color="#059669"/>
+    </linearGradient>
+    <linearGradient id="logoSilver" x1="34" y1="11.5" x2="24" y2="37" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#cbd5e1"/>
+      <stop offset="1" stop-color="#475569"/>
+    </linearGradient>
+  </defs>
+</svg>
