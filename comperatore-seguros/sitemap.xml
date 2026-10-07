@@ -7,6 +7,18 @@
     <priority>1.0</priority>
   </url>
   <url>
+    <loc>https://comperatore-seguros.vercel.app/seguros-godoy-cruz/</loc>
+    <lastmod>2026-03-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://comperatore-seguros.vercel.app/seguros-lujan-de-cuyo/</loc>
+    <lastmod>2026-03-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
     <loc>https://comperatore-seguros.vercel.app/granizo/</loc>
     <lastmod>2026-03-01</lastmod>
     <changefreq>weekly</changefreq>

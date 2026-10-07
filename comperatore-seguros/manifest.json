@@ -1,0 +1,23 @@
+{
+  "name": "Comperatore Seguros",
+  "short_name": "Comperatore",
+  "description": "Asesor de Seguros en Mendoza: Asistente de Choque, Granizo y Pólizas Directas",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0b0f17",
+  "theme_color": "#0b0f17",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "48x48 72x72 96x96 128x128 192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/mauricio-comperatore.jpg",
+      "sizes": "400x500",
+      "type": "image/jpeg"
+    }
+  ]
+}
