@@ -6447,3 +6447,12 @@ async def trigger_newsletter_cron(request: Request):
         "recipient_count": len(recipients),
     }
 
+
+@app.get("/studio-proposal", response_class=FileResponse)
+async def serve_studio_proposal(request: Request):
+    """Interactive studio modernization staging, diagnostic, and custom proposal engine."""
+    proposal_path = os.path.join(BASE_DIR, "static", "proposal.html")
+    if os.path.exists(proposal_path):
+        return FileResponse(proposal_path, media_type="text/html")
+    raise HTTPException(status_code=404, detail="Proposal engine template not found")
+

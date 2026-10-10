@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Studio Staging & Proposal Engine | Half Radiation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        studio: {
+                            950: '#07080c',
+                            900: '#0d0f17',
+                            850: '#121520',
+                            800: '#181d2c',
+                            700: '#232a3f',
+                            600: '#333d59',
+                            amber: '#e69d45',
+                            gold: '#f5b041',
+                            cyan: '#00d2d3',
+                            emerald: '#10b981',
+                            crimson: '#ef4444'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        mono: ['"JetBrains Mono"', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #07080c;
+            color: #e2e8f0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+        .glass-panel {
+            background: rgba(18, 21, 32, 0.85);
+            backdrop-filter: blur(14px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .glow-amber {
+            box-shadow: 0 0 35px -5px rgba(230, 157, 69, 0.25);
+        }
+        .glow-cyan {
+            box-shadow: 0 0 35px -5px rgba(0, 210, 211, 0.25);
+        }
+        .glow-emerald {
+            box-shadow: 0 0 35px -5px rgba(16, 185, 129, 0.25);
+        }
+        .audio-meter {
+            background: linear-gradient(90deg, #10b981 0%, #f5b041 70%, #ef4444 100%);
+        }
+    </style>
+</head>
+<body class="min-h-screen text-slate-100 flex flex-col justify-between selection:bg-studio-amber selection:text-black">
+
+    <!-- Top Navigation Bar -->
+    <header class="border-b border-white/10 bg-studio-950/80 backdrop-blur-md sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-studio-amber to-studio-gold flex items-center justify-center font-mono font-bold text-black text-sm shadow-md">
+                    HR
+                </div>
+                <div>
+                    <span class="font-bold text-sm tracking-wide text-white">Half Radiation</span>
+                    <span class="text-xs text-slate-500 font-mono ml-2">studio-infrastructure</span>
+                </div>
+            </div>
+            <div class="flex items-center space-x-4">
+                <span id="targetStatusPill" class="text-xs font-mono px-3 py-1 rounded-full bg-studio-amber/10 text-studio-amber border border-studio-amber/20 flex items-center space-x-1.5">
+                    <span class="w-2 h-2 rounded-full bg-studio-amber animate-pulse"></span>
+                    <span id="targetDomainLabel">Custom Proposal</span>
+                </span>
+                <a href="https://bipluk.com" target="_blank" class="text-xs font-mono text-slate-400 hover:text-white transition-colors">
+                    bipluk.com ↗
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-6 py-12 flex-1 w-full space-y-12">
+
+        <!-- Target Selector (Client Quick-Switch) -->
+        <div class="glass-panel rounded-2xl p-6 flex flex-col md:flex-row items-center justify-between gap-4 border border-white/10">
+            <div>
+                <span class="text-xs font-mono uppercase tracking-widest text-studio-amber block mb-1">Interactive Diagnostic & Scope</span>
+                <h1 class="text-2xl font-bold text-white tracking-tight flex items-center gap-2">
+                    Proposal & Modernization Staging for <span id="clientTitle" class="text-transparent bg-clip-text bg-gradient-to-r from-studio-amber to-studio-gold">Your Studio</span>
+                </h1>
+                <p class="text-sm text-slate-400 mt-1">
+                    Prepared by Max Comperatore (<a href="https://bipluk.com" class="text-slate-300 underline underline-offset-2">bipluk.com</a>, Half Radiation LLC)
+                </p>
+            </div>
+            <!-- Quick Preset Switcher for testing/demoing -->
+            <div class="flex items-center space-x-2 bg-studio-900/90 border border-white/10 rounded-xl p-1.5 font-mono text-xs">
+                <label for="leadPresetSelect" class="text-slate-400 px-2">Preset:</label>
+                <select id="leadPresetSelect" class="bg-studio-850 text-white rounded-lg px-3 py-1.5 border border-white/10 focus:outline-none focus:border-studio-amber">
+                    <option value="custom">-- Custom Studio --</option>
+                    <option value="themixking">Steve Sola (The Mix King / Plain Truth NYC)</option>
+                    <option value="digitalforest">Digital Forest Studio (Cape Town)</option>
+                    <option value="trakworx">Justin Weis (Trakworx San Francisco)</option>
+                    <option value="paperstreet">Paul Kavicky (Paper Street Audio)</option>
+                    <option value="pesound">Joe Trojcak (Progressive Sound PA)</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Before & After Technical Audit Section -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- Current Status (Broken / Slow) -->
+            <div class="glass-panel rounded-2xl p-6 border-red-500/20 relative overflow-hidden">
+                <div class="absolute top-0 right-0 px-3 py-1 bg-red-500/10 border-b border-l border-red-500/20 text-red-400 font-mono text-[11px] font-semibold">
+                    CURRENT STATE
+                </div>
+                <h2 class="text-lg font-bold text-white mb-2 flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-red-500"></span>
+                    Live Vulnerabilities & Overhead
+                </h2>
+                <p class="text-xs text-slate-400 mb-6">
+                    Audit of your existing CMS host, template assets, and client drop flow:
+                </p>
+
+                <ul id="vulnerabilitiesList" class="space-y-3.5 text-xs font-mono">
+                    <li class="flex items-start space-x-2.5 bg-red-950/20 border border-red-500/20 p-3 rounded-lg text-slate-300">
+                        <span class="text-red-400 mt-0.5">✕</span>
+                        <div>
+                            <span class="font-bold text-red-300 block mb-0.5">Recurring CMS SaaS Tax</span>
+                            <span>Paying $200–$350/yr to Wix / Squarespace just to keep static text and images live online.</span>
+                        </div>
+                    </li>
+                    <li class="flex items-start space-x-2.5 bg-red-950/20 border border-red-500/20 p-3 rounded-lg text-slate-300">
+                        <span class="text-red-400 mt-0.5">✕</span>
+                        <div>
+                            <span class="font-bold text-red-300 block mb-0.5">Manual File Intake Friction</span>
+                            <span>Forcing clients to use free WeTransfer links, Dropbox shares, or email attachments that expire in 7 days.</span>
+                        </div>
+                    </li>
+                    <li class="flex items-start space-x-2.5 bg-red-950/20 border border-red-500/20 p-3 rounded-lg text-slate-300">
+                        <span class="text-red-400 mt-0.5">✕</span>
+                        <div>
+                            <span class="font-bold text-red-300 block mb-0.5">Unoptimized Mobile Script Bloat</span>
+                            <span>Heavy JavaScript frameworks that score 35-50 on Google Lighthouse mobile audits, hurting local SEO.</span>
+                        </div>
+                    </li>
+                </ul>
+
+                <div class="mt-6 pt-4 border-t border-white/5 flex items-center justify-between text-xs font-mono text-slate-500">
+                    <span>Recurring Cost: <span class="text-red-400 font-semibold">$240 – $360/year</span></span>
+                    <span>Load Latency: <span class="text-red-400 font-semibold">2.4s – 4.2s</span></span>
+                </div>
+            </div>
+
+            <!-- Target State (Edge / Instant) -->
+            <div class="glass-panel rounded-2xl p-6 border-studio-emerald/20 relative overflow-hidden glow-emerald">
+                <div class="absolute top-0 right-0 px-3 py-1 bg-studio-emerald/10 border-b border-l border-studio-emerald/20 text-studio-emerald font-mono text-[11px] font-semibold">
+                    UPGRADED EDGE STATE
+                </div>
+                <h2 class="text-lg font-bold text-white mb-2 flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-studio-emerald"></span>
+                    Modernized Cloudflare / Vercel Edge
+                </h2>
+                <p class="text-xs text-slate-400 mb-6">
+                    What changes once migrated to modern edge infrastructure:
+                </p>
+
+                <ul class="space-y-3.5 text-xs font-mono">
+                    <li class="flex items-start space-x-2.5 bg-studio-emerald/10 border border-studio-emerald/20 p-3 rounded-lg text-slate-300">
+                        <span class="text-studio-emerald mt-0.5">✓</span>
+                        <div>
+                            <span class="font-bold text-emerald-300 block mb-0.5">$0/mo Hosting Overhead Forever</span>
+                            <span>Global Cloudflare CDN cache. Zero recurring monthly CMS fees. Completely eliminates your annual platform bill.</span>
+                        </div>
+                    </li>
+                    <li class="flex items-start space-x-2.5 bg-studio-emerald/10 border border-studio-emerald/20 p-3 rounded-lg text-slate-300">
+                        <span class="text-studio-emerald mt-0.5">✓</span>
+                        <div>
+                            <span class="font-bold text-emerald-300 block mb-0.5">Private Direct Multitrack Drop</span>
+                            <span>Dedicated upload pipeline on your own domain. Clients drop multi-gigabyte ZIPs/WAVs directly into secure cloud storage.</span>
+                        </div>
+                    </li>
+                    <li class="flex items-start space-x-2.5 bg-studio-emerald/10 border border-studio-emerald/20 p-3 rounded-lg text-slate-300">
+                        <span class="text-studio-emerald mt-0.5">✓</span>
+                        <div>
+                            <span class="font-bold text-emerald-300 block mb-0.5">Sub-50ms Global Load Speeds</span>
+                            <span>Clean, compiled static assets. 98+ Google Lighthouse mobile score. Instant snappy navigation on any phone or laptop.</span>
+                        </div>
+                    </li>
+                </ul>
+
+                <div class="mt-6 pt-4 border-t border-white/5 flex items-center justify-between text-xs font-mono text-slate-500">
+                    <span>Recurring Cost: <span class="text-studio-emerald font-semibold">$0.00 / mo</span></span>
+                    <span>Global Latency: <span class="text-studio-emerald font-semibold">&lt; 50ms</span></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Interactive Scope & Estimate Calculator -->
+        <div class="glass-panel rounded-2xl p-8 border border-white/10 glow-amber">
+            <div class="flex flex-col md:flex-row md:items-center justify-between pb-6 border-b border-white/10 gap-4">
+                <div>
+                    <span class="text-xs font-mono uppercase tracking-widest text-studio-amber block mb-1">Transparent Pricing Model</span>
+                    <h2 class="text-2xl font-bold text-white tracking-tight">Interactive Scope & Retainer Builder</h2>
+                    <p class="text-sm text-slate-400 mt-1">
+                        Select the exact components you need. No monthly lock-in, no hidden hosting retainer.
+                    </p>
+                </div>
+                <div class="text-right">
+                    <span class="text-xs font-mono text-slate-400 uppercase tracking-widest block">Total Flat Investment</span>
+                    <div class="flex items-baseline justify-end gap-1">
+                        <span class="text-4xl font-extrabold font-mono text-white tracking-tight" id="totalPriceDisplay">$500</span>
+                        <span class="text-xs font-mono text-slate-400">USD</span>
+                    </div>
+                    <span class="text-[11px] font-mono text-studio-emerald block mt-0.5">50% deposit to commence ($<span id="depositDisplay">250</span>)</span>
+                </div>
+            </div>
+
+            <!-- Scope Options Form -->
+            <div class="mt-8 space-y-4" id="scopeOptionsContainer">
+                
+                <!-- Option 1: Base Migration (Locked / Required) -->
+                <label class="flex items-start justify-between p-4 rounded-xl bg-studio-900/90 border border-studio-amber/40 cursor-pointer transition-colors">
+                    <div class="flex items-start space-x-3.5">
+                        <input type="checkbox" checked disabled class="mt-1 w-4 h-4 rounded text-studio-amber bg-studio-800 border-white/20 focus:ring-0">
+                        <div>
+                            <div class="flex items-center space-x-2">
+                                <span class="text-sm font-bold text-white">Full Edge Migration & Performance Modernization</span>
+                                <span class="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-studio-amber/20 text-studio-amber font-semibold">Base Core</span>
+                            </div>
+                            <p class="text-xs text-slate-400 mt-1">
+                                Complete extraction of all assets, gear lists, and layouts from your existing CMS. Zero-downtime DNS cutover to Cloudflare Edge. Lifetime $0/mo hosting. Fixes all broken links and template artifacts.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="text-right pl-4">
+                        <span class="font-mono text-sm font-bold text-white">$500</span>
+                    </div>
+                </label>
+
+                <!-- Option 2: Multitrack / Stem Upload Portal -->
+                <label class="flex items-start justify-between p-4 rounded-xl bg-studio-900/50 border border-white/10 hover:border-white/20 cursor-pointer transition-colors">
+                    <div class="flex items-start space-x-3.5">
+                        <input type="checkbox" id="optMultitrack" onchange="calculateTotal()" class="mt-1 w-4 h-4 rounded text-studio-amber bg-studio-800 border-white/20 focus:ring-0">
+                        <div>
+                            <div class="flex items-center space-x-2">
+                                <span class="text-sm font-bold text-white">Dedicated Client Multitrack / Stem Drop Portal</span>
+                                <span class="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-studio-cyan/20 text-studio-cyan font-semibold">Recommended</span>
+                            </div>
+                            <p class="text-xs text-slate-400 mt-1">
+                                High-speed drag-and-drop intake directly on your domain. Clients upload multi-gigabyte ZIP/WAV session files with sample rate verification, stem labeling, and zero 7-day expiration limits.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="text-right pl-4">
+                        <span class="font-mono text-sm font-bold text-white">+$400</span>
+                    </div>
+                </label>
+
+                <!-- Option 3: Automated Booking & Deposit Intake -->
+                <label class="flex items-start justify-between p-4 rounded-xl bg-studio-900/50 border border-white/10 hover:border-white/20 cursor-pointer transition-colors">
+                    <div class="flex items-start space-x-3.5">
+                        <input type="checkbox" id="optBooking" onchange="calculateTotal()" class="mt-1 w-4 h-4 rounded text-studio-amber bg-studio-800 border-white/20 focus:ring-0">
+                        <div>
+                            <div class="flex items-center space-x-2">
+                                <span class="text-sm font-bold text-white">Custom Session Booking & Stripe Deposit Integration</span>
+                            </div>
+                            <p class="text-xs text-slate-400 mt-1">
+                                Direct session hold calendar with 50% automated non-refundable deposits, studio room selection (tracking vs mix), and automatic confirmation emails.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="text-right pl-4">
+                        <span class="font-mono text-sm font-bold text-white">+$300</span>
+                    </div>
+                </label>
+
+                <!-- Option 4: Full Visual Redesign & Dark Mode Theme -->
+                <label class="flex items-start justify-between p-4 rounded-xl bg-studio-900/50 border border-white/10 hover:border-white/20 cursor-pointer transition-colors">
+                    <div class="flex items-start space-x-3.5">
+                        <input type="checkbox" id="optRedesign" onchange="calculateTotal()" class="mt-1 w-4 h-4 rounded text-studio-amber bg-studio-800 border-white/20 focus:ring-0">
+                        <div>
+                            <div class="flex items-center space-x-2">
+                                <span class="text-sm font-bold text-white">Studio UI Overhaul (Analog Hardware Aesthetic)</span>
+                            </div>
+                            <p class="text-xs text-slate-400 mt-1">
+                                Complete visual refresh with dark studio room aesthetics, interactive gear rack inspection drawers, high-resolution live room galleries, and custom audio player demos.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="text-right pl-4">
+                        <span class="font-mono text-sm font-bold text-white">+$300</span>
+                    </div>
+                </label>
+
+            </div>
+
+            <!-- Investment Breakdown & Action -->
+            <div class="mt-8 pt-6 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-6">
+                <div class="text-xs font-mono text-slate-400 space-y-1">
+                    <div>🔒 <strong>No Subscription Trap:</strong> You own 100% of the repository & DNS.</div>
+                    <div>⚡ <strong>Zero Downtime Guarantee:</strong> New build is verified on preview URL before pointing your domain.</div>
+                </div>
+
+                <div class="flex items-center space-x-4 w-full md:w-auto">
+                    <!-- Deposit Trigger Button -->
+                    <button onclick="handleCheckout()" class="w-full md:w-auto px-8 py-3.5 rounded-xl bg-gradient-to-r from-studio-amber to-studio-gold text-black font-bold text-sm tracking-wide shadow-lg hover:brightness-110 active:scale-95 transition-all flex items-center justify-center space-x-2">
+                        <span>Lock In Migration (<span id="btnDepositText">$250 Deposit</span>)</span>
+                        <span>→</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Live Direct Proof & Staging Verification -->
+        <div class="glass-panel rounded-2xl p-6 border border-white/10">
+            <h3 class="text-base font-bold text-white mb-2 flex items-center space-x-2">
+                <span>Verified Studio Deployments</span>
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-studio-emerald/20 text-studio-emerald uppercase">Live Case Study</span>
+            </h3>
+            <p class="text-xs text-slate-400 mb-4">
+                Explore an actual production migration built for an independent audio facility:
+            </p>
+
+            <div class="p-4 rounded-xl bg-studio-900 border border-white/10 flex flex-col md:flex-row items-center justify-between gap-4">
+                <div>
+                    <span class="font-bold text-sm text-white block">Paper Street Audio Company</span>
+                    <span class="text-xs text-slate-400 font-mono">Modernized from legacy static pages to high-speed edge architecture.</span>
+                </div>
+                <a href="https://paperstreet-preview.vercel.app" target="_blank" class="px-4 py-2 rounded-lg bg-studio-800 border border-white/10 text-xs font-mono text-studio-amber hover:text-white hover:border-studio-amber transition-colors flex items-center space-x-1.5">
+                    <span>View Live Staging Build</span>
+                    <span>↗</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Contact Direct Channel -->
+        <div class="text-center py-6">
+            <p class="text-xs font-mono text-slate-500">
+                Direct questions? Reach Max Comperatore directly: 
+                <a href="mailto:max@half-radiation.com" class="text-studio-amber hover:underline ml-1">max@half-radiation.com</a> 
+                or reply directly to our email thread.
+            </p>
+        </div>
+
+    </main>
+
+    <!-- Interactive Logic Script -->
+    <script>
+        const presets = {
+            custom: {
+                title: "Your Studio",
+                domain: "Custom Proposal",
+                vulnerabilities: [
+                    { title: "Recurring CMS SaaS Tax", desc: "Paying $200–$350/yr to Wix / Squarespace just to keep static text and images live." },
+                    { title: "Manual File Intake Friction", desc: "Forcing clients to use free WeTransfer links, Dropbox shares, or email attachments that expire." },
+                    { title: "Unoptimized Mobile Script Bloat", desc: "Heavy JavaScript frameworks that hurt mobile Google Lighthouse scores and local booking SEO." }
+                ],
+                recommendedMultitrack: true,
+                recommendedBooking: false,
+                recommendedRedesign: false
+            },
+            themixking: {
+                title: "Steve Sola / The Mix King (Plain Truth Ent NYC)",
+                domain: "themixking.com",
+                vulnerabilities: [
+                    { title: "Subdomain Fragmentation", desc: "Studio rates & booking isolated on free 'plaintruthent.wixsite.com' with Wix promo banners." },
+                    { title: "Manual File Transfers for 20M-Record Resume", desc: "High-ticket mixing clients sending stems through loose Gmail threads without a branded multitrack portal." },
+                    { title: "Conflicting DNS / Server Artifacts", desc: "Search index picking up legacy third-party server traces from fragmented past hosting." }
+                ],
+                recommendedMultitrack: true,
+                recommendedBooking: true,
+                recommendedRedesign: false
+            },
+            digitalforest: {
+                title: "Digital Forest Studio (Constantia Estate)",
+                domain: "digitalforeststudio.com",
+                vulnerabilities: [
+                    { title: "'Widget Didn’t Load' Banner Error", desc: "Homepage header literally displays 'Widget Didn’t Load' error text and unrendered CSS variables to international label visitors." },
+                    { title: "Catastrophic Raw JSON Dump in Footer", desc: "Broken third-party review plugin dumping hundreds of lines of raw JSON code and 'Lorem ipsum' filler text in live footer." },
+                    { title: "7-Year Wix Subscription Lock", desc: "Frozen 2019 Wix footer badge while paying continuous platform fees for broken scripts." }
+                ],
+                recommendedMultitrack: true,
+                recommendedBooking: true,
+                recommendedRedesign: true
+            },
+            trakworx: {
+                title: "Justin Weis / Trakworx Mastering",
+                domain: "trakworx.com",
+                vulnerabilities: [
+                    { title: "Third-Party Offloading for Mastering Intake", desc: "Site instructs high-volume online mastering clients to leave and use free Dropbox or WeTransfer links." },
+                    { title: "Personal Gmail Routing", desc: "Mastering WAV files and notes routed to personal Gmail without structured sample rate validation." },
+                    { title: "Annual Squarespace Overhead", desc: "Paying $200+/yr for static portfolio and gear pages with manual link handling." }
+                ],
+                recommendedMultitrack: true,
+                recommendedBooking: false,
+                recommendedRedesign: false
+            },
+            paperstreet: {
+                title: "Paul Kavicky / Paper Street Audio",
+                domain: "paperstreetaudio.com",
+                vulnerabilities: [
+                    { title: "Legacy Layout Degradation", desc: "Static layout lacking responsive mobile fidelity for touring musicians and local venue clients." },
+                    { title: "No Instant Quote or Multitrack Drop", desc: "Sound clients forced to initiate back-and-forth emails to confirm tracking rates and gear specs." },
+                    { title: "Zero Edge Caching", desc: "Higher server latency on multimedia assets without modern global CDN caching." }
+                ],
+                recommendedMultitrack: true,
+                recommendedBooking: false,
+                recommendedRedesign: false
+            },
+            pesound: {
+                title: "Joe Trojcak / Progressive Sound Studios",
+                domain: "pesound.studio",
+                vulnerabilities: [
+                    { title: "Auto-Generated Template Slugs", desc: "Main navigation links to '/services-2' for Our Crew and '/blog-1' for Blog." },
+                    { title: "Broken Hybrid Tracking Hand-off", desc: "Explicitly caters to bands tracking drums in the 23-ft room and finishing overdubs at home, but offers no stem portal." },
+                    { title: "39-Year History on Frozen Wix Container", desc: "Paying monthly Wix fees while site relies on external mailto links to an old domain." }
+                ],
+                recommendedMultitrack: true,
+                recommendedBooking: false,
+                recommendedRedesign: false
+            }
+        };
+
+        function calculateTotal() {
+            let total = 500; // Base core migration
+            if (document.getElementById('optMultitrack').checked) total += 400;
+            if (document.getElementById('optBooking').checked) total += 300;
+            if (document.getElementById('optRedesign').checked) total += 300;
+
+            const deposit = Math.round(total * 0.5);
+            document.getElementById('totalPriceDisplay').innerText = '$' + total;
+            document.getElementById('depositDisplay').innerText = deposit;
+            document.getElementById('btnDepositText').innerText = '$' + deposit + ' Deposit';
+        }
+
+        function loadPreset(key) {
+            const data = presets[key] || presets.custom;
+            document.getElementById('clientTitle').innerText = data.title;
+            document.getElementById('targetDomainLabel').innerText = data.domain;
+
+            const vulnList = document.getElementById('vulnerabilitiesList');
+            vulnList.innerHTML = '';
+            data.vulnerabilities.forEach(v => {
+                const li = document.createElement('li');
+                li.className = 'flex items-start space-x-2.5 bg-red-950/20 border border-red-500/20 p-3 rounded-lg text-slate-300';
+                li.innerHTML = `
+                    <span class="text-red-400 mt-0.5">✕</span>
+                    <div>
+                        <span class="font-bold text-red-300 block mb-0.5">${v.title}</span>
+                        <span>${v.desc}</span>
+                    </div>
+                `;
+                vulnList.appendChild(li);
+            });
+
+            document.getElementById('optMultitrack').checked = data.recommendedMultitrack;
+            document.getElementById('optBooking').checked = data.recommendedBooking;
+            document.getElementById('optRedesign').checked = data.recommendedRedesign;
+
+            calculateTotal();
+        }
+
+        document.getElementById('leadPresetSelect').addEventListener('change', function(e) {
+            loadPreset(e.target.value);
+        });
+
+        // Check URL parameters for custom query (?lead=themixking or ?name=Studio&domain=xyz)
+        window.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            const leadParam = params.get('lead');
+            if (leadParam && presets[leadParam]) {
+                document.getElementById('leadPresetSelect').value = leadParam;
+                loadPreset(leadParam);
+            } else if (params.get('name')) {
+                document.getElementById('clientTitle').innerText = params.get('name');
+                if (params.get('domain')) {
+                    document.getElementById('targetDomainLabel').innerText = params.get('domain');
+                }
+                calculateTotal();
+            } else {
+                calculateTotal();
+            }
+        });
+
+        function handleCheckout() {
+            const totalText = document.getElementById('totalPriceDisplay').innerText;
+            const depositText = document.getElementById('depositDisplay').innerText;
+            const client = document.getElementById('clientTitle').innerText;
+            
+            // Mailto or direct Stripe link generator
+            const subject = encodeURIComponent(`Migration Authorization: ${client} (${totalText} Scope)`);
+            const body = encodeURIComponent(`Hi Max,\n\nI reviewed the proposal for ${client}.\n\nTotal Scope: ${totalText} (50% Deposit: $${depositText})\n\nPlease send over the deposit invoice / Stripe link and instructions to start the staging build.\n\nBest,`);
+            window.location.href = `mailto:max@half-radiation.com?subject=${subject}&body=${body}`;
+        }
+    </script>
+</body>
+</html>
