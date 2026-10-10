@@ -28,7 +28,10 @@ def require_env(name: str) -> str:
 
 
 # Core
-DATABASE_URL = require_env("DATABASE_URL") if IS_PRODUCTION else getenv("DATABASE_URL")
+DATABASE_URL = getenv("DATABASE_URL")
+if not DATABASE_URL and IS_PRODUCTION:
+    import logging
+    logging.warning("DATABASE_URL is not configured in Vercel environment variables.")
 
 _raw_session_secret = getenv("SESSION_SECRET_KEY")
 _INSECURE_DEV_SECRET = "dev-only-session-secret-change-me"
