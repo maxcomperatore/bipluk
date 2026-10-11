@@ -6448,20 +6448,26 @@ async def trigger_newsletter_cron(request: Request):
     }
 
 
-@app.get("/studio-proposal", response_class=FileResponse)
+@app.get("/studio-proposal", response_class=HTMLResponse)
 async def serve_studio_proposal(request: Request):
     """Interactive studio modernization staging, diagnostic, and custom proposal engine."""
     proposal_path = os.path.join(BASE_DIR, "static", "proposal.html")
     if os.path.exists(proposal_path):
-        return FileResponse(proposal_path, media_type="text/html")
+        with open(proposal_path, "r", encoding="utf-8") as f:
+            return HTMLResponse(content=f.read())
     raise HTTPException(status_code=404, detail="Proposal engine template not found")
 
 
-@app.get("/trakworx-preview", response_class=FileResponse)
+@app.get("/trakworx-preview", response_class=HTMLResponse)
 async def serve_trakworx_preview(request: Request):
     """Bespoke modern Trakworx edge staging preview with direct client file drop."""
     preview_path = os.path.join(BASE_DIR, "static", "trakworx-preview.html")
     if os.path.exists(preview_path):
-        return FileResponse(preview_path, media_type="text/html")
+        with open(preview_path, "r", encoding="utf-8") as f:
+            return HTMLResponse(content=f.read())
+    alt_path = os.path.join(BASE_DIR, "trakworx-preview", "index.html")
+    if os.path.exists(alt_path):
+        with open(alt_path, "r", encoding="utf-8") as f:
+            return HTMLResponse(content=f.read())
     raise HTTPException(status_code=404, detail="Trakworx preview template not found")
 
