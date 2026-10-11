@@ -6456,3 +6456,12 @@ async def serve_studio_proposal(request: Request):
         return FileResponse(proposal_path, media_type="text/html")
     raise HTTPException(status_code=404, detail="Proposal engine template not found")
 
+
+@app.get("/trakworx-preview", response_class=FileResponse)
+async def serve_trakworx_preview(request: Request):
+    """Bespoke modern Trakworx edge staging preview with direct client file drop."""
+    preview_path = os.path.join(BASE_DIR, "static", "trakworx-preview.html")
+    if os.path.exists(preview_path):
+        return FileResponse(preview_path, media_type="text/html")
+    raise HTTPException(status_code=404, detail="Trakworx preview template not found")
+
