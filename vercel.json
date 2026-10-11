@@ -31,6 +31,10 @@
       "dest": "/static/proposal.html"
     },
     {
+      "src": "/pipeline",
+      "dest": "/static/pipeline.html"
+    },
+    {
       "src": "/sitemap.xml",
       "dest": "main.py"
     },

@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pipeline Command | Half Radiation Studio Modernization</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        ops: {
+                            950: '#06070a',
+                            900: '#0c0e14',
+                            850: '#11141e',
+                            800: '#171b28',
+                            700: '#232a3d',
+                            amber: '#e69d45',
+                            gold: '#f5b041',
+                            cyan: '#00d2d3',
+                            emerald: '#10b981',
+                            crimson: '#ef4444',
+                            purple: '#a855f7'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['"Space Grotesk"', 'sans-serif'],
+                        mono: ['"JetBrains Mono"', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #06070a;
+            color: #e2e8f0;
+            font-family: 'Space Grotesk', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+        .kanban-col {
+            background: rgba(12, 14, 20, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(16px);
+        }
+        .deal-card {
+            background: rgba(23, 27, 40, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            transition: all 0.15s ease;
+            cursor: grab;
+        }
+        .deal-card:active {
+            cursor: grabbing;
+        }
+        .deal-card:hover {
+            border-color: rgba(230, 157, 69, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+        }
+        .glow-amber {
+            box-shadow: 0 0 35px -5px rgba(230, 157, 69, 0.2);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-ops-amber selection:text-black">
+
+    <!-- Top Status Bar -->
+    <header class="border-b border-white/10 bg-ops-950/90 sticky top-0 z-50 backdrop-blur-md px-6 py-4">
+        <div class="max-w-[1600px] mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+            <div class="flex items-center space-x-3.5">
+                <div class="w-9 h-9 rounded-lg bg-gradient-to-tr from-ops-amber to-ops-gold flex items-center justify-center font-mono font-bold text-black text-sm shadow-md">
+                    HR
+                </div>
+                <div>
+                    <div class="flex items-center space-x-2">
+                        <span class="font-bold text-base tracking-wide text-white">Studio Pipeline Command</span>
+                        <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-ops-amber/20 text-ops-gold font-semibold uppercase">Zero-SaaS Kanban</span>
+                    </div>
+                    <span class="text-xs text-slate-400 font-mono">Half Radiation LLC · Max Comperatore</span>
+                </div>
+            </div>
+
+            <!-- Pipeline Metrics Bar -->
+            <div class="flex items-center space-x-6 text-xs font-mono">
+                <div class="bg-ops-900 border border-white/10 px-4 py-2 rounded-xl text-center">
+                    <span class="text-slate-400 text-[10px] uppercase block">Weighted Pipeline</span>
+                    <span id="metricPipelineTotal" class="text-base font-bold text-ops-gold">$0</span>
+                </div>
+                <div class="bg-ops-900 border border-white/10 px-4 py-2 rounded-xl text-center">
+                    <span class="text-slate-400 text-[10px] uppercase block">Active Leads</span>
+                    <span id="metricActiveCount" class="text-base font-bold text-white">0</span>
+                </div>
+                <div class="bg-ops-900 border border-emerald-500/20 px-4 py-2 rounded-xl text-center">
+                    <span class="text-emerald-400 text-[10px] uppercase block">Closed Revenue</span>
+                    <span id="metricClosedTotal" class="text-base font-bold text-emerald-400">$0</span>
+                </div>
+                <button onclick="openNewLeadModal()" class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-ops-amber to-ops-gold text-black font-bold text-xs uppercase tracking-wider hover:brightness-110 active:scale-95 transition-all shadow-md">
+                    + Add Lead
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Kanban Canvas -->
+    <main class="max-w-[1600px] w-full mx-auto px-6 py-8 flex-1 overflow-x-auto">
+        <div class="grid grid-cols-1 md:grid-cols-5 gap-5 min-w-[1200px]" id="kanbanBoard">
+            
+            <!-- Column 1: Dispatched (Cold Sent) -->
+            <div class="kanban-col rounded-2xl p-4 flex flex-col h-[calc(100vh-170px)]" ondragover="allowDrop(event)" ondrop="drop(event, 'dispatched')">
+                <div class="flex items-center justify-between pb-3 mb-3 border-b border-white/10">
+                    <div class="flex items-center space-x-2">
+                        <span class="w-2.5 h-2.5 rounded-full bg-slate-400"></span>
+                        <h2 class="text-xs font-bold font-mono tracking-wider text-slate-300 uppercase">1. Dispatched</h2>
+                    </div>
+                    <span id="count-dispatched" class="text-[11px] font-mono px-2 py-0.5 rounded bg-white/5 text-slate-400">0</span>
+                </div>
+                <div id="col-dispatched" class="space-y-3 flex-1 overflow-y-auto pr-1"></div>
+            </div>
+
+            <!-- Column 2: Warm / Dialogue Open -->
+            <div class="kanban-col rounded-2xl p-4 flex flex-col h-[calc(100vh-170px)] border-ops-amber/30 glow-amber" ondragover="allowDrop(event)" ondrop="drop(event, 'warm')">
+                <div class="flex items-center justify-between pb-3 mb-3 border-b border-white/10">
+                    <div class="flex items-center space-x-2">
+                        <span class="w-2.5 h-2.5 rounded-full bg-ops-amber animate-pulse"></span>
+                        <h2 class="text-xs font-bold font-mono tracking-wider text-ops-gold uppercase">2. Warm Dialogue</h2>
+                    </div>
+                    <span id="count-warm" class="text-[11px] font-mono px-2 py-0.5 rounded bg-ops-amber/20 text-ops-gold font-bold">0</span>
+                </div>
+                <div id="col-warm" class="space-y-3 flex-1 overflow-y-auto pr-1"></div>
+            </div>
+
+            <!-- Column 3: Staging Preview Delivered -->
+            <div class="kanban-col rounded-2xl p-4 flex flex-col h-[calc(100vh-170px)] border-ops-cyan/30" ondragover="allowDrop(event)" ondrop="drop(event, 'staging')">
+                <div class="flex items-center justify-between pb-3 mb-3 border-b border-white/10">
+                    <div class="flex items-center space-x-2">
+                        <span class="w-2.5 h-2.5 rounded-full bg-ops-cyan"></span>
+                        <h2 class="text-xs font-bold font-mono tracking-wider text-ops-cyan uppercase">3. Preview Delivered</h2>
+                    </div>
+                    <span id="count-staging" class="text-[11px] font-mono px-2 py-0.5 rounded bg-ops-cyan/20 text-ops-cyan font-bold">0</span>
+                </div>
+                <div id="col-staging" class="space-y-3 flex-1 overflow-y-auto pr-1"></div>
+            </div>
+
+            <!-- Column 4: Verbal Pending Close / Circle Back -->
+            <div class="kanban-col rounded-2xl p-4 flex flex-col h-[calc(100vh-170px)] border-ops-purple/30" ondragover="allowDrop(event)" ondrop="drop(event, 'pending_close')">
+                <div class="flex items-center justify-between pb-3 mb-3 border-b border-white/10">
+                    <div class="flex items-center space-x-2">
+                        <span class="w-2.5 h-2.5 rounded-full bg-ops-purple"></span>
+                        <h2 class="text-xs font-bold font-mono tracking-wider text-ops-purple uppercase">4. Pending Close</h2>
+                    </div>
+                    <span id="count-pending_close" class="text-[11px] font-mono px-2 py-0.5 rounded bg-ops-purple/20 text-ops-purple font-bold">0</span>
+                </div>
+                <div id="col-pending_close" class="space-y-3 flex-1 overflow-y-auto pr-1"></div>
+            </div>
+
+            <!-- Column 5: Closed & Paid ($$$) -->
+            <div class="kanban-col rounded-2xl p-4 flex flex-col h-[calc(100vh-170px)] border-emerald-500/30" ondragover="allowDrop(event)" ondrop="drop(event, 'closed')">
+                <div class="flex items-center justify-between pb-3 mb-3 border-b border-white/10">
+                    <div class="flex items-center space-x-2">
+                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
+                        <h2 class="text-xs font-bold font-mono tracking-wider text-emerald-400 uppercase">5. Won / Paid</h2>
+                    </div>
+                    <span id="count-closed" class="text-[11px] font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-bold">0</span>
+                </div>
+                <div id="col-closed" class="space-y-3 flex-1 overflow-y-auto pr-1"></div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Modal for Adding/Editing Lead -->
+    <div id="leadModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-ops-900 border border-white/10 rounded-2xl max-w-lg w-full p-6 space-y-4">
+            <div class="flex justify-between items-center pb-2 border-b border-white/10">
+                <h3 class="text-lg font-bold text-white">Lead Details</h3>
+                <button onclick="closeModal()" class="text-slate-400 hover:text-white font-mono text-sm">✕</button>
+            </div>
+            <div class="space-y-3 font-mono text-xs">
+                <div>
+                    <label class="text-slate-400 block mb-1">Studio / Lead Name</label>
+                    <input id="modalName" type="text" class="w-full bg-ops-850 border border-white/10 rounded-lg p-2.5 text-white focus:outline-none focus:border-ops-amber">
+                </div>
+                <div>
+                    <label class="text-slate-400 block mb-1">Domain</label>
+                    <input id="modalDomain" type="text" class="w-full bg-ops-850 border border-white/10 rounded-lg p-2.5 text-white focus:outline-none focus:border-ops-amber">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="text-slate-400 block mb-1">Deal Value ($)</label>
+                        <input id="modalValue" type="number" value="500" class="w-full bg-ops-850 border border-white/10 rounded-lg p-2.5 text-white focus:outline-none focus:border-ops-amber">
+                    </div>
+                    <div>
+                        <label class="text-slate-400 block mb-1">Stage</label>
+                        <select id="modalStage" class="w-full bg-ops-850 border border-white/10 rounded-lg p-2.5 text-white focus:outline-none focus:border-ops-amber">
+                            <option value="dispatched">1. Dispatched</option>
+                            <option value="warm">2. Warm Dialogue</option>
+                            <option value="staging">3. Preview Delivered</option>
+                            <option value="pending_close">4. Pending Close</option>
+                            <option value="closed">5. Won / Paid</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <label class="text-slate-400 block mb-1">Notes / Live Glitch / Follow-up Date</label>
+                    <textarea id="modalNotes" rows="3" class="w-full bg-ops-850 border border-white/10 rounded-lg p-2.5 text-white focus:outline-none focus:border-ops-amber"></textarea>
+                </div>
+                <div>
+                    <label class="text-slate-400 block mb-1">Preview URL (optional)</label>
+                    <input id="modalPreviewUrl" type="text" placeholder="https://bipluk.com/..." class="w-full bg-ops-850 border border-white/10 rounded-lg p-2.5 text-white focus:outline-none focus:border-ops-amber">
+                </div>
+            </div>
+            <div class="flex justify-end space-x-3 pt-3 border-t border-white/10">
+                <button onclick="closeModal()" class="px-4 py-2 rounded-lg bg-ops-850 text-slate-400 hover:text-white font-mono text-xs">Cancel</button>
+                <button onclick="saveLeadFromModal()" class="px-5 py-2 rounded-lg bg-ops-amber text-black font-bold font-mono text-xs hover:brightness-110">Save Card</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Data Engine (LocalStorage + Initial Seed) -->
+    <script>
+        const STORAGE_KEY = 'half_radiation_pipeline_v1';
+
+        const defaultLeads = [
+            {
+                id: 'lead-1',
+                name: 'Justin Weis (Trakworx)',
+                domain: 'trakworx.com',
+                email: 'justinweis65@gmail.com',
+                value: 900,
+                stage: 'pending_close',
+                notes: 'Replied: "good thing to do at some point, plate full, circle back next month". Live preview ready at /trakworx-preview. Follow up early Nov.',
+                previewUrl: 'https://bipluk.com/trakworx-preview',
+                updated: 'Today'
+            },
+            {
+                id: 'lead-2',
+                name: 'Paul Kavicky (Paper Street)',
+                domain: 'paperstreetaudio.com',
+                email: 'paul@paperstreetaudio.com',
+                value: 1200,
+                stage: 'staging',
+                notes: 'Tested preview build. Asked about maintenance costs and cutover timing.',
+                previewUrl: 'https://paperstreet-preview.vercel.app',
+                updated: 'Yesterday'
+            },
+            {
+                id: 'lead-3',
+                name: 'Steve Sola (The Mix King)',
+                domain: 'themixking.com',
+                email: 'stevesola@gmail.com',
+                value: 1200,
+                stage: 'dispatched',
+                notes: 'Free wixsite subdomain split on 20M-record resume. Consolidated domain pitch sent.',
+                previewUrl: 'https://bipluk.com/studio-proposal?lead=themixking',
+                updated: 'Oct 10'
+            },
+            {
+                id: 'lead-4',
+                name: 'Justin Ames (Sky City Audio)',
+                domain: 'skycityaudio.com',
+                email: 'LinkedIn',
+                value: 500,
+                stage: 'warm',
+                notes: 'Root domain dropped (NXDOMAIN). Sent urgent sub-300-char LinkedIn alert.',
+                previewUrl: '',
+                updated: 'Oct 8'
+            },
+            {
+                id: 'lead-5',
+                name: 'Shawn Altman (Altman Sound)',
+                domain: 'altmanstudiosound.com',
+                email: 'altmanstudiosound@gmail.com',
+                value: 500,
+                stage: 'dispatched',
+                notes: 'Server refusing connection (ERR_CONNECTION_REFUSED). High-priority outage alert dispatched.',
+                previewUrl: '',
+                updated: 'Oct 9'
+            },
+            {
+                id: 'lead-6',
+                name: 'Andrew Rawbone (Digital Forest)',
+                domain: 'digitalforeststudio.com',
+                email: 'info@digitalforeststudio.com',
+                value: 1500,
+                stage: 'dispatched',
+                notes: '"Widget Didn’t Load" header crash + raw JSON Lorem Ipsum dump in live footer.',
+                previewUrl: 'https://bipluk.com/studio-proposal?lead=digitalforest',
+                updated: 'Oct 10'
+            },
+            {
+                id: 'lead-7',
+                name: 'Corey Hallsted (Dissentric)',
+                domain: 'dissentric-audio.com',
+                email: 'perennialsound@yahoo.com',
+                value: 500,
+                stage: 'dispatched',
+                notes: 'Typos: "fluxuate" and "recorded their numerous times", 2020 Wix freeze.',
+                previewUrl: '',
+                updated: 'Oct 10'
+            },
+            {
+                id: 'lead-8',
+                name: 'Royce Sorensen (Royce Studios)',
+                domain: 'royceacousticmusic.com',
+                email: 'roycebanjo@gmail.com',
+                value: 500,
+                stage: 'dispatched',
+                notes: 'RESOURCES links to /blank, copyright cuts off mid-word "Royce Acoustic Mu."',
+                previewUrl: '',
+                updated: 'Oct 10'
+            }
+        ];
+
+        function getLeads() {
+            const raw = localStorage.getItem(STORAGE_KEY);
+            if (!raw) {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(defaultLeads));
+                return defaultLeads;
+            }
+            try { return JSON.parse(raw); } catch(e) { return defaultLeads; }
+        }
+
+        function saveLeads(leads) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(leads));
+            renderBoard();
+        }
+
+        let editingLeadId = null;
+
+        function renderBoard() {
+            const leads = getLeads();
+            const columns = ['dispatched', 'warm', 'staging', 'pending_close', 'closed'];
+
+            columns.forEach(col => {
+                const el = document.getElementById(`col-${col}`);
+                el.innerHTML = '';
+            });
+
+            const counts = { dispatched: 0, warm: 0, staging: 0, pending_close: 0, closed: 0 };
+            let totalPipelineValue = 0;
+            let totalClosedValue = 0;
+
+            leads.forEach(lead => {
+                counts[lead.stage] = (counts[lead.stage] || 0) + 1;
+                if (lead.stage === 'closed') {
+                    totalClosedValue += Number(lead.value || 0);
+                } else {
+                    totalPipelineValue += Number(lead.value || 0);
+                }
+
+                const card = document.createElement('div');
+                card.className = 'deal-card rounded-xl p-3.5 space-y-2.5 relative';
+                card.draggable = true;
+                card.id = lead.id;
+                card.ondragstart = (e) => drag(e);
+
+                card.innerHTML = `
+                    <div class="flex items-start justify-between gap-2">
+                        <div>
+                            <span class="font-bold text-sm text-white block leading-tight">${lead.name}</span>
+                            <span class="text-[11px] font-mono text-slate-400 block">${lead.domain}</span>
+                        </div>
+                        <span class="font-mono text-xs font-bold px-2 py-0.5 rounded bg-ops-amber/20 text-ops-gold whitespace-nowrap">
+                            $${lead.value}
+                        </span>
+                    </div>
+
+                    <p class="text-xs text-slate-300 font-sans line-clamp-3 leading-relaxed">
+                        ${lead.notes}
+                    </p>
+
+                    <div class="pt-2 border-t border-white/5 flex items-center justify-between text-[11px] font-mono">
+                        <span class="text-slate-500">${lead.updated}</span>
+                        <div class="flex items-center space-x-2">
+                            ${lead.previewUrl ? `<a href="${lead.previewUrl}" target="_blank" class="text-ops-cyan hover:underline">Preview ↗</a>` : ''}
+                            <button onclick="editLead('${lead.id}')" class="text-slate-400 hover:text-white">Edit</button>
+                        </div>
+                    </div>
+                `;
+
+                const colEl = document.getElementById(`col-${lead.stage}`);
+                if (colEl) colEl.appendChild(card);
+            });
+
+            // Update column badges
+            columns.forEach(col => {
+                document.getElementById(`count-${col}`).innerText = counts[col] || 0;
+            });
+
+            // Update top metric bars
+            document.getElementById('metricPipelineTotal').innerText = '$' + totalPipelineValue.toLocaleString();
+            document.getElementById('metricClosedTotal').innerText = '$' + totalClosedValue.toLocaleString();
+            document.getElementById('metricActiveCount').innerText = leads.filter(l => l.stage !== 'closed').length;
+        }
+
+        // Drag & Drop
+        function allowDrop(e) {
+            e.preventDefault();
+        }
+
+        function drag(e) {
+            e.dataTransfer.setData("text", e.target.id);
+        }
+
+        function drop(e, targetStage) {
+            e.preventDefault();
+            const id = e.dataTransfer.getData("text");
+            const leads = getLeads();
+            const lead = leads.find(l => l.id === id);
+            if (lead) {
+                lead.stage = targetStage;
+                lead.updated = 'Just now';
+                saveLeads(leads);
+            }
+        }
+
+        // Modal Controls
+        function openNewLeadModal() {
+            editingLeadId = null;
+            document.getElementById('modalName').value = '';
+            document.getElementById('modalDomain').value = '';
+            document.getElementById('modalValue').value = 500;
+            document.getElementById('modalStage').value = 'dispatched';
+            document.getElementById('modalNotes').value = '';
+            document.getElementById('modalPreviewUrl').value = '';
+            document.getElementById('leadModal').classList.remove('hidden');
+        }
+
+        function editLead(id) {
+            editingLeadId = id;
+            const leads = getLeads();
+            const lead = leads.find(l => l.id === id);
+            if (!lead) return;
+
+            document.getElementById('modalName').value = lead.name;
+            document.getElementById('modalDomain').value = lead.domain;
+            document.getElementById('modalValue').value = lead.value;
+            document.getElementById('modalStage').value = lead.stage;
+            document.getElementById('modalNotes').value = lead.notes;
+            document.getElementById('modalPreviewUrl').value = lead.previewUrl || '';
+            document.getElementById('leadModal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('leadModal').classList.add('hidden');
+        }
+
+        function saveLeadFromModal() {
+            const leads = getLeads();
+            const name = document.getElementById('modalName').value.trim();
+            if (!name) return;
+
+            const domain = document.getElementById('modalDomain').value.trim();
+            const value = Number(document.getElementById('modalValue').value) || 500;
+            const stage = document.getElementById('modalStage').value;
+            const notes = document.getElementById('modalNotes').value.trim();
+            const previewUrl = document.getElementById('modalPreviewUrl').value.trim();
+
+            if (editingLeadId) {
+                const lead = leads.find(l => l.id === editingLeadId);
+                if (lead) {
+                    lead.name = name;
+                    lead.domain = domain;
+                    lead.value = value;
+                    lead.stage = stage;
+                    lead.notes = notes;
+                    lead.previewUrl = previewUrl;
+                    lead.updated = 'Just now';
+                }
+            } else {
+                leads.unshift({
+                    id: 'lead-' + Date.now(),
+                    name,
+                    domain,
+                    value,
+                    stage,
+                    notes,
+                    previewUrl,
+                    updated: 'Just now'
+                });
+            }
+
+            saveLeads(leads);
+            closeModal();
+        }
+
+        window.addEventListener('DOMContentLoaded', renderBoard);
+    </script>
+</body>
+</html>
