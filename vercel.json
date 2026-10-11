@@ -23,6 +23,14 @@
       "dest": "/static/robots.txt"
     },
     {
+      "src": "/trakworx-preview",
+      "dest": "/static/trakworx-preview.html"
+    },
+    {
+      "src": "/studio-proposal",
+      "dest": "/static/proposal.html"
+    },
+    {
       "src": "/sitemap.xml",
       "dest": "main.py"
     },
