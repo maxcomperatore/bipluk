@@ -641,6 +641,16 @@
                     </div>
 
                     <!-- Hardware Status / Troubleshooting Guidance -->
+                    <div id="midi-browser-unsupported-banner" class="hidden p-2.5 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-300 text-[10px] space-y-1">
+                        <div class="flex items-center gap-1.5 text-amber-400 font-pixel text-[8px] uppercase tracking-wider">
+                            <span>⚠️</span>
+                            <span>Browser Missing Web MIDI Support</span>
+                        </div>
+                        <p class="text-zinc-300 text-[10px] leading-relaxed font-sans">
+                            Safari and Firefox do not support browser-to-hardware MIDI communication. Switch to <strong>Google Chrome</strong>, <strong>Microsoft Edge</strong>, or <strong>Brave</strong> to transmit and dump SysEx patches.
+                        </p>
+                    </div>
+
                     <div id="midi-no-ports-tip" class="p-2.5 rounded-lg bg-zinc-950/80 border border-zinc-800 text-[10px] space-y-1">
                         <div class="flex items-center gap-1.5 text-amber-400 font-pixel text-[8px] uppercase tracking-wider">
                             <span>⚡</span>
@@ -1459,6 +1469,10 @@
                 updateMidiBadge("error", "Web MIDI API Un-supported");
                 logMidiEvent("SYSTEM", "Web MIDI API is unsupported in this browser.");
                 logToPostHog('midi_unsupported_browser', { interactive: interactive });
+                const unsupportedBanner = document.getElementById('midi-browser-unsupported-banner');
+                if (unsupportedBanner) unsupportedBanner.classList.remove('hidden');
+                const noPortsTip = document.getElementById('midi-no-ports-tip');
+                if (noPortsTip) noPortsTip.classList.add('hidden');
                 if (interactive) {
                     showToast("Compatibility Warning", "Your browser does not support Web MIDI API. Please switch to Google Chrome or Microsoft Edge.", "warning");
                 }
@@ -1688,6 +1702,16 @@
         function triggerMidiRescan(btn) {
             const icon = document.getElementById('rescan-btn-icon');
             const txt = document.getElementById('rescan-btn-text');
+
+            if (!navigator.requestMIDIAccess) {
+                initializeMidiAccess(true);
+                if (txt) txt.textContent = "Browser Unsupported";
+                setTimeout(function() {
+                    if (txt) txt.textContent = "Re-scan Ports";
+                }, 2000);
+                return;
+            }
+
             if (txt) txt.textContent = "Scanning Ports...";
             if (icon) icon.className = "inline-block animate-spin";
             if (btn) btn.disabled = true;

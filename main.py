@@ -3682,8 +3682,16 @@ async def share_bank(request: Request, bank_id: int):
     user = get_current_user(request)
     if not user:
         raise HTTPException(status_code=401, detail="Unauthorized")
-    if user["tier"] != "premium":
-        raise HTTPException(status_code=403, detail="Premium required to share soundbanks")
+        
+    banks = database.get_all_banks(user["id"])
+    first_bank_id = banks[0]["id"] if banks else None
+    is_first_bank = (first_bank_id is None) or (first_bank_id == bank_id)
+
+    if user.get("tier") != "premium" and not is_first_bank:
+        return JSONResponse({
+            "error": "Upgrade to bipluk+ required to share additional soundbanks.",
+            "checkout_url": "/checkout"
+        }, status_code=403)
         
     token = database.generate_bank_share_token(bank_id, user["id"])
     if not token:

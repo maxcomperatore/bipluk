@@ -81,23 +81,52 @@
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' }
             });
-            if (!response.ok) throw new Error("Failed to generate share link");
+            if (response.status === 403) {
+                const errData = await response.json().catch(() => ({}));
+                if (typeof showToast === 'function') {
+                    showToast("Upgrade Required", errData.error || "Upgrade to bipluk+ required to share additional soundbanks.", "warning");
+                }
+                if (typeof showUpgradeModal === 'function') {
+                    showUpgradeModal();
+                } else if (errData.checkout_url) {
+                    window.location.href = errData.checkout_url;
+                }
+                return;
+            }
+            if (!response.ok) {
+                const errData = await response.json().catch(() => ({}));
+                throw new Error(errData.error || errData.detail || "Failed to generate share link");
+            }
             const data = await response.json();
             
-            await navigator.clipboard.writeText(data.url);
+            let copied = false;
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                try {
+                    await navigator.clipboard.writeText(data.url);
+                    copied = true;
+                } catch (clipErr) {
+                    console.warn("Clipboard write failed:", clipErr);
+                }
+            }
             
-            // Simple mobile alert fallback if toast isn't available
-            if (typeof showToast === 'function') {
-                showToast("Link Copied", "Public read-only link copied to clipboard.", "success");
+            if (copied) {
+                if (typeof showToast === 'function') {
+                    showToast("Link Copied", "Public read-only link copied to clipboard.", "success");
+                } else {
+                    alert("Share link copied to clipboard:\n" + data.url);
+                }
             } else {
-                alert("Share link copied to clipboard:\n" + data.url);
+                window.prompt("Copy public share link:", data.url);
+                if (typeof showToast === 'function') {
+                    showToast("Share Link Ready", "Copy the link above to share.", "info");
+                }
             }
         } catch (error) {
             console.error("Share error:", error);
             if (typeof showToast === 'function') {
-                showToast("Share Failed", "Could not generate share link.", "error");
+                showToast("Share Failed", error.message || "Could not generate share link.", "error");
             } else {
-                alert("Failed to generate share link.");
+                alert("Failed to generate share link: " + error.message);
             }
         }
     }
