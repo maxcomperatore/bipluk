@@ -205,7 +205,7 @@
             const evtToken = tokenInput ? tokenInput.value : '';
             const urlParams = new URLSearchParams(window.location.search);
             const modelParam = urlParams.get('model') || '';
-            const nextParam = urlParams.get('next') || (modelParam ? `/home?synth=${modelParam}` : '');
+            const nextParam = urlParams.get('next') || urlParams.get('redirect') || (modelParam ? `/home?synth=${modelParam}` : '');
 
             const magicBtn = document.getElementById('magic-btn');
             if (magicBtn) {

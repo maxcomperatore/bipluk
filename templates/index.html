@@ -2193,7 +2193,7 @@
             if (synthModel === "Roland Juno-106" || synthModel === "Sequential Prophet" || synthModel.includes("LXR-02") || synthModel.includes("Erica Synths")) {
                 const isLXR = synthModel.includes("LXR-02") || synthModel.includes("Erica Synths");
                 const isProphet = synthModel === "Sequential Prophet";
-                let instructions = "Press WRITE on the Juno-106 to dump all 128 patches...";
+                let instructions = "Set rear FUNCTION switch to III, then press WRITE to dump...";
                 if (isLXR) {
                     instructions = "Press SHIFT + SAVE (or SysEx Dump) on your LXR-02 panel to transmit kit data...";
                 } else if (isProphet) {
@@ -2208,7 +2208,10 @@
                     }
                 }, 60000);
             } else {
-                updateStatusOverlay(10, "Sending dump request command...", "0 B", "HANDSHAKE");
+                const handshakeTip = synthModel === "Yamaha DX7" 
+                    ? "Requesting DX7 dump... (Verify MIDI CH is 1 & Function 8 Sys Info is Avail)" 
+                    : "Sending dump request command...";
+                updateStatusOverlay(10, handshakeTip, "0 B", "HANDSHAKE");
                 logMidiEvent("SYSTEM", `Sending SysEx Bulk Dump Request command to ${synthModel}...`);
                 outputPort.send(dumpRequestCommand);
                 logMidiEvent("OUT", Array.from(dumpRequestCommand).map(b => b.toString(16).padStart(2, '0')).join(' '));

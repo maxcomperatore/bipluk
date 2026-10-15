@@ -450,21 +450,12 @@
                 </div>
 
                 <div class="mt-8 pt-4">
-                    {% if user %}
-                    <a href="/home?upgrade=1" class="btn-upgrade-tv w-full !h-12 !rounded-xl !p-[1px] block active:scale-[0.98] shadow-lg shadow-blue-600/30">
+                    <a href="/checkout?plan=personal" class="btn-upgrade-tv w-full !h-12 !rounded-xl !p-[1px] block active:scale-[0.98] shadow-lg shadow-blue-600/30">
                         <span class="btn-upgrade-tv-inner !rounded-xl px-4 !text-xs font-pixel uppercase tracking-widest text-white flex items-center justify-center gap-2">
                             <img src="/static/icons/dinkie/lock.svg" class="w-3.5 h-3.5 brightness-0 invert" alt="">
-                            <span>Upgrade My Account</span>
+                            <span>{% if user %}Upgrade My Account{% else %}Get Lifetime Access{% endif %}</span>
                         </span>
                     </a>
-                    {% else %}
-                    <a href="/login?redirect=/home?upgrade=1" class="btn-upgrade-tv w-full !h-12 !rounded-xl !p-[1px] block active:scale-[0.98] shadow-lg shadow-blue-600/30">
-                        <span class="btn-upgrade-tv-inner !rounded-xl px-4 !text-xs font-pixel uppercase tracking-widest text-white flex items-center justify-center gap-2">
-                            <img src="/static/icons/dinkie/lock.svg" class="w-3.5 h-3.5 brightness-0 invert" alt="">
-                            <span>Get Lifetime Access</span>
-                        </span>
-                    </a>
-                    {% endif %}
                     <div class="flex items-center justify-center gap-2 text-[10px] font-mono text-zinc-400 uppercase tracking-wider mt-3">
                         <span>256-Bit SSL</span>
                         <span>·</span>
@@ -922,21 +913,16 @@
                     Internal lithium batteries are ticking time bombs. Back up your synthesizers in 30 seconds with zero software setup.
                 </p>
                 <div class="flex flex-col sm:flex-row items-center justify-center gap-3 pt-3">
-                    {% if user %}
-                    <a href="/home?upgrade=1" class="btn-upgrade-tv !h-12 !w-full sm:!w-auto !rounded-xl !p-[1px] shrink-0 active:scale-[0.98]">
+                    <a href="/checkout?plan=personal" class="btn-upgrade-tv !h-12 !w-full sm:!w-auto !rounded-xl !p-[1px] shrink-0 active:scale-[0.98]">
                         <span class="btn-upgrade-tv-inner !rounded-xl px-8 !text-xs font-pixel uppercase tracking-widest text-white">
-                            Upgrade to bipluk+
+                            {% if user %}Upgrade to bipluk+{% else %}Get Lifetime Access ({{ pricing.symbol }}{{ pricing.personal_amount }}){% endif %}
                         </span>
                     </a>
+                    {% if user %}
                     <a href="/home" class="w-full sm:w-auto px-6 py-3 rounded-xl border border-zinc-800 bg-zinc-900 hover:bg-zinc-800 text-white text-xs font-pixel uppercase tracking-widest transition-all">
                         Go to My Vault
                     </a>
                     {% else %}
-                    <a href="/login?redirect=/home?upgrade=1" class="btn-upgrade-tv !h-12 !w-full sm:!w-auto !rounded-xl !p-[1px] shrink-0 active:scale-[0.98]">
-                        <span class="btn-upgrade-tv-inner !rounded-xl px-8 !text-xs font-pixel uppercase tracking-widest text-white">
-                            Get Lifetime Access ({{ pricing.symbol }}{{ pricing.personal_amount }})
-                        </span>
-                    </a>
                     <a href="/signup" class="w-full sm:w-auto px-6 py-3 rounded-xl border border-zinc-800 bg-zinc-900 hover:bg-zinc-800 text-white text-xs font-pixel uppercase tracking-widest transition-all">
                         Start Free
                     </a>

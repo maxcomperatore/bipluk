@@ -1730,7 +1730,7 @@
 
                 <div class="mt-16 text-center reveal" style="--delay: 300ms;">
                     <p class="text-zinc-400 mb-6 text-sm font-medium">Ready to back up your {{ seo.synth_name }}?</p>
-                    <a href="/login"
+                    <a href="/checkout?plan=personal"
                         class="btn-upgrade-tv-lg inline-flex !w-auto !h-auto !p-[1px]">
                         <span class="btn-upgrade-tv-inner px-8 py-4 gap-3 !rounded-xl">
                             <span class="text-sm font-pixel uppercase tracking-widest text-white">Get Premium Vault</span>
@@ -1895,7 +1895,7 @@
                     <img src="/static/logo.png" alt="" width="56" height="56" aria-hidden="true"
                         class="absolute left-1/2 top-0 z-0 w-14 h-14 -translate-x-1/2 -translate-y-1 select-none pointer-events-none"
                         style="image-rendering: pixelated; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.45));">
-                    <a href="/login" role="button"
+                    <a href="{% if user %}/home{% else %}/login{% endif %}" role="button"
                         class="btn-upgrade-tv-lg pricing-free-cta relative z-10 mx-auto w-full cursor-pointer select-none"
                         style="height: 64px;">
                         <span class="btn-upgrade-tv-border"></span>
@@ -2015,7 +2015,7 @@
                             </ul>
                         </div>
                     <div class="mt-8 text-center space-y-2">
-                        <a href="/login"
+                        <a href="/checkout?plan=personal"
                             class="btn-upgrade-tv-lg pricing-cta-personal">
                             <span class="btn-upgrade-tv-border"></span>
                             <span class="btn-upgrade-tv-inner">

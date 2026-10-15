@@ -2097,11 +2097,14 @@ async def subscribe(request: Request, email: str = Form(...)):
     return Response(status_code=200)
 
 @app.get("/login", response_class=HTMLResponse)
-@app.get("/pricing", response_class=HTMLResponse)
 async def login_page(request: Request, error: str = None, msg: str = None):
-    next_url = request.query_params.get("next")
+    next_url = request.query_params.get("next") or request.query_params.get("redirect")
     model = request.query_params.get("model")
-    is_pricing = request.url.path == "/pricing" or request.query_params.get("from") == "pricing"
+    is_pricing = (
+        request.url.path == "/pricing"
+        or request.query_params.get("from") == "pricing"
+        or bool(next_url and ("upgrade" in next_url or "checkout" in next_url))
+    )
     signed_cookie = request.cookies.get("session_user")
     if signed_cookie:
         session_data = verify_session_cookie(signed_cookie)
@@ -3853,7 +3856,7 @@ async def checkout_pack(request: Request, pack_id: str):
 async def create_checkout_session(request: Request, plan: str = "personal"):
     user = get_current_user(request)
     if not user:
-        return RedirectResponse(url="/login")
+        return RedirectResponse(url=f"/login?next=/checkout?plan={plan}")
         
     # If Stripe keys are missing, run in sandbox developer mock-mode
     if not STRIPE_SECRET_KEY:
