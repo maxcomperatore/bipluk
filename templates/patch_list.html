@@ -38,7 +38,10 @@
             <div class="flex items-center justify-between gap-4 mt-2">
                 <div class="flex items-center gap-2">
                     <!-- Sync/Flash Button -->
-                    <button onclick="flashBank({{ bank.id }}, {{ bank.name | tojson }}, {{ bank.synth_model | tojson }})" 
+                    <button data-bank-id="{{ bank.id }}"
+                            data-bank-name="{{ bank.name | e }}"
+                            data-synth-model="{{ bank.synth_model | default('') | e }}"
+                            onclick="flashBank(Number(this.dataset.bankId), this.dataset.bankName, this.dataset.synthModel)" 
                             class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg font-roman uppercase text-[9px] tracking-wider transition-all shadow tactical-pink-button">
                         <img src="/static/icons/dinkie/revert.svg" class="h-3.5 w-3.5" style="filter: invert(1);" />
                         Sync to Synth
@@ -48,13 +51,17 @@
                     {% if user.tier == 'premium' or is_first_bank %}
                     <a href="/banks/{{ bank.id }}/download" 
                        title="Download .syx backup file" 
-                       onclick="logToPostHog('bank_downloaded', { bank_id: {{ bank.id }}, bank_name: '{{ bank.name }}' })"
+                       data-bank-id="{{ bank.id }}"
+                       data-bank-name="{{ bank.name | e }}"
+                       onclick="logToPostHog('bank_downloaded', { bank_id: Number(this.dataset.bankId), bank_name: this.dataset.bankName })"
                        class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-zinc-350 font-roman uppercase text-[9px] tracking-wider transition-all tactical-button">
                         <img src="/static/icons/dinkie/download.svg" class="h-3.5 w-3.5" style="filter: invert(1);" />
                         Download file
                     </a>
                     
-                    <button onclick="shareBank({{ bank.id }}, '{{ bank.name }}')"
+                    <button data-bank-id="{{ bank.id }}"
+                            data-bank-name="{{ bank.name | e }}"
+                            onclick="shareBank(Number(this.dataset.bankId), this.dataset.bankName)"
                             title="Share as public read-only link"
                             class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-zinc-350 font-roman uppercase text-[9px] tracking-wider transition-all tactical-button">
                         <img src="/static/icons/dinkie/globe-meridians.svg" class="h-3.5 w-3.5" style="filter: invert(1);" />

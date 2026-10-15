@@ -1,18 +1,35 @@
 <!-- PostHog Tracking -->
 <script>
-    // Suppress external Android/Facebook WebView injected script bridge errors
+    // Suppress external Android/Facebook WebView injected script bridge errors and wallet extensions
     window.addEventListener('error', function(e) {
         var msg = (e && (e.message || (e.error && e.error.message))) || '';
         if (typeof msg === 'string' && (
             msg.indexOf('Java object is gone') !== -1 ||
             msg.indexOf('sendJsBlockingTimeMessage') !== -1 ||
-            msg.indexOf('sendDataToNative') !== -1
+            msg.indexOf('sendDataToNative') !== -1 ||
+            msg.indexOf('window.ethereum') !== -1 ||
+            msg.indexOf('selectedAddress') !== -1
         )) {
             if (e.stopImmediatePropagation) e.stopImmediatePropagation();
             if (e.preventDefault) e.preventDefault();
             return true;
         }
     }, true);
+
+    window.addEventListener('unhandledrejection', function(e) {
+        var reason = e && (e.reason || '');
+        var msg = (reason && (reason.message || reason.name || String(reason))) || '';
+        if (typeof msg === 'string' && (
+            msg.indexOf('NotAllowedError') !== -1 ||
+            msg.indexOf('The play method is not allowed') !== -1 ||
+            msg.indexOf('ethereum') !== -1 ||
+            msg.indexOf('selectedAddress') !== -1
+        )) {
+            if (e.stopImmediatePropagation) e.stopImmediatePropagation();
+            if (e.preventDefault) e.preventDefault();
+            return true;
+        }
+    });
 
     // Ensure essential open graph tags exist to prevent third-party scripts from crashing on querySelector().content
     ['og:type', 'og:title', 'og:description'].forEach(function(prop) {
@@ -91,14 +108,17 @@
                             if (
                                 val.indexOf('Permission denied to access property') !== -1 ||
                                 val.indexOf('nodeName') !== -1 ||
-                                val.indexOf('Unexpected end of input') !== -1 ||
                                 val.indexOf('Script error.') !== -1 ||
                                 val.indexOf('Java object is gone') !== -1 ||
                                 val.indexOf('sendDataToNative') !== -1 ||
                                 val.indexOf('sendJsBlockingTimeMessage') !== -1 ||
                                 raw.indexOf('Java object is gone') !== -1 ||
                                 raw.indexOf('sendDataToNative') !== -1 ||
-                                raw.indexOf('sendJsBlockingTimeMessage') !== -1
+                                raw.indexOf('sendJsBlockingTimeMessage') !== -1 ||
+                                raw.indexOf('selectedAddress') !== -1 ||
+                                raw.indexOf('window.ethereum') !== -1 ||
+                                raw.indexOf('The play method is not allowed') !== -1 ||
+                                raw.indexOf('NotAllowedError') !== -1
                             ) {
                                 return null;
                             }

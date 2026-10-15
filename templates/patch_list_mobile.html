@@ -21,12 +21,16 @@
     {% if user.tier == 'premium' or is_first_bank %}
     <div class="px-4 pb-3 flex items-center gap-2">
         <a href="/banks/{{ bank.id }}/download"
-            onclick="logToPostHog('bank_downloaded', { bank_id: {{ bank.id }}, bank_name: '{{ bank.name }}', mobile: true })"
+            data-bank-id="{{ bank.id }}"
+            data-bank-name="{{ bank.name | e }}"
+            onclick="logToPostHog('bank_downloaded', { bank_id: Number(this.dataset.bankId), bank_name: this.dataset.bankName, mobile: true })"
             class="inline-flex items-center gap-2 rounded-full bg-white text-black text-xs font-semibold px-4 py-2 active:scale-[0.98] transition-transform">
             <img src="/static/icons/dinkie/download.svg" class="h-3.5 w-3.5" alt="" />
             Download .syx
         </a>
-        <button onclick="shareBankMobile({{ bank.id }}, '{{ bank.name }}')"
+        <button data-bank-id="{{ bank.id }}"
+            data-bank-name="{{ bank.name | e }}"
+            onclick="shareBankMobile(Number(this.dataset.bankId), this.dataset.bankName)"
             class="inline-flex items-center gap-2 rounded-full bg-zinc-800 text-white text-xs font-semibold px-4 py-2 active:scale-[0.98] transition-transform">
             <img src="/static/icons/dinkie/globe-meridians.svg" class="h-3.5 w-3.5" style="filter: invert(1);" alt="" />
             Share
